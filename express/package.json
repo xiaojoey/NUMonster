@@ -1,0 +1,20 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "test for express.js",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "body-parser": "*",
+    "ejs": "^2.5.7",
+    "express": "*",
+    "express-fileupload": "^0.4.0",
+    "express-validator": "^4.3.0",
+    "express-validators": "^1.0.4"
+  },
+  "author": "Richard Huang",
+  "license": "ISC"
+}
