@@ -3,7 +3,8 @@ var bodyParser = require('body-parser');
 var path = require('path'); 
 var expressValidator = require('express-validator');  
 var upload = require("express-fileupload");
-
+var fs = require('fs');
+var mkdirp = require('mkdirp'); 
 
 var app = express(); 
 
@@ -63,8 +64,17 @@ app.post('/upload', function(req, res) {
 	}
 
 	var pdb = req.files.pdbFile; 
+	var d = new Date(); 
 
-	pdb.mv('./upload/' + pdb.name, function (err) {
+	var append = Math.floor(Math.random() * 1000) + d.getFullYear() + d.getMonth() + d.getDate() +  + d.getMilliseconds(); 
+
+	var dir = './upload/' + append; 
+	if (!fs.existsSync(dir)) {
+		fs.mkdirSync(dir); 
+	}
+
+
+	pdb.mv(dir + '/' + pdb.name, function (err) {
 		if (err) {
 			return res.status(500).send(err); 
 		}
