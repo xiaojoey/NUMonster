@@ -10,22 +10,12 @@ var app = express();
 
 
 // order important, must put middleware before route handler 
-/*
-var logger = function (req, res, next) {
-	console.log('Logging...'); 
-	next(); 
-}
 
-app.use(logger); 
-*/ 
 
 // body parser middleware 
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({extended: false})); 
 app.use(upload()); 
-
-// set static path
- //app.use(express.static(path.join(__dirname, 'public'))); 
 
 // express validator middleware 
  app.use(expressValidator({
@@ -54,11 +44,9 @@ app.get('/', function (req, res) {
 	res.render('index'); 
 }); 
 
+// handle uploads 
 app.post('/upload', function(req, res) {
-	/*
-
-	req.checkBody('require first name last name') 48 on 
-	*/ 
+	
 	if (!req.files) {
 		return res.status(400).send('No files were upload.'); 
 	}
@@ -66,15 +54,18 @@ app.post('/upload', function(req, res) {
 	var pdb = req.files.pdbFile; 
 	var d = new Date(); 
 
-	var append = Math.floor(Math.random() * 1000) + d.getFullYear() + d.getMonth() + d.getDate() +  + d.getMilliseconds(); 
+	var append = 0; 
+	var dir = './upload/' + append;
 
-	var dir = './upload/' + append; 
-	if (!fs.existsSync(dir)) {
-		fs.mkdirSync(dir); 
+	while (fs.existsSync(dir)) {
+		append = Math.floor(Math.random() * 1000000000) + d.getFullYear() + d.getMonth() + d.getDate() +  + d.getMilliseconds(); 
+		dir = './upload/' + append; 
 	}
 
+	fs.mkdirSync(dir);
+	var file = dir + '/' + pdb.name; 
 
-	pdb.mv(dir + '/' + pdb.name, function (err) {
+	pdb.mv(file, function (err) {
 		if (err) {
 			return res.status(500).send(err); 
 		}
@@ -84,9 +75,42 @@ app.post('/upload', function(req, res) {
 	console.log('file uploaded'); 
 	res.render('index'); 
 
+	// parse the file 
+	parse(file); 
 }); 
 
 app.listen(9000, function() {
 	console.log('server started on port 9000')
-}) 
+}); 
+
+
+// parses the uploaded pdb file. takes the folder as input 
+function parse(file) {
+	var array; 
+	fs.readFile(file, function(err, data) {
+    	if(err) throw err;
+    	array = data.toString().split("\n");
+	    for(i in array) {
+	        console.log(array[i]);
+	    }
+	});
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
