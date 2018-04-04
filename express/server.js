@@ -86,13 +86,61 @@ app.listen(9000, function() {
 
 // parses the uploaded pdb file. takes the folder as input 
 function parse(file) {
-	var array; 
+	var lines; 
 	fs.readFile(file, function(err, data) {
     	if(err) throw err;
-    	array = data.toString().split("\n");
-	    for(i in array) {
-	        console.log(array[i]);
-	    }
+
+		// each index of the array holds a line of the pdb file 
+    	lines = data.toString().split("\n");
+		var len = lines.length;
+
+		// split on space to allow access to individual words 
+		for (var i = 0; i < len; i++) {
+			lines[i] = lines[i].split(" "); 
+		}
+
+		var firstValid = 0; 
+	    // get rid of extraneous beggining parts  
+		while (lines[firstValid][0] != "ATOM") {
+			firstValid++;
+		}
+		lines.splice(0, firstValid); 
+
+		len = lines.length; 
+		// eliminate spaces 
+		for (var i = 0; i < len; i++) {
+			var trimmed = []; 
+			var lineLength = lines[i].length; 
+
+			for (var j = 0; j < lineLength; j++) {
+				if (lines[i][j] != "") {
+					trimmed.push(lines[i][j]); 
+				}
+			}
+			lines[i] = trimmed; 
+			/* more fun implementation to get rid of spaces 
+			var space = -1; 
+			
+			for (var j = 0; j < lines[i].length; j++) {
+				if (lines[i][j] != " ") {
+					space++;
+				}
+				lines[i][space] = lines[i][j]; 
+			}
+			*/
+		}
+		 
+// checking output
+		var print = '';
+		for (var i = 0; i < len; i++) {
+			for (var j = 0; j < lines[i].length; j++) {
+				print += lines[i][j] + " " ; 
+			}
+			print += "\n\n"; 
+
+		}
+		fs.writeFile("output.txt", print); 
+
 	});
 }
 
