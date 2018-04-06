@@ -13,7 +13,9 @@
     "express": "^4.16.3",
     "express-fileupload": "^0.4.0",
     "express-validator": "^4.3.0",
-    "express-validators": "^1.0.4"
+    "express-validators": "^1.0.4",
+    "mkdirp": "^0.5.1",
+    "pug": "^2.0.3"
   },
   "author": "Richard Huang",
   "license": "ISC"

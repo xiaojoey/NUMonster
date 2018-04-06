@@ -36,12 +36,14 @@ app.use(upload());
  })); 
 
 // view engine 
-app.set('view engine', 'ejs'); 
+app.set('view engine', 'pug'); 
 app.set('views', path.join(__dirname, 'views')); 
 
 // route handler
 app.get('/', function (req, res) {
-	res.render('index'); 
+	res.render('index', {
+		chains : []
+	}); 
 }); 
 
 // handle uploads 
@@ -73,10 +75,21 @@ app.post('/upload', function(req, res) {
 	}); 
 	console.log(pdb.name); 
 	console.log('file uploaded'); 
-	res.render('index'); 
 
 	// parse the file 
-	parse(file); 
+	var chainInfo = parse(file); 
+	var chainNames = []; 
+
+	for (chain in chainInfo) {
+		chainNames.push(chain.id); 
+	}
+
+	console.log("length of chainNames: " + chainNames.length); 
+
+	res.render('index', {
+		chains : chainNames
+	}); 
+
 }); 
 
 app.listen(9000, function() {
@@ -87,6 +100,7 @@ app.listen(9000, function() {
 // parses the uploaded pdb file. takes the folder as input 
 function parse(file) {
 	var lines; 
+	var chains; 
 	fs.readFile(file, function(err, data) {
     	if(err) throw err;
 
@@ -129,8 +143,34 @@ function parse(file) {
 			}
 			*/
 		}
+
+		var currId = lines[0][4]; 
+		chains = []; 
+		var chain = new Chain(currId, 0, -1); 	
+
+		for (var i = 0; i < len; i++) {
+			if (lines[i][4] != currId && lines[i].length == 12) {
+				chain.end = i - 1; 
+				chains.push(chain); 
+				currId = lines[i][4]; 
+				chain = new Chain(currId, i, -1); 
+			} else if (lines[i][0] == "ENDMDL") {
+				chain.end = i;
+				chains.push(chain); 
+				break; 
+			}
+		}
+
+
+
+		// error checking, comment out later 
+		console.log(chains.length); 
+		var print = ''; 
+		for (var i = 0; i < chains.length; i++) {
+			print += chains[i].id + "\n"; 	
+		}
+		fs.writeFile("chains.txt", print); 
 		 
-// checking output
 		var print = '';
 		for (var i = 0; i < len; i++) {
 			for (var j = 0; j < lines[i].length; j++) {
@@ -139,9 +179,10 @@ function parse(file) {
 			print += "\n\n"; 
 
 		}
-		fs.writeFile("output.txt", print); 
-
+		fs.writeFile("read.txt", print); 
+	console.log("length of chains: " + chains.length); 
 	});
+
 }
 
 
@@ -149,11 +190,36 @@ function parse(file) {
 
 
 
+function Chain(id, start, end) {
+	this.id = id; 
+	this.start = start;
+	this.end = end; 
+}
+
+
+function createChainList(chains) {
+
+	for (chain in chains) {
+		addItem(chain.id); 
+	}
+}
 
 
 
-
-
+function addItem(name) {
+        var ul = document.getElementById('chainList'); //ul
+        var li = document.createElement('li');//li
+        
+        var checkbox = document.createElement('input');
+            checkbox.type = "checkbox";
+            checkbox.value = 1;
+            checkbox.name = "todo[]";
+        
+        li.appendChild(checkbox);
+        
+        li.appendChild(document.createTextNode(name));
+        ul.appendChild(li); 
+}
 
 
 
