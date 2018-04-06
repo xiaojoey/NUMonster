@@ -77,18 +77,8 @@ app.post('/upload', function(req, res) {
 	console.log('file uploaded'); 
 
 	// parse the file 
-	var chainInfo = parse(file); 
-	var chainNames = []; 
+	var chainInfo = parse(file, res); 
 
-	for (chain in chainInfo) {
-		chainNames.push(chain.id); 
-	}
-
-	console.log("length of chainNames: " + chainNames.length); 
-
-	res.render('index', {
-		chains : chainNames
-	}); 
 
 }); 
 
@@ -98,7 +88,7 @@ app.listen(9000, function() {
 
 
 // parses the uploaded pdb file. takes the folder as input 
-function parse(file) {
+function parse(file, res) {
 	var lines; 
 	var chains; 
 	fs.readFile(file, function(err, data) {
@@ -180,9 +170,20 @@ function parse(file) {
 
 		}
 		fs.writeFile("read.txt", print); 
-	console.log("length of chains: " + chains.length); 
-	});
 
+		console.log("length of chains: " + chains.length); 
+		var chainNames = []; 
+
+		for (var i = 0; i < chains.length; i++) {
+			chainNames.push(chains[i].id); 
+		}
+
+		console.log("length of chainNames: " + chainNames.length); 
+		console.log(chainNames[0]); 
+		res.render('index', {
+			chains : chainNames
+		}); 
+	});
 }
 
 

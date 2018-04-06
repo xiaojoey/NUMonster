@@ -38,12 +38,11 @@
 
          <div class="col-sm">
                 <form action="/action_page.php">
-                ul  
-                    for chain in chains
-                        li=chain
-                
-                    <input type="submit" value="Submit">
-                        <!-- <input type="checkbox" name="vehicle" value="Bike"> #{chain} --> 
+                ul
+                    if chain != null
+                        for chain in chains
+                            <input type="checkbox" name="vehicle" value="Bike"> #{chain}
+                        <input type="submit" value="Submit">
                 </form>
         </div>
 
