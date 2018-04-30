@@ -42,7 +42,8 @@ app.set('views', path.join(__dirname, 'views'));
 // route handler
 app.get('/', function (req, res) {
 	res.render('index', {
-		chains : []
+		chains : [], 
+        pairs : []
 	}); 
 }); 
 
@@ -104,13 +105,15 @@ function parse(file, res) {
 		}
 
 		var firstValid = 0; 
-	    // get rid of extraneous beggining parts  
+
+	    // get rid of extraneous begining parts  
 		while (lines[firstValid][0] != "ATOM") {
 			firstValid++;
 		}
 		lines.splice(0, firstValid); 
 
 		len = lines.length; 
+
 		// eliminate spaces 
 		for (var i = 0; i < len; i++) {
 			var trimmed = []; 
@@ -122,16 +125,6 @@ function parse(file, res) {
 				}
 			}
 			lines[i] = trimmed; 
-			/* more fun implementation to get rid of spaces 
-			var space = -1; 
-			
-			for (var j = 0; j < lines[i].length; j++) {
-				if (lines[i][j] != " ") {
-					space++;
-				}
-				lines[i][space] = lines[i][j]; 
-			}
-			*/
 		}
 
 		var currId = lines[0][4]; 
@@ -144,16 +137,14 @@ function parse(file, res) {
 				chains.push(chain); 
 				currId = lines[i][4]; 
 				chain = new Chain(currId, i, -1); 
-			} else if (lines[i][0] == "ENDMDL") {
+			} else if (lines[i][0] == "MASTER" || lines[i][0] == "ENDMDL") {
 				chain.end = i;
 				chains.push(chain); 
 				break; 
 			}
 		}
 
-
-
-		// error checking, comment out later 
+		// error checking writes to files chains.txt and read.txt 
 		console.log(chains.length); 
 		var print = ''; 
 		for (var i = 0; i < chains.length; i++) {
@@ -172,17 +163,49 @@ function parse(file, res) {
 		fs.writeFile("read.txt", print); 
 
 		console.log("length of chains: " + chains.length); 
+
+
+        // chainNames is the array of chains passed to pug 
 		var chainNames = []; 
 
 		for (var i = 0; i < chains.length; i++) {
-			chainNames.push(chains[i].id); 
+
+            // lst is a dictionary mapping chain attributes to chain attribute values 
+            var lst = {}; 
+            lst["id"] = chains[i].id; 
+            lst["start"] = chains[i].start;
+            lst["end"] = chains[i].end;
+			chainNames.push(lst); 
 		}
 
+        // chainpairs is the array of chain pairs passed to pug
+        var chainPairs = []; 
+
+        for (var i = 0; i < chains.length - 1; i++) {
+            var start = chains[i].id; 
+            for (var j = i + 1; j < chains.length; j++) {
+                var pair = start + chains[j].id; 
+                chainPairs.push(pair); 
+            }
+        }
+
 		console.log("length of chainNames: " + chainNames.length); 
+
 		console.log(chainNames[0]); 
+        console.log("length of chainPairs: " + chainPairs.length); 
+        console.log(chainPairs[0]); 
+
 		res.render('index', {
-			chains : chainNames
+
+            "pairs": chainPairs,
+			"chains": chainNames 
 		}); 
+
+
+        console.log("just checking: " + chainPairs[1]); 
+
+        console.log("just checking: " + chainPairs); 
+        console.log("chainNames: " + chainNames);
 	});
 }
 
