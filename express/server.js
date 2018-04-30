@@ -10,8 +10,6 @@ var app = express();
 
 
 // order important, must put middleware before route handler 
-
-
 // body parser middleware 
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({extended: false})); 
@@ -50,21 +48,26 @@ app.get('/', function (req, res) {
 // handle uploads 
 app.post('/upload', function(req, res) {
 	
+    // ensure files are uploaded
 	if (!req.files) {
 		return res.status(400).send('No files were upload.'); 
 	}
 
+    // pdb is the pdb file, d is the date for random folder generation
 	var pdb = req.files.pdbFile; 
 	var d = new Date(); 
 
+    // create a randomly named folder by appending a random number to the upload/ directory
 	var append = 0; 
 	var dir = './upload/' + append;
 
+    // while a folder of the same name exists, keep getting random numbers
 	while (fs.existsSync(dir)) {
 		append = Math.floor(Math.random() * 1000000000) + d.getFullYear() + d.getMonth() + d.getDate() +  + d.getMilliseconds(); 
 		dir = './upload/' + append; 
 	}
 
+    // create the directory upload the file to it
 	fs.mkdirSync(dir);
 	var file = dir + '/' + pdb.name; 
 
@@ -90,6 +93,8 @@ app.listen(9000, function() {
 
 // parses the uploaded pdb file. takes the folder as input 
 function parse(file, res) {
+
+    // lines are the lines in the pdb file chains will hold the chains themselves
 	var lines; 
 	var chains; 
 	fs.readFile(file, function(err, data) {
@@ -104,12 +109,15 @@ function parse(file, res) {
 			lines[i] = lines[i].split(" "); 
 		}
 
+        // first valid holds the index of the first valid line 
 		var firstValid = 0; 
 
 	    // get rid of extraneous begining parts  
 		while (lines[firstValid][0] != "ATOM") {
 			firstValid++;
 		}
+
+        // delete invalid lines 
 		lines.splice(0, firstValid); 
 
 		len = lines.length; 
@@ -127,6 +135,8 @@ function parse(file, res) {
 			lines[i] = trimmed; 
 		}
 
+        // parse the file. go through each line and create a chain object to store in the 
+        // "chains" list 
 		var currId = lines[0][4]; 
 		chains = []; 
 		var chain = new Chain(currId, 0, -1); 	
@@ -213,7 +223,9 @@ function parse(file, res) {
 
 
 
-
+/**
+ * constructor for the chain object. takes id, start val, end val
+ */
 function Chain(id, start, end) {
 	this.id = id; 
 	this.start = start;
@@ -221,6 +233,10 @@ function Chain(id, start, end) {
 }
 
 
+/**
+ * function that takes a a variable, holding chains and 
+ * takes their ids 
+ */ 
 function createChainList(chains) {
 
 	for (chain in chains) {
@@ -230,6 +246,10 @@ function createChainList(chains) {
 
 
 
+/**
+ * function that adds things to the dom tree. 
+ * used to create the list of chains
+ */
 function addItem(name) {
         var ul = document.getElementById('chainList'); //ul
         var li = document.createElement('li');//li
