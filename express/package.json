@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "devstart": "nodemon server.js"
   },
   "dependencies": {
     "body-parser": "*",
@@ -18,5 +19,8 @@
     "pug": "^2.0.3"
   },
   "author": "Richard Huang",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^1.18.2"
+  }
 }
