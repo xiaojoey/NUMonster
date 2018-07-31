@@ -58,13 +58,13 @@ app.post('/upload', function(req, res) {
 	var d = new Date(); 
 
     // create a randomly named folder by appending a random number to the upload/ directory
-	var append = 0; 
-	var dir = './upload/' + append;
+	var epoch = (new Date).getTime().toString();
+	var dir = './upload/' + epoch;
 
     // while a folder of the same name exists, keep getting random numbers
 	while (fs.existsSync(dir)) {
-		append = Math.floor(Math.random() * 1000000000) + d.getFullYear() + d.getMonth() + d.getDate() +  + d.getMilliseconds(); 
-		dir = './upload/' + append; 
+		epoch = epoch + "_new";
+		dir = './upload/' + epoch;
 	}
 
     // create the directory upload the file to it
@@ -76,15 +76,14 @@ app.post('/upload', function(req, res) {
 			return res.status(500).send(err); 
 		}
 		console.log("here"); 
-	}); 
-	console.log(pdb.name); 
+	});
+	console.log(file);
 	console.log('file uploaded'); 
 
 	// parse the file 
-	var chainInfo = parse(file, res); 
+	parse(file, res);
 
-
-}); 
+});
 
 app.listen(9000, function() {
 	console.log('server started on port 9000')
@@ -93,129 +92,51 @@ app.listen(9000, function() {
 
 // parses the uploaded pdb file. takes the folder as input 
 function parse(file, res) {
-
-    // lines are the lines in the pdb file chains will hold the chains themselves
-	var lines; 
-	var chains; 
+	var chains = [],
+		currID = false,
+		startRes = false;
 	fs.readFile(file, function(err, data) {
-    	if(err) throw err;
+    	//if(err) throw err;
+		// each index of the array holds a line of the pdb file
+			var line,
+    		lines = data.toString().split("\n");
 
-		// each index of the array holds a line of the pdb file 
-    	lines = data.toString().split("\n");
-		var len = lines.length;
-
-		// split on space to allow access to individual words 
-		for (var i = 0; i < len; i++) {
-			lines[i] = lines[i].split(" "); 
-		}
-
-        // first valid holds the index of the first valid line 
-		var firstValid = 0; 
-
-	    // get rid of extraneous begining parts  
-		while (lines[firstValid][0] != "ATOM") {
-			firstValid++;
-		}
-
-        // delete invalid lines 
-		lines.splice(0, firstValid); 
-
-		len = lines.length; 
-
-		// eliminate spaces 
-		for (var i = 0; i < len; i++) {
-			var trimmed = []; 
-			var lineLength = lines[i].length; 
-
-			for (var j = 0; j < lineLength; j++) {
-				if (lines[i][j] != "") {
-					trimmed.push(lines[i][j]); 
+		for (line of lines){
+			//console.log(line);
+			if ("ATOM" === line.slice(0,4) && !currID){
+				line = line.split(/(\s+)/);
+				currID = line[8];
+				startRes = line[10];
+			}
+			if ("TER" === line.slice(0,3)){
+				if (!currID || !startRes) {
+					throw "Parsing ERROR";
 				}
+				line = line.split(/(\s+)/);
+				chains.push({"id": currID, "start":startRes, "end":line[8]});
+				currID = false;
 			}
-			lines[i] = trimmed; 
-		}
-
-        // parse the file. go through each line and create a chain object to store in the 
-        // "chains" list 
-		var currId = lines[0][4]; 
-		chains = []; 
-		var chain = new Chain(currId, 0, -1); 	
-
-		for (var i = 0; i < len; i++) {
-			if (lines[i][4] != currId && lines[i].length == 12) {
-				chain.end = i - 1; 
-				chains.push(chain); 
-				currId = lines[i][4]; 
-				chain = new Chain(currId, i, -1); 
-			} else if (lines[i][0] == "MASTER" || lines[i][0] == "ENDMDL") {
-				chain.end = i;
-				chains.push(chain); 
-				break; 
+			// Only look at the first model to extract chains
+			if ("ENDMDL" === line.slice(0,6)){
+				break;
 			}
-		}
-
-		// error checking writes to files chains.txt and read.txt 
-		console.log(chains.length); 
-		var print = ''; 
-		for (var i = 0; i < chains.length; i++) {
-			print += chains[i].id + "\n"; 	
-		}
-		fs.writeFile("chains.txt", print); 
-		 
-		var print = '';
-		for (var i = 0; i < len; i++) {
-			for (var j = 0; j < lines[i].length; j++) {
-				print += lines[i][j] + " " ; 
-			}
-			print += "\n\n"; 
-
-		}
-		fs.writeFile("read.txt", print); 
-
-		console.log("length of chains: " + chains.length); 
-
-
-        // chainNames is the array of chains passed to pug 
-		var chainNames = []; 
-
-		for (var i = 0; i < chains.length; i++) {
-
-            // lst is a dictionary mapping chain attributes to chain attribute values 
-            var lst = {}; 
-            lst["id"] = chains[i].id; 
-            lst["start"] = chains[i].start;
-            lst["end"] = chains[i].end;
-			chainNames.push(lst); 
 		}
 
         // chainpairs is the array of chain pairs passed to pug
-        var chainPairs = []; 
+        var chainPairs = [];
 
         for (var i = 0; i < chains.length - 1; i++) {
-            var start = chains[i].id; 
+            var start = chains[i].id;
             for (var j = i + 1; j < chains.length; j++) {
-                var pair = start + chains[j].id; 
-                chainPairs.push(pair); 
+                var pair = start + chains[j].id;
+                chainPairs.push(pair);
             }
         }
 
-		console.log("length of chainNames: " + chainNames.length); 
-
-		console.log(chainNames[0]); 
-        console.log("length of chainPairs: " + chainPairs.length); 
-        console.log(chainPairs[0]); 
-
 		res.render('index', {
-
-            "pairs": chainPairs,
-			"chains": chainNames 
-		}); 
-
-
-        console.log("just checking: " + chainPairs[1]); 
-
-        console.log("just checking: " + chainPairs); 
-        console.log("chainNames: " + chainNames);
+			"chains": chains,
+			"pairs": chainPairs
+		});
 	});
 }
 
