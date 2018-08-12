@@ -133,9 +133,9 @@ function parse(file, res) {
             }
         }
 
-		res.render('index', {
+		res.send( {
+			"file_path": file,
 			"chains": chains,
-			"pairs": chainPairs
 		});
 	});
 }
