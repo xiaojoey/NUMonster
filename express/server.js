@@ -90,7 +90,8 @@ app.listen(9000, function() {
 function parse(file, res) {
 	var chains = [],
 		currID = false,
-		startRes = false;
+		startRes = false,
+		endRes = false;
 	fs.readFile(file, function(err, data) {
     	//if(err) throw err;
 		// each index of the array holds a line of the pdb file
@@ -99,16 +100,18 @@ function parse(file, res) {
 
 		for (line of lines){
 			//console.log(line);
-			if ("ATOM" === line.slice(0,4) && !currID){
-				currID = line.substring(21, 22).trim();
-				startRes = line.substring(22, 26).trim();
+			if ("ATOM" === line.slice(0,4)){
+				if (!currID) {
+                    currID = line.substring(21, 22).trim();
+                    startRes = line.substring(22, 26).trim();
+                }
+                endRes = line.substring(22, 26).trim();
 			}
 			if ("TER" === line.slice(0,3)){
 				if (!currID || !startRes) {
 					throw "Parsing ERROR";
 				}
-				var residue = line.substring(22, 26).trim();
-				chains.push({"name": currID, "start":startRes, "end":residue});
+				chains.push({"name": currID, "start":startRes, "end":endRes});
 				currID = false;
 			}
 			// Only look at the first model to extract chains
