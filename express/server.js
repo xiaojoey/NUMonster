@@ -4,9 +4,11 @@ var path = require('path');
 var expressValidator = require('express-validator');  
 var upload = require("express-fileupload");
 var fs = require('fs');
-var mkdirp = require('mkdirp'); 
+var cors = require('cors');
 
-var app = express(); 
+
+var app = express();
+app.use(cors());
 
 
 // order important, must put middleware before route handler 
