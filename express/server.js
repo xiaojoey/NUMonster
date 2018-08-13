@@ -53,9 +53,7 @@ app.post('/upload', function(req, res) {
 		return res.status(400).send('No files were upload.'); 
 	}
 
-    // pdb is the pdb file, d is the date for random folder generation
-	var pdb = req.files.pdbFile; 
-	var d = new Date(); 
+	var pdb = req.files.pdbFile;
 
     // create a randomly named folder by appending a random number to the upload/ directory
 	var epoch = (new Date).getTime().toString();
@@ -75,14 +73,10 @@ app.post('/upload', function(req, res) {
 		if (err) {
 			return res.status(500).send(err); 
 		}
-		console.log("here"); 
+		console.log('file uploaded: ' + file);
+		// parse the file
+		parse(file, res);
 	});
-	console.log(file);
-	console.log('file uploaded'); 
-
-	// parse the file 
-	parse(file, res);
-
 });
 
 app.listen(9000, function() {
@@ -104,16 +98,15 @@ function parse(file, res) {
 		for (line of lines){
 			//console.log(line);
 			if ("ATOM" === line.slice(0,4) && !currID){
-				line = line.split(/(\s+)/);
-				currID = line[8];
-				startRes = line[10];
+				currID = line.substring(21, 22).trim();
+				startRes = line.substring(22, 26).trim();
 			}
 			if ("TER" === line.slice(0,3)){
 				if (!currID || !startRes) {
 					throw "Parsing ERROR";
 				}
-				line = line.split(/(\s+)/);
-				chains.push({"id": currID, "start":startRes, "end":line[8]});
+				var residue = line.substring(22, 26).trim();
+				chains.push({"name": currID, "start":startRes, "end":residue});
 				currID = false;
 			}
 			// Only look at the first model to extract chains
@@ -121,17 +114,11 @@ function parse(file, res) {
 				break;
 			}
 		}
-
-        // chainpairs is the array of chain pairs passed to pug
-        var chainPairs = [];
-
-        for (var i = 0; i < chains.length - 1; i++) {
-            var start = chains[i].id;
-            for (var j = i + 1; j < chains.length; j++) {
-                var pair = start + chains[j].id;
-                chainPairs.push(pair);
-            }
+		if (!chains.length) {
+            return res.status(500).send('Unable to parse chains from PDB file');
         }
+
+		console.log(chains);
 
 		res.send( {
 			"file_path": file,
