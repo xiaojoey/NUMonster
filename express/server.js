@@ -59,12 +59,11 @@ app.post('/upload', function(req, res) {
 
     // create a randomly named folder by appending a random number to the upload/ directory
 	var epoch = (new Date).getTime().toString();
-	var dir = './upload/' + epoch;
+	var dir = '/home/monster_uploads/' + epoch;
 
     // while a folder of the same name exists, keep getting random numbers
 	while (fs.existsSync(dir)) {
-		epoch = epoch + "_new";
-		dir = './upload/' + epoch;
+		dir = dir + "_new";
 	}
 
     // create the directory upload the file to it
@@ -75,6 +74,7 @@ app.post('/upload', function(req, res) {
 		if (err) {
 			return res.status(500).send(err); 
 		}
+		fs.chmod(dir, 777);
 		console.log('file uploaded: ' + file);
 		// parse the file
 		parse(file, res);
