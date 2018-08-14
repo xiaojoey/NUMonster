@@ -68,13 +68,13 @@ app.post('/upload', function(req, res) {
 
     // create the directory upload the file to it
 	fs.mkdirSync(dir);
+	fs.chmod(dir, 0o777);
 	var file = dir + '/' + pdb.name; 
 
 	pdb.mv(file, function (err) {
 		if (err) {
 			return res.status(500).send(err); 
 		}
-		fs.chmod(dir, 777);
 		console.log('file uploaded: ' + file);
 		// parse the file
 		parse(file, res);
