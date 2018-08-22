@@ -59,7 +59,7 @@ app.post('/upload', function(req, res) {
 
     // create a randomly named folder by appending a random number to the upload/ directory
 	var epoch = (new Date).getTime().toString();
-	var dir = '/home/monster_uploads/' + epoch;
+	var dir = '/home/monster_uploads/upload/' + epoch;
 
     // while a folder of the same name exists, keep getting random numbers
 	while (fs.existsSync(dir)) {
@@ -69,7 +69,8 @@ app.post('/upload', function(req, res) {
     // create the directory upload the file to it
 	fs.mkdirSync(dir);
 	fs.chmod(dir, 0o777);
-	var file = dir + '/' + pdb.name; 
+	var file = dir + '/' + pdb.name;
+	var url_path = 'http://monster.northwestern.edu/files/upload/' + epoch + '/' + pdb.name;
 
 	pdb.mv(file, function (err) {
 		if (err) {
@@ -77,7 +78,7 @@ app.post('/upload', function(req, res) {
 		}
 		console.log('file uploaded: ' + file);
 		// parse the file
-		parse(file, res);
+		parse(file, url_path, res);
 	});
 });
 
@@ -87,7 +88,7 @@ app.listen(9000, function() {
 
 
 // parses the uploaded pdb file. takes the folder as input 
-function parse(file, res) {
+function parse(file, url_path, res) {
 	var chains = [],
 		currID = false,
 		startRes = false,
@@ -126,7 +127,7 @@ function parse(file, res) {
 		console.log(chains);
 
 		res.send( {
-			"file_path": file,
+			"file_path": url_path,
 			"chains": chains,
 		});
 	});
