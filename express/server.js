@@ -50,8 +50,8 @@ app.get('/', function (req, res) {
 app.post('/upload', function(req, res) {
     let url_path;
     let file;
-    let pdbID = req.body.pdbId.toLowerCase();
-    if (pdbID) {
+    if (req.body.pdbId) {
+        let pdbID = req.body.pdbId.toLowerCase();
     	if (!RegExp('^[a-z0-9]{4}$').test(pdbID)) {
     		console.log('Bad PDB: ' + pdbID);
     		return res.status(400).send(`${pdbID} does not appear to be a valid PDB ID`);
