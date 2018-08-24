@@ -50,16 +50,19 @@ app.get('/', function (req, res) {
 app.post('/upload', function(req, res) {
     let url_path;
     let file;
-    let pdbID = req.body.pdbId;
+    let pdbID = req.body.pdbId.toLowerCase();
     if (pdbID) {
-    	if (!RegExp('[A-z0-9]{4}').test(pdbID)) {
+    	if (!RegExp('^[a-z0-9]{4}$').test(pdbID)) {
+    		console.log('Bad PDB: ' + pdbID);
     		return res.status(400).send(`${pdbID} does not appear to be a valid PDB ID`);
 		}
     	file = `/home/pdb-mirror/data/structures/all/pdb/pdb${pdbID}.ent.gz`;
 		if (!fs.existsSync(file)){
+			console.log('Missing PDB: ' + pdbID);
     		return res.status(400).send(`${pdbID} is not present in the local PDB cache. 
     		Please use the file upload`);
 		}
+		console.log('Using PDB cache: ' + file);
 		url_path = `http://monster.northwestern.edu/files/pdb/pdb${pdbID}.ent.gz`;
 		parse(file, url_path, res);
 
@@ -108,8 +111,7 @@ function parse(file, url_path, res) {
     let startRes = false;
     let endRes = false;
     fs.readFile(file, function(err, data) {
-    	//if(err) throw err;
-		// each index of the array holds a line of the pdb file
+    	if(err) throw err;
         let line;
         let lines = data.toString().split("\n");
 
@@ -135,6 +137,7 @@ function parse(file, url_path, res) {
 			}
 		}
 		if (!chains.length) {
+        	console.log(`Failed to parse file\n ID: ${currID}\n Start Res: ${startRes}\n EndRes: ${endRes}`);
             return res.status(500).send('Unable to parse chains from PDB file');
         }
 
