@@ -1,12 +1,14 @@
-var express = require("express"); 
-var bodyParser = require('body-parser');
-var path = require('path'); 
-var expressValidator = require('express-validator');  
-var upload = require("express-fileupload");
-var fs = require('fs');
-var mkdirp = require('mkdirp'); 
+const express = require("express");
+const bodyParser = require('body-parser');
+const path = require('path');
+const expressValidator = require('express-validator');
+const upload = require("express-fileupload");
+const fs = require('fs');
+const cors = require('cors');
 
-var app = express(); 
+
+const app = express();
+app.use(cors());
 
 
 // order important, must put middleware before route handler 
@@ -18,9 +20,8 @@ app.use(upload());
 // express validator middleware 
  app.use(expressValidator({
  	errorFormater: function (param, msg, value) {
- 		var namespace = param.split('.')
- 		, root = namespace.shift()
- 		, formParam = root; 
+ 		let namespace = param.split('.');
+ 		let formParam = namespace.shift();
 
  		while (namespace.length) {
  			formParam += '[' + namespace.shift() + ']'; 
@@ -47,44 +48,56 @@ app.get('/', function (req, res) {
 
 // handle uploads 
 app.post('/upload', function(req, res) {
-	
-    // ensure files are uploaded
-	if (!req.files) {
-		return res.status(400).send('No files were upload.'); 
-	}
-
-    // pdb is the pdb file, d is the date for random folder generation
-	var pdb = req.files.pdbFile; 
-	var d = new Date(); 
-
-    // create a randomly named folder by appending a random number to the upload/ directory
-	var append = 0; 
-	var dir = './upload/' + append;
-
-    // while a folder of the same name exists, keep getting random numbers
-	while (fs.existsSync(dir)) {
-		append = Math.floor(Math.random() * 1000000000) + d.getFullYear() + d.getMonth() + d.getDate() +  + d.getMilliseconds(); 
-		dir = './upload/' + append; 
-	}
-
-    // create the directory upload the file to it
-	fs.mkdirSync(dir);
-	var file = dir + '/' + pdb.name; 
-
-	pdb.mv(file, function (err) {
-		if (err) {
-			return res.status(500).send(err); 
+    let url_path;
+    let file;
+    if (req.body.pdbId) {
+        let pdbID = req.body.pdbId.toLowerCase();
+    	if (!RegExp('^[a-z0-9]{4}$').test(pdbID)) {
+    		console.log('Bad PDB: ' + pdbID);
+    		return res.status(400).send(`${pdbID} does not appear to be a valid PDB ID`);
 		}
-		console.log("here"); 
-	}); 
-	console.log(pdb.name); 
-	console.log('file uploaded'); 
+    	file = `/home/pdb-mirror/data/structures/all/pdb/pdb${pdbID}.ent.gz`;
+		if (!fs.existsSync(file)){
+			console.log('Missing PDB: ' + pdbID);
+    		return res.status(400).send(`${pdbID} is not present in the local PDB cache. 
+    		Please use the file upload`);
+		}
+		console.log('Using PDB cache: ' + file);
+		url_path = `http://monster.northwestern.edu/files/pdb/pdb${pdbID}.ent.gz`;
+		parse(file, url_path, res);
 
-	// parse the file 
-	var chainInfo = parse(file, res); 
+    } else {
+        // ensure files are uploaded
+        if (!req.files) {
+            return res.status(400).send('No files were upload.');
+        }
+        let pdb = req.files.pdbFile;
 
+        // create a randomly named folder by appending a random number to the upload/ directory
+        let epoch = (new Date).getTime().toString();
+        let dir = '/home/monster_uploads/upload/' + epoch;
 
-}); 
+        // while a folder of the same name exists, keep getting random numbers
+        while (fs.existsSync(dir)) {
+            dir = dir + "_new";
+        }
+
+        // create the directory upload the file to it
+        fs.mkdirSync(dir);
+        fs.chmod(dir, 0o777);
+        file = dir + '/' + pdb.name;
+        url_path = 'http://monster.northwestern.edu/files/upload/' + epoch + '/' + pdb.name;
+
+        pdb.mv(file, function (err) {
+            if (err) {
+                return res.status(500).send(err);
+            }
+            console.log('file uploaded: ' + file);
+            // parse the file
+            parse(file, url_path, res);
+        });
+    }
+});
 
 app.listen(9000, function() {
 	console.log('server started on port 9000')
@@ -92,183 +105,47 @@ app.listen(9000, function() {
 
 
 // parses the uploaded pdb file. takes the folder as input 
-function parse(file, res) {
-
-    // lines are the lines in the pdb file chains will hold the chains themselves
-	var lines; 
-	var chains; 
-	fs.readFile(file, function(err, data) {
+function parse(file, url_path, res) {
+    let chains = [];
+    let currID = false;
+    let startRes = false;
+    let endRes = false;
+    fs.readFile(file, function(err, data) {
     	if(err) throw err;
+        let line;
+        let lines = data.toString().split("\n");
 
-		// each index of the array holds a line of the pdb file 
-    	lines = data.toString().split("\n");
-		var len = lines.length;
-
-		// split on space to allow access to individual words 
-		for (var i = 0; i < len; i++) {
-			lines[i] = lines[i].split(" "); 
-		}
-
-        // first valid holds the index of the first valid line 
-		var firstValid = 0; 
-
-	    // get rid of extraneous begining parts  
-		while (lines[firstValid][0] != "ATOM") {
-			firstValid++;
-		}
-
-        // delete invalid lines 
-		lines.splice(0, firstValid); 
-
-		len = lines.length; 
-
-		// eliminate spaces 
-		for (var i = 0; i < len; i++) {
-			var trimmed = []; 
-			var lineLength = lines[i].length; 
-
-			for (var j = 0; j < lineLength; j++) {
-				if (lines[i][j] != "") {
-					trimmed.push(lines[i][j]); 
+        for (line of lines){
+			//console.log(line);
+			if ("ATOM" === line.slice(0,4)){
+				if (!currID) {
+                    currID = line.substring(21, 22).trim();
+                    startRes = line.substring(22, 26).trim();
+                }
+                endRes = line.substring(22, 26).trim();
+			}
+			if ("TER" === line.slice(0,3)){
+				if (!currID || !startRes) {
+					throw "Parsing ERROR";
 				}
+				chains.push({"name": currID, "start":startRes, "end":endRes});
+				currID = false;
 			}
-			lines[i] = trimmed; 
-		}
-
-        // parse the file. go through each line and create a chain object to store in the 
-        // "chains" list 
-		var currId = lines[0][4]; 
-		chains = []; 
-		var chain = new Chain(currId, 0, -1); 	
-
-		for (var i = 0; i < len; i++) {
-			if (lines[i][4] != currId && lines[i].length == 12) {
-				chain.end = i - 1; 
-				chains.push(chain); 
-				currId = lines[i][4]; 
-				chain = new Chain(currId, i, -1); 
-			} else if (lines[i][0] == "MASTER" || lines[i][0] == "ENDMDL") {
-				chain.end = i;
-				chains.push(chain); 
-				break; 
+			// Only look at the first model to extract chains
+			if ("ENDMDL" === line.slice(0,6)){
+				break;
 			}
 		}
-
-		// error checking writes to files chains.txt and read.txt 
-		console.log(chains.length); 
-		var print = ''; 
-		for (var i = 0; i < chains.length; i++) {
-			print += chains[i].id + "\n"; 	
-		}
-		fs.writeFile("chains.txt", print); 
-		 
-		var print = '';
-		for (var i = 0; i < len; i++) {
-			for (var j = 0; j < lines[i].length; j++) {
-				print += lines[i][j] + " " ; 
-			}
-			print += "\n\n"; 
-
-		}
-		fs.writeFile("read.txt", print); 
-
-		console.log("length of chains: " + chains.length); 
-
-
-        // chainNames is the array of chains passed to pug 
-		var chainNames = []; 
-
-		for (var i = 0; i < chains.length; i++) {
-
-            // lst is a dictionary mapping chain attributes to chain attribute values 
-            var lst = {}; 
-            lst["id"] = chains[i].id; 
-            lst["start"] = chains[i].start;
-            lst["end"] = chains[i].end;
-			chainNames.push(lst); 
-		}
-
-        // chainpairs is the array of chain pairs passed to pug
-        var chainPairs = []; 
-
-        for (var i = 0; i < chains.length - 1; i++) {
-            var start = chains[i].id; 
-            for (var j = i + 1; j < chains.length; j++) {
-                var pair = start + chains[j].id; 
-                chainPairs.push(pair); 
-            }
+		if (!chains.length) {
+        	console.log(`Failed to parse file\n ID: ${currID}\n Start Res: ${startRes}\n EndRes: ${endRes}`);
+            return res.status(500).send('Unable to parse chains from PDB file');
         }
 
-		console.log("length of chainNames: " + chainNames.length); 
+		console.log(chains);
 
-		console.log(chainNames[0]); 
-        console.log("length of chainPairs: " + chainPairs.length); 
-        console.log(chainPairs[0]); 
-
-		res.render('index', {
-
-            "pairs": chainPairs,
-			"chains": chainNames 
-		}); 
-
-
-        console.log("just checking: " + chainPairs[1]); 
-
-        console.log("just checking: " + chainPairs); 
-        console.log("chainNames: " + chainNames);
+		res.send( {
+			"file_path": url_path,
+			"chains": chains,
+		});
 	});
 }
-
-
-
-
-
-/**
- * constructor for the chain object. takes id, start val, end val
- */
-function Chain(id, start, end) {
-	this.id = id; 
-	this.start = start;
-	this.end = end; 
-}
-
-
-/**
- * function that takes a a variable, holding chains and 
- * takes their ids 
- */ 
-function createChainList(chains) {
-
-	for (chain in chains) {
-		addItem(chain.id); 
-	}
-}
-
-
-
-/**
- * function that adds things to the dom tree. 
- * used to create the list of chains
- */
-function addItem(name) {
-        var ul = document.getElementById('chainList'); //ul
-        var li = document.createElement('li');//li
-        
-        var checkbox = document.createElement('input');
-            checkbox.type = "checkbox";
-            checkbox.value = 1;
-            checkbox.name = "todo[]";
-        
-        li.appendChild(checkbox);
-        
-        li.appendChild(document.createTextNode(name));
-        ul.appendChild(li); 
-}
-
-
-
-
-
-
-
-
