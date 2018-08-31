@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require('body-parser');
 const path = require('path');
+const https = require('https');
 const expressValidator = require('express-validator');
 const upload = require("express-fileupload");
 const fs = require('fs');
@@ -50,21 +51,34 @@ app.get('/', function (req, res) {
 app.post('/upload', function(req, res) {
     let url_path;
     let file;
+    // create a randomly named folder by appending a random number to the upload/ directory
+	let epoch = (new Date).getTime().toString();
+	let dir = '/home/monster_uploads/upload/' + epoch;
+
+	// while a folder of the same name exists, keep getting random numbers
+	while (fs.existsSync(dir)) {
+		dir = dir + "_new";
+	}
+
+	// create the directory upload the file to it
+	fs.mkdirSync(dir);
+	fs.chmod(dir, 0o777);
     if (req.body.pdbId) {
         let pdbID = req.body.pdbId.toLowerCase();
     	if (!RegExp('^[a-z0-9]{4}$').test(pdbID)) {
     		console.log('Bad PDB: ' + pdbID);
     		return res.status(400).send(`${pdbID} does not appear to be a valid PDB ID`);
 		}
-    	file = `/home/pdb-mirror/data/structures/all/pdb/pdb${pdbID}.ent.gz`;
-		if (!fs.existsSync(file)){
-			console.log('Missing PDB: ' + pdbID);
-    		return res.status(400).send(`${pdbID} is not present in the local PDB cache. 
-    		Please use the file upload`);
-		}
-		console.log('Using PDB cache: ' + file);
-		url_path = `http://monster.northwestern.edu/files/pdb/pdb${pdbID}.ent.gz`;
-		parse(file, url_path, res);
+		const web_address = `https://files.rcsb.org/download/${pdbID}.pdb`;
+    	const file_path = `${dir}/${pdbID}.pdb`;
+    	file = fs.createWriteStream(file_path);
+		https.get(web_address, function(response) {
+		  response.pipe(file).on('finish', function () {
+		  	console.log('Download PDB from RCSB: ' + file_path);
+			url_path = `http://monster.northwestern.edu/files/upload/${epoch}/${pdbID}.pdb`;
+			parse(file_path, url_path, res);
+		  });
+		});
 
     } else {
         // ensure files are uploaded
@@ -73,18 +87,6 @@ app.post('/upload', function(req, res) {
         }
         let pdb = req.files.pdbFile;
 
-        // create a randomly named folder by appending a random number to the upload/ directory
-        let epoch = (new Date).getTime().toString();
-        let dir = '/home/monster_uploads/upload/' + epoch;
-
-        // while a folder of the same name exists, keep getting random numbers
-        while (fs.existsSync(dir)) {
-            dir = dir + "_new";
-        }
-
-        // create the directory upload the file to it
-        fs.mkdirSync(dir);
-        fs.chmod(dir, 0o777);
         file = dir + '/' + pdb.name;
         url_path = 'http://monster.northwestern.edu/files/upload/' + epoch + '/' + pdb.name;
 
