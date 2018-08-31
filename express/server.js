@@ -73,11 +73,15 @@ app.post('/upload', function(req, res) {
     	const file_path = `${dir}/${pdbID}.pdb`;
     	file = fs.createWriteStream(file_path);
 		https.get(web_address, function(response) {
-		  response.pipe(file).on('finish', function () {
-		  	console.log('Download PDB from RCSB: ' + file_path);
-			url_path = `http://monster.northwestern.edu/files/upload/${epoch}/${pdbID}.pdb`;
-			parse(file_path, url_path, res);
-		  });
+			if (response.statusCode !== 200){
+				console.log('Bad PDB Download: ' + pdbID);
+				return res.status(400).send(`Failed to fetch a PDB file for ${pdbID} from RCSB`)
+			}
+			response.pipe(file).on('finish', function () {
+				console.log('Download PDB from RCSB: ' + file_path);
+				url_path = `http://monster.northwestern.edu/files/upload/${epoch}/${pdbID}.pdb`;
+				parse(file_path, url_path, res);
+			});
 		});
 
     } else {
