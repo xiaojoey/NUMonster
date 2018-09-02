@@ -1,0 +1,29 @@
+HBPLUS Hydrogen Bond Calculator v 3.15            Aug 24 15:29:23 CDT 2018
+(c) I McDonald, D Naylor, D Jones and J Thornton 1993 All Rights Reserved.
+
+Configured for 25000 atoms and  3000 residues.
+Opening options file /home/monster/execs/hbplus/whatif/hbplus.opt.
+
+Criteria
+
+Minimum Angles; DHA 90.00, HAAA 90.00, DAAA 90.00
+Maximum Distances; D-A 3.9, H-A 2.5, S-S 3.0
+Maximum angles at aromatic acceptors DAAX 20.00, HAAAX 20.00
+Minimum covalent separation 3 Covalent bonds
+
+
+Processing file "/home/monster/web/jobs/27rv13g098/1/AB.pdb" . . .
+Opening "/home/monster/web/jobs/27rv13g098/1/AB.pdb" for protein co-ordinates. . .
+
+3270 atoms selected from 414 residues.
+
+Found 1 elements of secondary structure and 2 chains.
+0 CONRECS used.
+Checking for disulphide bridges . . . 
+0 disulphide bonds found.
+
+
+Adding Polar Hydrogens.
+Opened output file "AB.hb2".
+Checking for hydrogen bonds . . . 
+390 hydrogen bonds found.

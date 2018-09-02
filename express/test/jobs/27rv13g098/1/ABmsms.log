@@ -1,0 +1,26 @@
+/home/monster/web/jobs/27rv13g098/1/ActB_19
+
+Computing surface of /home/monster/web/jobs/27rv13g098/1/A buried by /home/monster/web/jobs/27rv13g098/1/B -- density = 19
+Running MSMS....
+
+Analyzing buried surface...
+Done. Wrote AVS fld files and surface analysis files /home/monster/web/jobs/27rv13g098/1/BctA_19
+Surface of /home/monster/web/jobs/27rv13g098/1/A buried by /home/monster/web/jobs/27rv13g098/1/B -- density = 19
+MSMSLIB 1.3 started on monster.northwestern.edu
+Copyright M.F. Sanner (March 2000)
+Compilation flags  
+buried SES surface 620.906067 buried out of 9464.124023
+buried SAS surface 888.730286 out of 0.000000
+MSMSLIB terminated normally
+Surface of /home/monster/web/jobs/27rv13g098/1/B buried by /home/monster/web/jobs/27rv13g098/1/A -- density = 19
+MSMSLIB 1.3 started on monster.northwestern.edu
+Copyright M.F. Sanner (March 2000)
+Compilation flags  
+RESTART FROM TRI: 1
+radius of atom 625 goes from 1.740000 to 1.840000
+radius of atom 628 goes from 1.740000 to 1.840000
+radius of atom 629 goes from 1.740000 to 1.840000
+Partial mode
+buried SES surface 620.936462 buried out of 9464.986328
+buried SAS surface 888.830688 out of 0.000000
+MSMSLIB terminated normally

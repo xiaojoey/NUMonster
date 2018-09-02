@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require('body-parser');
 const path = require('path');
 const https = require('https');
+const convert = require('xml-js');
 const expressValidator = require('express-validator');
 const upload = require("express-fileupload");
 const fs = require('fs');
@@ -45,7 +46,43 @@ app.get('/', function (req, res) {
 		chains : [], 
         pairs : []
 	}); 
-}); 
+});
+
+app.get('/results/:job_id', function(req, res) {
+	const jobs_dir = `/home/monster_uploads/jobs/${req.params.job_id}`;
+	const dl_url = `http://monster.northwestern.edu/jobs/${req.params.job_id}`;
+	let response = {job_id: req.params.job_id};
+	fs.readdirSync(jobs_dir).forEach(item => {
+		if (fs.lstatSync(`${jobs_dir}/${item}`).isDirectory()) {
+			let chains = [];
+			response.item = {};
+			fs.readdirSync(`${jobs_dir}/${item}`).forEach(file => {
+				// Assuming single character chain IDs
+				if (file.match(/..bonds\.xml/)) {chains.push(file.slice(0,2))}
+			});
+			chains.forEach(chain => {
+				const xml = fs.readFileSync(`${jobs_dir}/${item}/${chain}bonds.xml`, 'utf8');
+				const parsed_xml = convert.xml2json(xml, {compact: true});
+				response.item.chain = {
+					Results: {
+						XML: `${dl_url}/${item}/${chain}bonds.xml`,
+						TXT: `${dl_url}/${item}/${chain}bonds.txt`
+                    },
+					Logs: {
+						MSMS: `${dl_url}/${item}/${chain}msms.log`,
+						HBPlus: `${dl_url}/${item}/${chain}.log`
+					},
+					PDB: {
+						PDB: `${dl_url}/${item}/${chain}.pdb`
+					},
+					parsed_bonds: parsed_xml
+				}
+			});
+			res.send(response)
+		}
+	})
+
+});
 
 // handle uploads 
 app.post('/upload', function(req, res) {
