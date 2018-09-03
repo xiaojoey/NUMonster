@@ -8,6 +8,15 @@ const upload = require("express-fileupload");
 const fs = require('fs');
 const cors = require('cors');
 
+// Get environment variables
+const PORT = process.env.PORT || 9001;
+const SSL_KEY = process.env.SSL_KEY || 'server.key';
+const SSL_CERT = process.env.SSL_CERT || 'server.cert';
+const UPLOAD_DIR = process.env.UPLOAD_DIR || '/home/monster_uploads/uploads';
+const UPLOAD_URL = process.env.UPLOAD_URL || 'http://monster.northwestern.edu/files/upload';
+const JOBS_DIR = process.env.JOBS_DIR || '/home/monster_uploads/jobs';
+const DL_URL = process.env.DL_URL || 'http://monster.northwestern.edu/jobs';
+
 
 const app = express();
 app.use(cors());
@@ -49,8 +58,8 @@ app.get('/', function (req, res) {
 });
 
 app.get('/results/:job_id', function(req, res) {
-	const jobs_dir = `/home/monster_uploads/jobs/${req.params.job_id}`;
-	const dl_url = `http://monster.northwestern.edu/jobs/${req.params.job_id}`;
+	const jobs_dir = `${JOBS_DIR}/${req.params.job_id}`;
+	const dl_url = `${DL_URL}/${req.params.job_id}`;
 	let response = {job_id: req.params.job_id};
 	fs.readdirSync(jobs_dir).forEach(item => {
 		if (fs.lstatSync(`${jobs_dir}/${item}`).isDirectory()) {
@@ -91,7 +100,7 @@ app.post('/upload', function(req, res) {
     let file;
     // create a randomly named folder by appending a random number to the upload/ directory
 	let epoch = (new Date).getTime().toString();
-	let dir = '/home/monster_uploads/upload/' + epoch;
+	let dir = UPLOAD_DIR + '/' + epoch;
 
 	// while a folder of the same name exists, keep getting random numbers
 	while (fs.existsSync(dir)) {
@@ -117,7 +126,7 @@ app.post('/upload', function(req, res) {
 			}
 			response.pipe(file).on('finish', function () {
 				console.log('Download PDB from RCSB: ' + file_path);
-				url_path = `http://monster.northwestern.edu/files/upload/${epoch}/${pdbID}.pdb`;
+				url_path = `${UPLOAD_URL}/${epoch}/${pdbID}.pdb`;
 				parse(file_path, url_path, res);
 			});
 		});
@@ -130,7 +139,7 @@ app.post('/upload', function(req, res) {
         let pdb = req.files.pdbFile;
 
         file = dir + '/' + pdb.name;
-        url_path = 'http://monster.northwestern.edu/files/upload/' + epoch + '/' + pdb.name;
+        url_path = `${UPLOAD_URL}/${epoch}/${pdb.name}`;
 
         pdb.mv(file, function (err) {
             if (err) {
@@ -144,8 +153,15 @@ app.post('/upload', function(req, res) {
 });
 
 app.listen(9000, function() {
-	console.log('server started on port 9000')
-}); 
+	console.log('HTTP server started on port 9000')
+});
+
+https.createServer({
+  key: fs.readFileSync(SSL_KEY),
+  cert: fs.readFileSync(SSL_CERT)
+}, app).listen(PORT, function () {
+  console.log('https app listening on port ' + PORT)
+});
 
 
 // parses the uploaded pdb file. takes the folder as input 
