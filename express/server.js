@@ -55,7 +55,8 @@ app.get('/results/:job_id', function(req, res) {
 	fs.readdirSync(jobs_dir).forEach(item => {
 		if (fs.lstatSync(`${jobs_dir}/${item}`).isDirectory()) {
 			let chains = [];
-			response.item = {};
+			response.models = {};
+			response.models[item] = {};
 			fs.readdirSync(`${jobs_dir}/${item}`).forEach(file => {
 				// Assuming single character chain IDs
 				if (file.match(/..bonds\.xml/)) {chains.push(file.slice(0,2))}
@@ -63,14 +64,14 @@ app.get('/results/:job_id', function(req, res) {
 			chains.forEach(chain => {
 				const xml = fs.readFileSync(`${jobs_dir}/${item}/${chain}bonds.xml`, 'utf8');
 				const parsed_xml = convert.xml2json(xml, {compact: true});
-				response.item.chain = {
+				response.models[item][chain] = {
 					Results: {
 						XML: `${dl_url}/${item}/${chain}bonds.xml`,
 						TXT: `${dl_url}/${item}/${chain}bonds.txt`
                     },
 					Logs: {
 						MSMS: `${dl_url}/${item}/${chain}msms.log`,
-						HBPlus: `${dl_url}/${item}/${chain}.log`
+						HBPlus: `${dl_url}/${item}/${chain}hb.log`
 					},
 					PDB: {
 						PDB: `${dl_url}/${item}/${chain}.pdb`
@@ -99,7 +100,7 @@ app.post('/upload', function(req, res) {
 
 	// create the directory upload the file to it
 	fs.mkdirSync(dir);
-	fs.chmod(dir, 0o777);
+	fs.chmodSync(dir, 0o777);
     if (req.body.pdbId) {
         let pdbID = req.body.pdbId.toLowerCase();
     	if (!RegExp('^[a-z0-9]{4}$').test(pdbID)) {
