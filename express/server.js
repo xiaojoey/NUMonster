@@ -10,9 +10,9 @@ const cors = require('cors');
 
 // Get environment variables
 const PORT = process.env.PORT || 9001;
-const SSL_KEY = process.env.SSL_KEY || 'server.key';
-const SSL_CERT = process.env.SSL_CERT || 'server.cert';
-const UPLOAD_DIR = process.env.UPLOAD_DIR || '/home/monster_uploads/uploads';
+const SSL_KEY = process.env.SSL_KEY;
+const SSL_CERT = process.env.SSL_CERT;
+const UPLOAD_DIR = process.env.UPLOAD_DIR || '/home/monster_uploads/upload';
 const UPLOAD_URL = process.env.UPLOAD_URL || 'http://monster.northwestern.edu/files/upload';
 const JOBS_DIR = process.env.JOBS_DIR || '/home/monster_uploads/jobs';
 const DL_URL = process.env.DL_URL || 'http://monster.northwestern.edu/jobs';
@@ -156,12 +156,14 @@ app.listen(9000, function() {
 	console.log('HTTP server started on port 9000')
 });
 
-https.createServer({
-  key: fs.readFileSync(SSL_KEY),
-  cert: fs.readFileSync(SSL_CERT)
-}, app).listen(PORT, function () {
-  console.log('https app listening on port ' + PORT)
-});
+if (SSL_CERT) {
+    https.createServer({
+        key: fs.readFileSync(SSL_KEY),
+        cert: fs.readFileSync(SSL_CERT)
+    }, app).listen(PORT, function () {
+        console.log('https app listening on port ' + PORT)
+    });
+}
 
 
 // parses the uploaded pdb file. takes the folder as input 
