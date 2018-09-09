@@ -87,11 +87,10 @@ app.get('/results/:job_id', function(req, res) {
 					},
 					parsed_bonds: parsed_xml
 				}
-			});
-			res.send(response)
+			})
 		}
-	})
-
+	});
+	res.send(response);
 });
 
 // handle uploads 
