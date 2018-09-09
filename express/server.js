@@ -61,10 +61,10 @@ app.get('/results/:job_id', function(req, res) {
 	const jobs_dir = `${JOBS_DIR}/${req.params.job_id}`;
 	const dl_url = `${DL_URL}/${req.params.job_id}`;
 	let response = {job_id: req.params.job_id};
+	response.models = {};
 	fs.readdirSync(jobs_dir).forEach(item => {
 		if (fs.lstatSync(`${jobs_dir}/${item}`).isDirectory()) {
 			let chains = [];
-			response.models = {};
 			response.models[item] = {};
 			fs.readdirSync(`${jobs_dir}/${item}`).forEach(file => {
 				// Assuming single character chain IDs
@@ -88,6 +88,21 @@ app.get('/results/:job_id', function(req, res) {
 					parsed_bonds: parsed_xml
 				}
 			})
+		} else if (item.match(/consensus\.xml/)) {
+			const chain = item.slice(0,2);
+			if (!response.models.Consensus) {
+                response.models.Consensus = {};
+            }
+            const xml = fs.readFileSync(`${jobs_dir}/${item}`, 'utf8');
+			const parsed_xml = convert.xml2json(xml, {compact: true});
+            response.models.Consensus[chain] = {
+				Results: {
+						XML: `${dl_url}/${chain}consensus.xml`,
+						TXT: `${dl_url}/${chain}consensus.txt`
+                    },
+				parsed_bonds: parsed_xml
+			}
+
 		}
 	});
 	res.send(response);
