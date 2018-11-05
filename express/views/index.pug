@@ -59,7 +59,6 @@
                                 </tr>
                                 each chain in chains
                                     <tr>
-                                    <th><input type="checkbox" name="vehicle" value="Bike"></th> 
                                     <th>#{chain.id}</th>
                                     <th><input type="text" value="#{chain.start}" size="5"></th>
                                     <th><input type="text" value="#{chain.end}" size="5"></th>
@@ -80,7 +79,7 @@
                         </tr>
                             each pair in pairs 
                                 <tr>
-                                <th><input type="checkbox" name="vehicle" value="Bike"></th> 
+                                <th><input type="checkbox" name=#{pair} value=True></th>
                                 <th>#{pair}</th> 
                                 </tr>
                     </table> 

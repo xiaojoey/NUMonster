@@ -5,10 +5,12 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "devstart": "nodemon server.js"
   },
   "dependencies": {
     "body-parser": "*",
+    "cors": "^2.8.4",
     "ejs": "^2.5.8",
     "express": "^4.16.3",
     "express-fileupload": "^0.4.0",
@@ -18,5 +20,8 @@
     "pug": "^2.0.3"
   },
   "author": "Richard Huang",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^1.18.2"
+  }
 }
