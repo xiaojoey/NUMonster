@@ -1,0 +1,84 @@
+#!/usr/bin/env perl
+
+use lib '/home/monster/perl/xml';
+use lib '/usr/local/lib/perl5/site_perl/5.8.4/';
+
+use XMLRPC::Transport::HTTP;
+use Fcntl ":flock";
+use XML::In;
+use WebDBI;
+use Email;
+use Carp;
+
+my $daemon = XMLRPC::Transport::HTTP::Daemon
+  -> new (LocalPort => 8081, SSL_server => 1, Reuse => 1)
+  -> dispatch_to('Monster')
+;
+print "Contact to XMLRPC server at ", $daemon->url, "\n";
+while(1){
+$daemon->handle;
+}
+
+package Monster;
+
+sub go{
+    shift if UNIVERSAL::isa($_[0] => __PACKAGE__);
+    my $xml = shift;
+    
+    $xml =~ s/&lt;/</g;
+    $xml =~ s/&gt;/>/g;
+
+    my $filePath = "/home/monster/web"; 
+    my $jobPath = "/home/monster/web/jobs/";
+    
+    $|=1;
+   
+    my $xmlObj = new XML::In($xml);
+    my $id = $xmlObj->getId();
+    my $fn = $xmlObj->getFile();
+    
+    my $index = 0;
+    my $pos = -1;
+    while (($pos = index($fn, "/", $pos)) > -1) {
+	$pos++;
+	$index=$pos;
+    }
+    my $file = substr($fn, $index); #10 letters in URL until filename (fileparse wouldnt work)
+    
+    WebDBI->init($id, $xmlObj->getFile(), $xmlObj->getIP(), $xmlObj->getEmail(), $xmlObj->getOS());
+    Email->initEmail($id, $file, $xmlObj);	
+
+    if(!-d "$jobPath$id/"){ # && length($id) == 10){
+	
+	mkdir "$jobPath$id/";
+	
+	open (F, ">$jobPath$id/$id.xml" ) or die "couldn't open file $id.cp: $!";
+	flock(F, LOCK_EX);
+	print F $xml;
+	flock(F, LOCK_UN);
+	close F;
+	
+#	use POSIX ":sys_wait_h";
+#	sub REAPER{
+#	    my $child;
+#	    while (($child = waitpid(-1,&WNOHANG)) > 0) {
+#		$Kid_Status{$child} = $?;
+#	    }
+#	    $SIG{CHLD} = \&REAPER;  # still loathe sysV
+#	}
+#	$SIG{CHLD} = \&REAPER;
+#	$SIG{CHLD} = 'IGNORE';
+
+	chdir "/home/monster/perl/xml";
+	exec("./monster_web", "$id") unless fork();
+    }else{
+	print "Dir already exists, id $id already in use!\n";
+    }
+    
+    return 0;
+}
+
+sub test{
+    shift if UNIVERSAL::isa($_[0] => __PACKAGE__);
+    return 0;
+}

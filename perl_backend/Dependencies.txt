@@ -1,0 +1,19 @@
+I use PerlBrew to manage my perl installations:
+https://metacpan.org/pod/App::perlbrew
+
+I use cpanm to manage my perl packages:
+https://perlbrew.pl/Perlbrew-and-Friends.html
+
+You will need to make sure your SSL libraries are up to date, I use openssl
+
+Perl dependencies:
+DBI
+Net::SSLeay
+HTTP::Daemon::SSL
+XMLRPC::Transport::HTTP
+Carp
+Net::SMTP
+IO::Uncompress::Gunzip
+IO::File
+File::Stream
+Excel::Writer::XLSX
