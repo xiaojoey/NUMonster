@@ -17,7 +17,8 @@
     "express-validator": "^4.3.0",
     "express-validators": "^1.0.4",
     "mkdirp": "^0.5.1",
-    "pug": "^2.0.3"
+    "pug": "^2.0.3",
+    "xml-js": "^1.6.7"
   },
   "author": "Richard Huang",
   "license": "ISC",

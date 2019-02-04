@@ -1,7 +1,6 @@
-
-
 # IntelliJ project files
 .idea
 
 #
 upload/*
+node_modules
