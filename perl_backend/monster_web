@@ -1,18 +1,17 @@
-#!/usr/bin/perl -w
-
+#!/usr/bin/env perl
+use warnings;
 use strict;
-use lib '/home/monster/perl/xml';
-use lib '/home/monster/perl/lib';
 
 # standard libraries
 use File::Find qw(find);
 use File::Basename;
 
 # custom libraries
+use lib "./perl_backend";
 use PDB;
 use PDB::Bonds;
 use XML::In;
-use WebDBI;
+#use WebDBI;
 
 # these libraries interact with external programs
 use WhatIf;
@@ -25,8 +24,8 @@ use Sheet;
 # Parse configuration file and command-line options
 ##################################################################
 
-my $jobsDir = '/home/monster/web/jobs/';
-my $filebase = '/home/monster/web';
+my $filebase = '/home/monster_uploads/';
+my $jobsDir = $filebase.'jobs/';
 my $job='';
 my $result='';
 
@@ -51,18 +50,27 @@ if(!$debug){
     $|=1;
     print SAVEERR "";
     print SAVEOUT "";
-    open( STDERR, ">> /home/monster/logs/monster.log" ) or die "\ncouldn't redirect STDERR to Log: $! ";
+    open( STDERR, ">> ".$filebase."tmp_logs/monster.log" ) or die "\ncouldn't redirect STDERR to Log: $! ";
     open( STDOUT, ">& STDERR" ) or die "\ncouldn't redirect STDOUT to STDERR: $! ";
 }
 
-$xmlFile = get_xml();
-print $xmlFile,"\n";
-$xml = new XML::In($xmlFile) if $xmlFile;
+$xmlFile = get_files($jobsDir,"xml")->[0];
 die "Died: Couldnt find an xml file in $jobsDir!\n" unless $xmlFile;
+$xml = new XML::In($xmlFile) if $xmlFile;
 die "Died: Couldnt parse $xmlFile!\n" unless $xml;
-    
-print $xml->getFile(),"\n";
+print("Starting job ".$job." running ".$xml->getFile(),"\n");
 
+sub get_files{
+    my $dir = shift;
+    my $suffix = shift;
+    opendir(my $dh, $dir) || die "can't opendir $jobsDir: $!";
+    my @files = grep { $_ =~ /.*\.${suffix}$/} readdir($dh);
+    closedir $dh;
+
+    return \@files;
+}
+
+__END__
 my ($submit, $path, $junk)=fileparse($xml->getFile());
 
 print $submit,"\t",$path,"\t",$junk,"\n";
