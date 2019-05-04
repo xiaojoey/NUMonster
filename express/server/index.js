@@ -220,9 +220,7 @@ app.get('/testjobxml', function(req, res) {
     });
 });
 
-app.listen(9000, function() {
-	console.log('HTTP server started on port 9000')
-});
+module.exports = app;
 
 if (SSL_CERT) {
     https.createServer({

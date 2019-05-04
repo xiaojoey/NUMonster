@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Monster</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <script src="tabs.js"></script>
+    <script src="logic.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    style
+        include styles.css
+  </head>
+  <body>
+    <div class="container main">
+      <div class="row">
+        <div class="col-sm">
+          <!-- Form for submitting pdb file --> 
+          <form method="post" action="/upload" id="fileUpload" encType="multipart/form-data">
+            <!-- file --> 
+            <span style="font-weight: bold">PDB File: </span><input id="pdbFile" type="file" name="pdbFile"/>
+            <br>
+            <br>
+            <span style="font-weight: bold">PDB ID: </span>
+            <br> 
+            <input type="text" name="pdbId"/>
+              <br> 
+              <br> 
+            <span style="font-weight: bold">Email (required): </span>
+            <br> 
+            <input type="text" name="email"/>
+              <br>
+              <br>
+            <input class="btn btn-outline-secondary" type="submit" value="Submit"/>
+            <input class="btn btn-outline-secondary" type="reset" value="Reset"/>
+          </form>
+        </div>
+
+         <div class="col-sm" style="height: 100%; position: relative;">
+
+                <div class="tab">
+                  <button class="tablinks" onclick="openTab(event, 'chains')">chains</button>
+                  <button class="tablinks" onclick="openTab(event, 'pairs')">pairs</button>
+                </div>
+
+                <div id="chains" class="tabcontent" style="display: block;">
+                  <h3>chains</h3>
+                        <form action="/action_page.php">
+
+                            <table style = "width: 100%">
+                                <tr>
+                                    <th>   </th>
+                                    <th>Chain</th>
+                                    <th>Start</th>
+                                    <th>End</th>
+                                </tr>
+                                each chain in chains
+                                    <tr>
+                                    <th>#{chain.id}</th>
+                                    <th><input type="text" value="#{chain.start}" size="5"></th>
+                                    <th><input type="text" value="#{chain.end}" size="5"></th>
+                                    </tr>
+                            </table> 
+                            <input type="submit" value="Submit">
+                        </form>
+
+                </div>
+
+                <div id="pairs" class="tabcontent">
+                  <h3>Pairs</h3>
+                  <form action="">
+                    <table style = "width: 100%">
+                        <tr>
+                            <th>   </th>
+                            <th>Pairs</th>
+                        </tr>
+                            each pair in pairs 
+                                <tr>
+                                <th><input type="checkbox" name=#{pair} value=True></th>
+                                <th>#{pair}</th> 
+                                </tr>
+                    </table> 
+                    <input type = "submit" value="submit">
+                    </form>
+                </div>
+                        </div>
+
+         <div class="col-sm">
+
+          <!-- wrap in from -->  
+              <span style="font-weight: bold">Retrieve Result: </span>
+              <br> 
+              <input type="text" name="resultId">
+              <br> 
+              <br> 
+              <span style="font-weight: bold">View Result : </span><input type="file" name="pdbFile"/>
+              <br>
+              <br> 
+              <br>
+              <br>
+              <br>
+              <br> 
+               <input class="btn btn-outline-secondary" type="submit" value="Submit"/>
+              <input class="btn btn-outline-secondary" type="reset" value="Reset"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+    script
+        include tabs.js
+  
+  </body>
+</html>

@@ -2,10 +2,10 @@
   "name": "test",
   "version": "1.0.0",
   "description": "test for express.js",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
+    "start": "node index.js",
     "devstart": "nodemon server.js"
   },
   "dependencies": {
@@ -18,11 +18,13 @@
     "express-validators": "^1.0.4",
     "mkdirp": "^0.5.1",
     "pug": "^2.0.3",
-    "xml-js": "^1.6.7"
+    "xml-js": "^1.6.7",
+    "child_process": "^1.0.2"
   },
   "author": "Richard Huang",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^1.18.2"
+    "nodemon": "^1.18.2",
+    "supertest": "^4.0.2"
   }
 }

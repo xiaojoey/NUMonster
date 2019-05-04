@@ -5,3 +5,5 @@
 upload/*
 node_modules
 vue_frontend/dist
+express/test/jobs
+.DS_Store
