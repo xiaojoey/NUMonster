@@ -13,9 +13,9 @@ const exec = require('child_process').exec;
 const PORT = process.env.PORT || 9001;
 const SSL_KEY = process.env.SSL_KEY;
 const SSL_CERT = process.env.SSL_CERT;
-const UPLOAD_DIR = process.env.UPLOAD_DIR || '../home/monster_uploads/upload';
+const UPLOAD_DIR = process.env.UPLOAD_DIR || '/home/monster_uploads/upload';
 const UPLOAD_URL = process.env.UPLOAD_URL || 'http://monster.northwestern.edu/files/upload';
-const JOBS_DIR = process.env.JOBS_DIR || '../home/monster_uploads/jobs';
+const JOBS_DIR = process.env.JOBS_DIR || '/home/monster_uploads/jobs';
 const DL_URL = process.env.DL_URL || 'http://monster.northwestern.edu/jobs';
 
 
@@ -169,7 +169,7 @@ app.post('/upload', function(req, res) {
 });
 
 //This endpoint takes xml requests, parses the job_id, saves the xml string
-//to a local file and activates the perl backend
+//to a local file and calls the shell script
 
 app.post('/jobxml', function (req, res) {
     //file is directory to store the xml string
@@ -184,14 +184,15 @@ app.post('/jobxml', function (req, res) {
     let regex = /index='([^']*)/;
     //sh is the location of the shell script that activates monster_web
     let sh = './perlbackend.sh';
-    //xml to be sent in the request
+    //gets xml sent in the request
     xml = req.body.xml;
-
+    //finds job_id
     job_id = xml.match(regex)[1];
-    //res.json(job_id);
+
     console.log(job_id);
 
     //calls the makeXMLFile()function to save the xml string in a file
+    //saves the xml string to the monster_uploads directory
     makeXMLFile(job_id, file, xml, (err) => {
         let message = (err) ? err : job_id + '.xml has been saved';
         console.log(message);
@@ -199,6 +200,7 @@ app.post('/jobxml', function (req, res) {
         res.json(job_id);
         if(!err){
             //activates the shell script that starts the perl backend
+            //passes the shell script the job_id
             exec(sh + ' '+ job_id, (error, stdout, stderr) => {
                    console.log(stdout);
                    console.log(stderr);
@@ -210,6 +212,7 @@ app.post('/jobxml', function (req, res) {
     });
 });
 
+//exports as a module to enable unit testing
 module.exports = app;
 
 if (SSL_CERT) {
@@ -274,16 +277,17 @@ function makeXMLFile(job_id, file, xml, callback) {
     //makes a new filepath
     let dirxml = file  + '/' + job_id;
     let i = 2;
-    //if directory exists then add a version number to end of it
+    //if directory exists then create a new one with a different version number
     let olddir = dirxml;
     while(fs.existsSync(dirxml)){
         dirxml = olddir + '-' + i;
         i++;
     }
-    
+
     //makes the directory with the file path generated
     fs.mkdirSync(dirxml);
     console.log('New folder created!');
+    //changes permissions on the directory
     fs.chmodSync(dirxml, 0o777);
     filexml = dirxml + '/' + job_id + '.xml';
     //makes the new xml file and writes to it
