@@ -4,5 +4,8 @@
 cd ../perl_backend
 
 echo 'executing shell script with arg:' $*
+
+echo 'hello world'
+
 #pipes the first argument to monster_web
-echo $1 | ./monster_web
+#echo $1 | ./monster_web

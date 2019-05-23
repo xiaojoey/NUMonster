@@ -168,26 +168,33 @@ app.post('/upload', function(req, res) {
     }
 });
 
+//Endpoint that takes xml requests, parses the job_id, saves the xml string
+//to a local file and activates the perl backend
+
 app.post('/jobxml', function (req, res) {
-    let file = '/home/monster/web/jobs';
+    //file is directory to store the xml string
+    let file = '../home/monster_uploads/upload';
     let xml ='';
     let job_id = '';
+    //regex string matching to find job_id from xml string
     let regex = /index='([^']*)/;
     //sh is the location of the shell script that activates monster_web
     let sh = './perlbackend.sh';
-
-    xml = req.body;
-
-    //testing regex//
-    // file = './test/jobs';
-    // xml = fs.readFileSync('./test/jobs/27rv13g098/27rv13g098.xml', 'utf8')
-    // console.log(xml);
+    //xml to be sent in the request
+    xml = req.body.xml;
 
     job_id = xml.match(regex)[1];
+    //res.json(job_id);
+    console.log(job_id);
+
+    //calls the makeXMLFile()function to save the xml string in a file
     makeXMLFile(job_id, file, xml, (err) => {
-        let response = (err) ? err : job_id + '.xml has been saved';
-        res.send(response);
+        let message = (err) ? err : job_id + '.xml has been saved';
+        console.log(message);
+        //returns the job_id
+        res.json(job_id);
         if(!err){
+            //activates the shell script that starts the perl backend
             exec(sh + ' '+ job_id, (error, stdout, stderr) => {
                    console.log(stdout);
                    console.log(stderr);
@@ -277,13 +284,25 @@ function parse(file, url_path, res) {
 		});
 	});
 }
-
+//takes the job_id, the path for the upload directory, and the xml string
+//saves the xml string to the upload directory in a xml file
 function makeXMLFile(job_id, file, xml, callback) {
+    //makes a new filepath
     let dirxml = file  + '/' + job_id;
+    //makes the directory with the file path generated
+    let i = 2;
+    //if directory exists then add a number to end of it
+    let olddir = dirxml;
+    while(fs.existsSync(dirxml)){
+        dirxml = olddir + '-' + i;
+        i++;
+    }
+
     fs.mkdirSync(dirxml);
     console.log('New folder created!');
     fs.chmodSync(dirxml, 0o777);
     filexml = dirxml + '/' + job_id + '.xml';
+    //makes the new xml file and writes to it
     fs.writeFile(filexml, xml, (err) => {
         if (err) callback(err);
         console.log('The xml file has been saved!');

@@ -4,12 +4,13 @@
   "description": "test for express.js",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node test",
     "start": "node index.js",
     "devstart": "nodemon server.js"
   },
   "dependencies": {
     "body-parser": "*",
+    "child_process": "^1.0.2",
     "cors": "^2.8.4",
     "ejs": "^2.5.8",
     "express": "^4.16.3",
@@ -18,8 +19,8 @@
     "express-validators": "^1.0.4",
     "mkdirp": "^0.5.1",
     "pug": "^2.0.3",
-    "xml-js": "^1.6.7",
-    "child_process": "^1.0.2"
+    "tape": "^4.10.1",
+    "xml-js": "^1.6.7"
   },
   "author": "Richard Huang",
   "license": "ISC",
