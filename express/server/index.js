@@ -173,7 +173,10 @@ app.post('/upload', function(req, res) {
 
 app.post('/jobxml', function (req, res) {
     //file is directory to store the xml string
-    let file = '../home/monster_uploads/upload';
+    let file = '../monster_uploads';
+    if(!fs.existsSync(file)){
+        fs.mkdirSync(file);
+    }
     let xml ='';
     let job_id = '';
     //regex string matching to find job_id from xml string
@@ -212,6 +215,9 @@ app.get('/testjobxml', function(req, res) {
     let xml = 'xmlstring';
     let sh = './perlbackend.sh';
 
+    if(!fs.existsSync(file)){
+        mkdirSync(file);
+    }
     makeXMLFile(job_id, file, xml, (err) => {
         let response = (err) ? err : job_id + '.xml has been saved';
         res.send(response);
