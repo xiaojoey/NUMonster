@@ -10,7 +10,7 @@ xml = "xml=" + xml;
 
 test('First test!', function(t){
     t.end();
-})
+});
 
 //Testing the /jobxml endpoint's ability to return the correct job_id
 test('Testing XML', function(t) {

@@ -168,11 +168,12 @@ app.post('/upload', function(req, res) {
     }
 });
 
-//Endpoint that takes xml requests, parses the job_id, saves the xml string
+//This endpoint takes xml requests, parses the job_id, saves the xml string
 //to a local file and activates the perl backend
 
 app.post('/jobxml', function (req, res) {
     //file is directory to store the xml string
+    //will need to be changed to the correct directory later
     let file = '../monster_uploads';
     if(!fs.existsSync(file)){
         fs.mkdirSync(file);
@@ -198,30 +199,6 @@ app.post('/jobxml', function (req, res) {
         res.json(job_id);
         if(!err){
             //activates the shell script that starts the perl backend
-            exec(sh + ' '+ job_id, (error, stdout, stderr) => {
-                   console.log(stdout);
-                   console.log(stderr);
-                   if (error !== null) {
-                       console.log(`exec error: ${error}`);
-                   }
-            });
-        }
-    });
-});
-
-app.get('/testjobxml', function(req, res) {
-    let file = '../home/monster_uploads/upload';
-    let job_id = 'the_job_id';
-    let xml = 'xmlstring';
-    let sh = './perlbackend.sh';
-
-    if(!fs.existsSync(file)){
-        mkdirSync(file);
-    }
-    makeXMLFile(job_id, file, xml, (err) => {
-        let response = (err) ? err : job_id + '.xml has been saved';
-        res.send(response);
-        if(!err){
             exec(sh + ' '+ job_id, (error, stdout, stderr) => {
                    console.log(stdout);
                    console.log(stderr);
@@ -290,20 +267,21 @@ function parse(file, url_path, res) {
 		});
 	});
 }
+
 //takes the job_id, the path for the upload directory, and the xml string
 //saves the xml string to the upload directory in a xml file
 function makeXMLFile(job_id, file, xml, callback) {
     //makes a new filepath
     let dirxml = file  + '/' + job_id;
-    //makes the directory with the file path generated
     let i = 2;
-    //if directory exists then add a number to end of it
+    //if directory exists then add a version number to end of it
     let olddir = dirxml;
     while(fs.existsSync(dirxml)){
         dirxml = olddir + '-' + i;
         i++;
     }
-
+    
+    //makes the directory with the file path generated
     fs.mkdirSync(dirxml);
     console.log('New folder created!');
     fs.chmodSync(dirxml, 0o777);
