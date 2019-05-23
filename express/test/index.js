@@ -4,15 +4,17 @@ const request = require('supertest');
 var app = require('../server/');
 const fs = require('fs');
 
+//The xml string is taken from the test files
 var xml = fs.readFileSync('./test/jobs/27rv13g098/27rv13g098.xml', 'utf8');
 console.log(xml);
 xml = "xml=" + xml;
 
+//Checking that testing framework works
 test('First test!', function(t){
     t.end();
 });
 
-//Testing the /jobxml endpoint's ability to return the correct job_id
+//Testing the /jobxml endpoint's ability to return the correct job_id when passed the xml string
 test('Testing XML', function(t) {
     request(app)
         .post('/jobxml')
