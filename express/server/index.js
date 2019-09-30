@@ -13,9 +13,11 @@ const exec = require('child_process').exec;
 const PORT = process.env.PORT || 9001;
 const SSL_KEY = process.env.SSL_KEY;
 const SSL_CERT = process.env.SSL_CERT;
-const UPLOAD_DIR = process.env.UPLOAD_DIR || '/home/monster_uploads/upload';
+//const UPLOAD_DIR = process.env.UPLOAD_DIR || '/home/monster_uploads/upload';
+const UPLOAD_DIR = process.env.UPLOAD_DIR || '/Users/zeyuyang/Projects/latestMonster/monster_uploads/upload';
 const UPLOAD_URL = process.env.UPLOAD_URL || 'http://monster.northwestern.edu/files/upload';
-const JOBS_DIR = process.env.JOBS_DIR || '/home/monster_uploads/jobs';
+//const JOBS_DIR = process.env.JOBS_DIR || '/monster_uploads/jobs';
+const JOBS_DIR = process.env.JOBS_DIR || '/Users/zeyuyang/Projects/latestMonster/monster_uploads/jobs';
 const DL_URL = process.env.DL_URL || 'http://monster.northwestern.edu/jobs';
 
 
@@ -25,8 +27,8 @@ app.use(cors());
 
 // order important, must put middleware before route handler
 // body parser middleware
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
 app.use(upload());
 
 // express validator middleware
@@ -114,6 +116,7 @@ app.post('/upload', function(req, res) {
     let url_path;
     let file;
     let email = req.body.email;
+    console.log(req.body.email)
     // create a randomly named folder by appending a random number to the upload/ directory
 	let epoch = (new Date).getTime().toString();
 	let dir = UPLOAD_DIR + '/' + epoch;
@@ -185,8 +188,11 @@ app.post('/jobxml', function (req, res) {
     //sh is the location of the shell script that activates monster_web
     let sh = './perlbackend.sh';
     //gets xml sent in the request
+    console.log(req.body)
+    console.log(req.headers)
     xml = req.body.xml;
     //finds job_id
+    console.log(xml)
     job_id = xml.match(regex)[1];
 
     console.log(job_id);
