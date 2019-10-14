@@ -13,11 +13,9 @@ const exec = require('child_process').exec;
 const PORT = process.env.PORT || 9001;
 const SSL_KEY = process.env.SSL_KEY;
 const SSL_CERT = process.env.SSL_CERT;
-//const UPLOAD_DIR = process.env.UPLOAD_DIR || '/home/monster_uploads/upload';
-const UPLOAD_DIR = process.env.UPLOAD_DIR || '/Users/zeyuyang/Projects/latestMonster/monster_uploads/upload';
+const UPLOAD_DIR = process.env.UPLOAD_DIR || '/home/monster_uploads/upload';
 const UPLOAD_URL = process.env.UPLOAD_URL || 'http://monster.northwestern.edu/files/upload';
-//const JOBS_DIR = process.env.JOBS_DIR || '/monster_uploads/jobs';
-const JOBS_DIR = process.env.JOBS_DIR || '/Users/zeyuyang/Projects/latestMonster/monster_uploads/jobs';
+const JOBS_DIR = process.env.JOBS_DIR || '/home/monster_uploads/jobs';
 const DL_URL = process.env.DL_URL || 'http://monster.northwestern.edu/jobs';
 
 
@@ -177,7 +175,7 @@ app.post('/upload', function(req, res) {
 app.post('/jobxml', function (req, res) {
     //file is directory to store the xml string
     //will need to be changed to the correct directory later
-    let file = '../monster_uploads';
+    let file = JOBS_DIR;
     if(!fs.existsSync(file)){
         fs.mkdirSync(file);
     }
