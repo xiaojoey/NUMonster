@@ -3,7 +3,7 @@
     <div v-if="display_label" class="card">
       <div class="card-header">
         <span>{{display_label}}</span>
-        <button-close v-on:click="closeDisplay()" class="btn"></button-close>
+        <b-button-close v-on:click="closeDisplay()" class="btn"></b-button-close>
       </div>
       <div v-if="url_3D" class="card-body">
         <iframe :src="url_3D" class="display-container" frameborder="0"></iframe>
@@ -80,7 +80,7 @@
 
 <script>
 import vueSlider from 'vue-slider-component';
-import ButtonClose from 'bootstrap-vue/src/components/button/button-close';
+import ButtonClose from 'bootstrap-vue';
 export default {
   name: 'Result',
   components: {
