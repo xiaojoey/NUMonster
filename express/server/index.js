@@ -180,7 +180,7 @@ app.post('/jobxml', function (req, res) {
         fs.mkdirSync(file);
     }
     let xml ='';
-    let job_id = '';
+    let job_id = req.body.job_id;
     //regex string matching to find job_id from xml string
     let regex = /index='([^']*)/;
     //sh is the location of the shell script that activates monster_web
@@ -191,7 +191,10 @@ app.post('/jobxml', function (req, res) {
     xml = req.body.xml;
     //finds job_id
     console.log(xml)
-    job_id = xml.match(regex)[1];
+
+    if(job_id == null){
+        job_id = xml.match(regex)[1];
+    }
 
     console.log(job_id);
 

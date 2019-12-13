@@ -27,13 +27,13 @@ test('Testing XML', function(t) {
         .end(function (err, res) {
 
             const expectedValue = '27rv13g098';
-            const newFile = '../monster_uploads/27rv13g098/27rv13g098.xml';
+            const newFile = process.env.JOBS_DIR + '/27rv13g098/27rv13g098.xml';
 
             t.error(err, 'No Error');
             //Checking if it returns the correct job_id
             t.same(res.body, expectedValue, 'Data as expected');
             //Check if file is saved
-            t.same(fs.existsSync('../monster_uploads/27rv13g098/27rv13g098.xml'), true, 'File saved');
+            t.same(fs.existsSync(newFile), true, 'File saved');
             const newFileContent = fs.readFileSync(newFile, 'utf8');
             //Check if saved xml string is same
             t.same(newFileContent, xml, 'File content as expected');
