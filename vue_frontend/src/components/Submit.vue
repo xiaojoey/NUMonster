@@ -175,7 +175,7 @@ export default {
     selected_chains: [],
     selected_pairs: [],
     new_chain: {},
-    monster_url: 'http://localhost:9001/jobxml',
+    monster_url: Vue.prototype.$server_url + '/jobxml',
     job_id: '',
     ret_pdb_id: '',
     loading: false,
