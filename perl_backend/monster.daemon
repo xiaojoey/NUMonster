@@ -24,19 +24,19 @@ package Monster;
 sub go{
     shift if UNIVERSAL::isa($_[0] => __PACKAGE__);
     my $xml = shift;
-    
+
     $xml =~ s/&lt;/</g;
     $xml =~ s/&gt;/>/g;
 
-    my $filePath = "/home/monster/web"; 
+    my $filePath = "/home/monster/web";
     my $jobPath = "/home/monster/web/jobs/";
-    
+
     $|=1;
-   
+
     my $xmlObj = new XML::In($xml);
     my $id = $xmlObj->getId();
     my $fn = $xmlObj->getFile();
-    
+
     my $index = 0;
     my $pos = -1;
     while (($pos = index($fn, "/", $pos)) > -1) {
@@ -44,20 +44,20 @@ sub go{
 	$index=$pos;
     }
     my $file = substr($fn, $index); #10 letters in URL until filename (fileparse wouldnt work)
-    
+
     WebDBI->init($id, $xmlObj->getFile(), $xmlObj->getIP(), $xmlObj->getEmail(), $xmlObj->getOS());
-    Email->initEmail($id, $file, $xmlObj);	
+    Email->initEmail($id, $file, $xmlObj);
 
     if(!-d "$jobPath$id/"){ # && length($id) == 10){
-	
+
 	mkdir "$jobPath$id/";
-	
+
 	open (F, ">$jobPath$id/$id.xml" ) or die "couldn't open file $id.cp: $!";
 	flock(F, LOCK_EX);
 	print F $xml;
 	flock(F, LOCK_UN);
 	close F;
-	
+
 #	use POSIX ":sys_wait_h";
 #	sub REAPER{
 #	    my $child;
@@ -74,7 +74,7 @@ sub go{
     }else{
 	print "Dir already exists, id $id already in use!\n";
     }
-    
+
     return 0;
 }
 

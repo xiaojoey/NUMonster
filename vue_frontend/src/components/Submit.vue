@@ -175,7 +175,7 @@ export default {
     selected_chains: [],
     selected_pairs: [],
     new_chain: {},
-    monster_url: 'https://cors-anywhere.herokuapp.com/http://monster.northwestern.edu:8081/',
+    monster_url: Vue.prototype.$server_url + '/jobxml',
     job_id: '',
     ret_pdb_id: '',
     loading: false,
@@ -203,6 +203,7 @@ export default {
       let formData = new FormData();
       formData.append('pdbFile', this.file);
       formData.append('pdbId', this.pdb_id);
+      formData.append('email', this.email);
       this.$http.post(this.$server_url + '/upload', formData).then(function (response) {
         console.log(response);
         this.all_chains = response.body.chains;
@@ -232,14 +233,18 @@ export default {
         alert('Missing required fields');
         return;
       }
+      let formData2 = new FormData();
+      formData2.append('xml', this.makeXML());
       this.loading = true;
-      fetch(this.monster_url, {
-        method: 'POST',
-        body: this.makeXML(),
-        headers: {
-          'Content-Type': 'text/xml',
-        },
-      }).then(res => res.text())
+      this.$http.post(this.monster_url, formData2)
+      // fetch(this.monster_url, {
+      //   method: 'POST',
+      //   body: this.makeXML(),
+      //   headers: {
+      //     'Content-Type': 'utf8',
+      //   },
+      // })
+        .then(res => res.text())
         .then(() => {
           this.loading = false;
           this.showSuccessAlert = true;
@@ -263,7 +268,8 @@ export default {
         txt += `<ChainPair index='${chain_pair}'>${this.getChainXML(chain_pair[0])}${this.getChainXML(chain_pair[1])}</ChainPair>`;
       }
       txt += '</ChainPairs>';
-      let es_txt = this.escapeXml(txt);
+      // let es_txt = this.escapeXml(txt);
+      let es_txt = txt;
       let xml =
         `<?xml version='1.0'?>
         <methodCall>
