@@ -271,19 +271,7 @@ export default {
       // let es_txt = this.escapeXml(txt);
       let es_txt = txt;
       let xml =
-        `<?xml version='1.0'?>
-        <methodCall>
-          <methodName>Monster.go</methodName>
-          <params>
-            <param>
-              <value>
-                <string>
-                ${es_txt}
-              </string>
-            </value>
-          </param>
-          </params>
-        </methodCall>`;
+        `${es_txt}`;
       console.log(xml);
       return xml;
     },
