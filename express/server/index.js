@@ -191,6 +191,7 @@ app.post('/jobxml', function (req, res) {
     xml = req.body.xml;
     //finds job_id
     console.log(xml)
+
     job_id = xml.match(regex)[1];
 
     console.log(job_id);

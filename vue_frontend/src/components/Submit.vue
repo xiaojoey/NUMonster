@@ -175,7 +175,7 @@ export default {
     selected_chains: [],
     selected_pairs: [],
     new_chain: {},
-    monster_url: 'http://localhost:9001/jobxml',
+    monster_url: Vue.prototype.$server_url + '/jobxml',
     job_id: '',
     ret_pdb_id: '',
     loading: false,
@@ -204,7 +204,6 @@ export default {
       formData.append('pdbFile', this.file);
       formData.append('pdbId', this.pdb_id);
       formData.append('email', this.email);
-      console.log(this.job_id);
       this.$http.post(this.$server_url + '/upload', formData).then(function (response) {
         console.log(response);
         this.all_chains = response.body.chains;
@@ -234,10 +233,8 @@ export default {
         alert('Missing required fields');
         return;
       }
-      console.log('hello')
       let formData2 = new FormData();
       formData2.append('xml', this.makeXML());
-      formData2.append('job_id', this.job_id);
       this.loading = true;
       this.$http.post(this.monster_url, formData2)
       // fetch(this.monster_url, {
