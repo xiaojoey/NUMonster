@@ -58,6 +58,7 @@ $xmlFile = get_files($jobsDir,"xml")->[0];
 die "Died: Couldnt find an xml file in $jobsDir!\n" unless $xmlFile;
 $xml = new XML::In($xmlFile) if $xmlFile;
 die "Died: Couldnt parse $xmlFile!\n" unless $xml;
+<<<<<<< HEAD
 print("Starting job ".$job." running ".$xml->getFile(),"\n");
 
 sub get_files{
@@ -70,7 +71,8 @@ sub get_files{
     return \@files;
 }
 
-__END__
+print $xml->getFile(),"\n";
+
 my ($submit, $path, $junk)=fileparse($xml->getFile());
 
 print $submit,"\t",$path,"\t",$junk,"\n";
@@ -143,7 +145,7 @@ foreach my $file (get_files()){
 ##################################################################
 # Iterate through chainpairs in model
 ##################################################################
-	
+
 	$PDB->setModel($i);
 	foreach my $cp (sort $PDB->chainPairs){
 	    WebDBI->set_model($job,$i,$cp) if !$debug;
@@ -177,7 +179,7 @@ foreach my $file (get_files()){
 ##################################################################
 # Process results if multiple models
 ##################################################################
-    
+
     #process averages
     if($models > 1){
 	my @jobfiles=();
@@ -191,7 +193,7 @@ foreach my $file (get_files()){
 	Sheet->generate_sheet(@jobfiles);
     }else{
 	Email->resultEmail($job, $xml->getEmail, $submit, get_text_results()) if !$debug;
-    }    
+    }
     WebDBI->print($job) if !$debug;
 } #end of get_files loop
 WebDBI->end($job) if !$debug;
@@ -202,7 +204,7 @@ exit(0);
 
 sub get_date_time {
     my @t = localtime;
-    return( ($t[4]+1) . "\/$t[3]\/" . ($t[5]+1900) . "\t" . 
+    return( ($t[4]+1) . "\/$t[3]\/" . ($t[5]+1900) . "\t" .
 	    "$t[2]\:$t[1]\:$t[0]\n" );
 }
 

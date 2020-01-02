@@ -3,7 +3,7 @@
     <div v-if="display_label" class="card">
       <div class="card-header">
         <span>{{display_label}}</span>
-        <button-close v-on:click="closeDisplay()" class="btn"></button-close>
+        <b-button-close v-on:click="closeDisplay()" class="btn"></b-button-close>
       </div>
       <div v-if="url_3D" class="card-body">
         <iframe :src="url_3D" class="display-container" frameborder="0"></iframe>
@@ -80,7 +80,7 @@
 
 <script>
 import vueSlider from 'vue-slider-component';
-import ButtonClose from 'bootstrap-vue/src/components/button/button-close';
+import ButtonClose from 'bootstrap-vue';
 export default {
   name: 'Result',
   components: {
@@ -121,8 +121,8 @@ export default {
       this.closeDisplay();
       this.display_label = label;
       this.url_3D = `http://3dmol.csb.pitt.edu/viewer.html?url=${pdb_url}
-      &surface=opacity:0.6&select=chain:${chain1}&style=cartoon:color~green
-      &select=chain:${chain2}&style=cartoon:color~yellow`;
+      &select=chain:${chain1}&style=cartoon:color~green
+      &select=chain:${chain2}&style=cartoon:color~yellow;stick`;
     },
     parsepdb: function (pdb) {
       let residues = [];
@@ -181,6 +181,7 @@ export default {
             x: 2 * new_nodes.length,
             y: 50,
             size: 1,
+            color: '#008888',
           });
           node_ids.add(source)
         }
