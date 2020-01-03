@@ -11,8 +11,7 @@ const exec = require('child_process').exec;
 
 // Get environment variables
 const PORT = process.env.PORT || 9001;
-const SSL_KEY = process.env.SSL_KEY;
-const SSL_CERT = process.env.SSL_CERT;
+
 const UPLOAD_DIR = process.env.UPLOAD_DIR || '/home/monster_uploads/upload';
 const UPLOAD_URL = process.env.UPLOAD_URL || 'http://monster.northwestern.edu/files/upload';
 const JOBS_DIR = process.env.JOBS_DIR || '/home/monster_uploads/jobs';
@@ -219,16 +218,6 @@ app.post('/jobxml', function (req, res) {
 
 //exports as a module to enable unit testing
 module.exports = app;
-
-if (SSL_CERT) {
-    https.createServer({
-        key: fs.readFileSync(SSL_KEY),
-        cert: fs.readFileSync(SSL_CERT)
-    }, app).listen(PORT, function () {
-        console.log('https app listening on port ' + PORT)
-    });
-}
-
 
 // parses the uploaded pdb file. takes the folder as input
 function parse(file, url_path, res) {
