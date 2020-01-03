@@ -220,16 +220,6 @@ app.post('/jobxml', function (req, res) {
 //exports as a module to enable unit testing
 module.exports = app;
 
-if (SSL_CERT) {
-    https.createServer({
-        key: fs.readFileSync(SSL_KEY),
-        cert: fs.readFileSync(SSL_CERT)
-    }, app).listen(PORT, function () {
-        console.log('https app listening on port ' + PORT)
-    });
-}
-
-
 // parses the uploaded pdb file. takes the folder as input
 function parse(file, url_path, res) {
     let chains = [];
