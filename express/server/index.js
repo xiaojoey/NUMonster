@@ -182,17 +182,18 @@ app.post('/jobxml', function (req, res) {
     let xml ='';
     let job_id = '';
     //regex string matching to find job_id from xml string
-    let regex = /index='([^']*)/;
+    // let regex = /index='([^']*)/;
     //sh is the location of the shell script that activates monster_web
     let sh = './perlbackend.sh';
     //gets xml sent in the request
     console.log(req.body)
     console.log(req.headers)
     xml = req.body.xml;
+    job_id = req.body.job_id;
     //finds job_id
     console.log(xml)
 
-    job_id = xml.match(regex)[1];
+    // job_id = xml.match(regex)[1];
 
     console.log(job_id);
 
