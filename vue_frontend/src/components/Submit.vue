@@ -4,7 +4,7 @@
              dismissible
              :show="showSuccessAlert"
              @dismissed="showSuccessAlert=false">
-      Job submission succeeded. Check your email for details
+      Job submission succeeded. Check your email for details. The Job ID is  {{ new_job_id}}
     </b-alert>
     <b-alert variant="danger"
              dismissible
@@ -177,6 +177,7 @@ export default {
     new_chain: {},
     monster_url: Vue.prototype.$server_url + '/jobxml',
     job_id: '',
+    new_job_id: '',
     ret_pdb_id: '',
     loading: false,
     showSuccessAlert: false,
@@ -234,7 +235,9 @@ export default {
         return;
       }
       let formData2 = new FormData();
-      formData2.append('xml', this.makeXML());
+      let job_xml = this.makeXML();
+      formData2.append('xml', job_xml[0]);
+      formData2.append('job_id', job_xml[1]);
       this.loading = true;
       this.$http.post(this.monster_url, formData2)
       // fetch(this.monster_url, {
@@ -247,7 +250,9 @@ export default {
         .then(res => res.text())
         .then(() => {
           this.loading = false;
+          this.new_job_id = job_xml[1];
           this.showSuccessAlert = true;
+          this.selected_pairs = [];
         }).catch((err) => {
           this.loading = false;
           console.error(err);
@@ -273,7 +278,7 @@ export default {
       let xml =
         `${es_txt}`;
       console.log(xml);
-      return xml;
+      return [xml, index];
     },
     escapeXml: function (unsafe) {
       return unsafe.replace(/[<>&'']/g, function (c) {

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -10,9 +11,6 @@ const cors = require('cors');
 const exec = require('child_process').exec;
 
 // Get environment variables
-const PORT = process.env.PORT || 9001;
-const SSL_KEY = process.env.SSL_KEY;
-const SSL_CERT = process.env.SSL_CERT;
 const UPLOAD_DIR = process.env.UPLOAD_DIR || '/home/monster_uploads/upload';
 const UPLOAD_URL = process.env.UPLOAD_URL || 'http://monster.northwestern.edu/files/upload';
 const JOBS_DIR = process.env.JOBS_DIR || '/home/monster_uploads/jobs';
@@ -182,17 +180,18 @@ app.post('/jobxml', function (req, res) {
     let xml ='';
     let job_id = '';
     //regex string matching to find job_id from xml string
-    let regex = /index='([^']*)/;
+    // let regex = /index='([^']*)/;
     //sh is the location of the shell script that activates monster_web
     let sh = './perlbackend.sh';
     //gets xml sent in the request
     console.log(req.body)
     console.log(req.headers)
     xml = req.body.xml;
+    job_id = req.body.job_id;
     //finds job_id
     console.log(xml)
 
-    job_id = xml.match(regex)[1];
+    // job_id = xml.match(regex)[1];
 
     console.log(job_id);
 
@@ -219,16 +218,6 @@ app.post('/jobxml', function (req, res) {
 
 //exports as a module to enable unit testing
 module.exports = app;
-
-if (SSL_CERT) {
-    https.createServer({
-        key: fs.readFileSync(SSL_KEY),
-        cert: fs.readFileSync(SSL_CERT)
-    }, app).listen(PORT, function () {
-        console.log('https app listening on port ' + PORT)
-    });
-}
-
 
 // parses the uploaded pdb file. takes the folder as input
 function parse(file, url_path, res) {
