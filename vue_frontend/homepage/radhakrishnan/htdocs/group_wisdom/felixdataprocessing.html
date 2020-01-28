@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="content-type"
+ content="text/html; charset=ISO-8859-1">
+  <title>Varian QuickStart</title>
+  <meta name="author" content="Ishwar Radhakrishnan">
+</head>
+<body>
+<h2
+ style="font-family: helvetica,arial,sans-serif; color: rgb(51, 153, 153);"><b>Saving
+and Processing Your Data on Abragam<br>
+</b></h2>
+<ol style="font-family: helvetica,arial,sans-serif;">
+  <li> Recall where you saved your data on Inova; i.e. directory in
+which you saved the data via. <span style="font-weight: bold;">svf('giveanappropriatefilename')</span>.</li>
+  <li>On Abragam, create a folder in your felix980/data directory using
+    <span style="font-weight: bold;">mkdir 'fidfoldername' </span>*no
+capital letters are permitted. </li>
+  <li> In the folder you just created type <span
+ style="font-weight: bold;">sftp ishwar@inova.</span><br>
+  </li>
+  <li> When prompted, enter the password of ishwar's account on Inova.<br>
+  </li>
+  <li>Using <span style="font-weight: bold;">cd</span> command,
+navigate to your data directory (i.e. /space2/home/swanson/data/)<br>
+  </li>
+  <li>Confirm you have found your data by typing <span
+ style="font-weight: bold;">ls</span> which should list files procpar,
+text, log, and fid<br>
+  </li>
+  <li>Type command <span style="font-weight: bold;">mget *</span> and
+wait for your data to copy from Inova to Abragam.</li>
+  <li>When transfer is complete, type <span style="font-weight: bold;">exit</span>
+to return to abragam prompt.</li>
+  <li>You must now edit a felix macro using the vi editor.<br>
+  </li>
+</ol>
+<br>
+<p style="font-family: helvetica,arial,sans-serif;"><font size="-1">written
+by: Kurt Swanson 7-25-04</font><br>
+</p>
+</body>
+</html>

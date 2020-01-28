@@ -1,0 +1,303 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="content-type"
+ content="text/html; charset=ISO-8859-1">
+  <title>Varian Quick Start</title>
+  <meta name="author" content="Ishwar Radhakrishnan">
+  <style type="text/css">
+<!--
+A { text-decoration:none }
+-->
+  </style>
+</head>
+<body>
+<h2
+ style="font-family: helvetica,arial,sans-serif; color: rgb(51, 153, 153);"><b>Performing
+Tasks on the Varian INOVA600 Spectrometer</b></h2>
+<span style="font-family: helvetica,arial,sans-serif;"><big><br
+ style="font-weight: bold; color: rgb(51, 153, 153);">
+</big></span>
+<ul style="font-weight: bold; color: rgb(255, 102, 0);">
+  <li><a href="#Getting_Started"><big><span
+ style="color: rgb(255, 102, 0); font-family: helvetica,arial,sans-serif;">Getting
+Started</span></big></a></li>
+  <li><a href="#Commonly_Used_Varian_Commands"><big><span
+ style="color: rgb(255, 102, 0); font-family: helvetica,arial,sans-serif;">Common
+1D and 2D
+commands</span></big></a></li>
+  <li><a href="#Commonly_Encountered_Problems_"><big><span
+ style="color: rgb(255, 102, 0); font-family: helvetica,arial,sans-serif;">Troubleshooting</span></big></a></li>
+</ul>
+<br>
+<big style="font-style: italic;"><span
+ style="color: rgb(51, 153, 153); font-family: helvetica,arial,sans-serif; font-weight: bold;"><a
+ name="Getting_Started"></a><span style="text-decoration: underline;">Getting
+Started&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></big><br>
+<ol style="font-family: helvetica,arial,sans-serif;">
+  <li> Insert your sample into a spinner. Make sure that the sample
+is appropriately positioned. The minimum sample volume in a
+normal NMR tube is 500 ul.&nbsp;
+Typical sample depth is 61 mm.<br>
+  </li>
+  <li> Eject the lock sample from the magnet.&nbsp; The sample should
+be put back when you are done acquiring data on your sample.<br>
+  </li>
+  <li> Insert your sample into the magnet. </li>
+  <li> Set temperature using the <span style="font-weight: bold;">temp
+    </span>command; be sure to use appropriate settings on the FTS
+water bath.<br>
+  </li>
+  <li> Set up the appropriate nuclei that you will detect.<br>
+    <ul>
+      <li>The usual setting is: <span style="font-weight: bold;">tn='H1'</span>,
+        <span style="font-weight: bold;">dn='C13'</span>,<span
+ style="font-weight: bold;"> dn2='N15'</span>. </li>
+    </ul>
+  </li>
+  <li> Tune the probe.<br>
+    <ul>
+      <li>The usual setting is: Chan #1: H1, Chan #2: C13, Chan #3: N15.</li>
+    </ul>
+    <ul>
+      <li>It is necessary to tune the probe every time you change the
+temperature or sample. </li>
+    </ul>
+  </li>
+  <li> Optimize lock signal.<br>
+    <ul>
+      <li>Open the "Acqi" or the 'lock window'; if button is absent on
+the menu, just type <span style="font-weight: bold;">acqi</span>.</li>
+    </ul>
+    <ul>
+      <li>Adjust z0 to maximize the lock signal (<span
+ style="color: rgb(255, 0, 0); font-weight: bold;">use extreme caution
+while changing this - note the z0 value before you start!</span>)<br>
+      </li>
+    </ul>
+    <ul>
+      <li> Click "Lock" button.</li>
+    </ul>
+    <ul>
+      <li>Adjust "lock gain" (<span style="color: rgb(255, 0, 0);">maximum
+40</span>) and "lock power" (<span style="color: rgb(255, 0, 0);">maximum
+34 in 10% D</span><sub style="color: rgb(255, 0, 0);">2</sub><span
+ style="color: rgb(255, 0, 0);">O</span> samples and <span
+ style="color: rgb(255, 0, 0);">20 in 100% D</span><sub
+ style="color: rgb(255, 0, 0);">2</sub><span
+ style="color: rgb(255, 0, 0);">O</span>) so that the lock level is
+around 70.</li>
+      <ul>
+        <li>Whenever you change "lock gain" be sure to re-optimize the
+lock level using "lock phase".<br>
+        </li>
+      </ul>
+    </ul>
+  </li>
+  <li> Shim on your sample starting from an appropriate shimming file.<br>
+    <ul>
+      <li><span style="font-weight: bold;">rts('yourshimfile')
+su.&nbsp; If you do not have a shim file that is okay too.&nbsp; In
+this case shim from wherever the previous user left off.&nbsp; Be sure
+to check the value of z0 (as of August 2004, it should be between
++15500 and +16000).<br>
+        </span></li>
+    </ul>
+    <ul>
+      <li>Manually shim the axial shims z1, z2, z3, z4 and then the
+radial shims x, y, xz, yz, xz2, and yz2.&nbsp; Reshim the axial shims.<br>
+      </li>
+    </ul>
+    <ul>
+      <li>You may also set up a gradient shimming protocol. Before
+doing so, I highly recommend saving your shims using the command <span
+ style="font-weight: bold;">svs('giveashimfilename')</span>. Go to exp2
+(for H<sub>2</sub>O samples) or exp3 (for D<sub>2</sub>O
+samples).&nbsp; Be sure <span style="font-weight: bold;">pw=1</span>, <span
+ style="font-weight: bold;">gain=0</span>, <span
+ style="font-weight: bold;">gzsize=5</span> for H<sub>2</sub>O
+samples.&nbsp; Type <span style="font-weight: bold;">gmapsys </span>and
+you will get a new set
+of menus.&nbsp; Select "Make Shimmap".&nbsp; After this finishes, set <span
+ style="font-weight: bold;">gzsize=4</span> and click on "Autoshim on
+Z".&nbsp; Repeat but set <span style="font-weight: bold;">gzsize=5</span>.<br>
+      </li>
+    </ul>
+  </li>
+  <li>Calibrate proton pulse widths in exp5 (for H<sub>2</sub>O
+samples) or exp6 (for D<sub>2</sub>O samples).</li>
+  <ul>
+    <li>Set <span style="font-weight: bold;">tpwr=54, tof=0</span>, <span
+ style="font-weight: bold;">pw=1</span>, type <span
+ style="font-weight: bold;">go</span>.&nbsp; After it finishes, type <span
+ style="font-weight: bold;">wft</span> to apply Fourier transform to
+the time-domain data and phase the spectrum.&nbsp;
+Expand the spectrum zooming in on the water resonance.&nbsp; Place the
+cursor on top of the water resonance.&nbsp; Then type <span
+ style="font-weight: bold;">movetof full f</span>.&nbsp; Note the value
+of <span style="font-weight: bold;">tof</span> - you may need it for
+your experiments later.&nbsp; Type <span style="font-weight: bold;">ga</span>.&nbsp;
+Zoom in on the water
+resonance.<br>
+    </li>
+    <li>Use the <span style="font-weight: bold;">array </span>command
+to array <span style="font-weight: bold;">pw</span>.&nbsp; Start with
+number of elements in array: 7, starting value of 32 and array
+increment of 2.&nbsp; Type <span style="font-weight: bold;">ga</span>.&nbsp;
+Note the value of <span style="font-weight: bold;">pw</span> at which
+the water resonance goes through a
+null.&nbsp; Repeat the experiment with a more rational starting value
+and array increment of 0.4.<br>
+    </li>
+  </ul>
+  <li>Set up appropriate parameters in your experiment.&nbsp; These
+typically include <span style="font-weight: bold;">pw</span> and <span
+ style="font-weight: bold;">tof</span> (determined from step 9) but can
+include a host of other
+parameters.&nbsp; Please
+start from a set of parameters that are known to give satisfying
+spectra.&nbsp; Consult with the facility manager or Ishwar about any
+new experiments.<br>
+  </li>
+</ol>
+<h2 style="font-family: helvetica,arial,sans-serif;">
+<br>
+<small
+ style="font-style: italic; text-decoration: underline; color: rgb(51, 153, 153);"><span
+ style="font-family: helvetica,arial,sans-serif; font-weight: bold;"><a
+ name="Commonly_Used_Varian_Commands"></a>Commonly Used Varian
+Commands&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp; </span></small><br>
+</h2>
+<ol style="font-family: helvetica,arial,sans-serif;">
+  <li>Start a 1D experiment and fourier transform and phase using
+previously set parameters: <span style="font-weight: bold;">ga</span>.&nbsp;
+If you do not want any processing after acquisition, just type <span
+ style="font-weight: bold;">go</span>.<br>
+  </li>
+  <li>Start a 2D or 3D experiment: <span style="font-weight: bold;">go
+    </span><span style="color: rgb(0, 0, 0);">(</span><span
+ style="font-weight: bold;"><span style="color: rgb(255, 0, 0);">never
+type </span>ga!</span>)<span style="font-weight: bold;"> </span></li>
+  <li> Save the acquired data: <span style="font-weight: bold;">svf('giveanappropriatefilename')</span>
+- be sure you are in the correct directory (type <span
+ style="font-weight: bold;">pwd </span>to check).&nbsp; To navigate
+between directories, use the "Set Directory" button.&nbsp; The "Parent"
+button takes you up one level.<br>
+  </li>
+  <li> Process 2D data and correct dc offset: <span
+ style="font-weight: bold;">sinesq(2,2*ni,'f1') wft2da dc2d('f2') </span></li>
+  <li> Plot a 2D spectrum in coutour mode on the screen: <span
+ style="font-weight: bold;">dpcon('pos', 20, 1.2)</span> </li>
+  <li> Plot a 2D spectrum from printer (be sure to choose the
+appropriate region you want to plot): <span style="font-weight: bold;">pap
+pcon('pos', 20, 1.2) page</span>.&nbsp; Before you do be sure you have
+set the the plot parameters appropriately using the command <span
+ style="font-weight: bold;">sc=0
+wc=150 sc2=0 wc2=150</span>.</li>
+  <li>Plot a 1D spectrum from printer: <span style="font-weight: bold;">pl
+pap pscale page</span><br>
+  </li>
+  <li> Plot arrayed spectra: <span style="font-weight: bold;">plww page</span>
+  </li>
+</ol>
+<h2 style="font-family: helvetica,arial,sans-serif;"><a
+ name="Commonly_Encountered_Problems_"></a><br>
+<small><span
+ style="color: rgb(51, 153, 153); font-family: helvetica,arial,sans-serif; font-weight: bold;"><span
+ style="text-decoration: underline; font-style: italic;">Commonly
+Encountered
+Problems&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><br style="font-family: helvetica,arial,sans-serif;">
+</span></small></h2>
+<ul style="font-family: helvetica,arial,sans-serif;">
+  <li>The "Acqi" button is missing from the main menu</li>
+  <ul>
+    <li>To resolve this issue, just type the <span
+ style="font-weight: bold;">acqi</span> command to get the lock window.<br>
+    </li>
+  </ul>
+</ul>
+<ul style="font-family: helvetica,arial,sans-serif;">
+  <li>Occasionally, the acquisition processor hangs up (esp. when you
+abort an acquisition immediately after starting it), which manifests
+itself in many ways:</li>
+  <ul>
+    <li>the spectrometer is unresponsive and does not execute any
+command</li>
+  </ul>
+  <ul>
+    <li>the Status in the Acquisition Status window is set to "Inactive"<br>
+    </li>
+  </ul>
+  <ul>
+    <li>you cannot open the lock window using the <span
+ style="font-weight: bold;">acqi </span>command </li>
+    <ul>
+      <li>To resolve this issue, follow the steps below:</li>
+      <ol>
+        <li>Open a Unix window and type <span
+ style="font-weight: bold;">su acqproc</span>.&nbsp; You will get the
+following message: "Killing acqproc"<br>
+        </li>
+        <li>Open the left door of the console.&nbsp; Locate and push
+the small, <span style="color: rgb(255, 0, 0);">red </span>RESET
+button on the left-most board marked as the CPU board. <br>
+        </li>
+        <li>On the Magnet/Sample regulation board (seven boards to the
+right of the CPU board), the fail light should turn <span
+ style="color: rgb(255, 0, 0);">red</span>.</li>
+        <li>Wait until the fail light turns off and the READY AP light
+turns <span style="color: rgb(0, 153, 0);">green</span>.&nbsp;
+Concomitantly, the green lights on the pulse/probe temperature status
+panel (next to the computer monitor) should flash and when ready should
+turn steady.&nbsp; <span style="color: rgb(255, 0, 0);">This will take
+a couple of minutes - so be patient!</span><br>
+        </li>
+        <li>Type <span style="font-weight: bold;">su acqproc</span> in
+the Unix window.</li>
+        <li>The Status in the Acquisition Status window should now
+revert to "Idle".&nbsp; If you do not get the lock window, type <span
+ style="font-weight: bold;">acqi </span>in vnmr.<br>
+        </li>
+      </ol>
+    </ul>
+  </ul>
+</ul>
+<p style="font-family: helvetica,arial,sans-serif;"><span
+ style="font-weight: bold; color: rgb(255, 0, 0);"><br
+ style="font-family: helvetica,arial,sans-serif;">
+This is by no means
+a comprehensive command reference guide!</span>&nbsp; For more commands
+and details about the commands given in bold above, please see the
+manual "VNMR Command and Parameter Reference".&nbsp; Furthermore, "User
+Guide: Liquids NMR" and "VNMR User Programming" also contain very
+useful information on setting up typical 2D experiments and
+understanding pulse sequences. We highly recommend those manuals to
+advanced NMR users.<br>
+<br>
+</p>
+<p style="font-family: helvetica,arial,sans-serif; text-align: center;"><font
+ size="-1">written
+by: kai huang<br>
+modified by: ishwar radhakrishnan<a
+ href="mailto:i-radhakrishnan@northwestern.edu"></a><br>
+</font></p>
+<div style="text-align: center;"><font size="1"><span
+ style="font-family: helvetica,arial,sans-serif;">&copy; copyright 2004
+radhakrishnan lab</span></font><br>
+<font size="1"><span style="font-family: helvetica,arial,sans-serif;">site
+maintained by members of the radhakrishnan lab</span></font><br>
+<font size="1"><span style="font-family: helvetica,arial,sans-serif;">feedback
+to <a href="mailto:i-radhakrishnan@northwestern.edu"
+ style="text-decoration: none;">ishwar
+radhakrishnan</a></span></font><br>
+<font size="1"><span style="font-family: helvetica,arial,sans-serif;"></span></font><br>
+<font size="1"><span style="font-family: helvetica,arial,sans-serif;">last
+updated august 2004</span></font></div>
+<p style="font-family: helvetica,arial,sans-serif;"></p>
+</body>
+</html>

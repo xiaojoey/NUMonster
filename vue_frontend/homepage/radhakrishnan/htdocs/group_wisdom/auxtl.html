@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+  <title>Auxiliary Tools Accessible within Felix95</title>
+  <meta name="GENERATOR"
+ content="Mozilla/3.01SGoldC-SGI (X11; I; IRIX 6.3 IP32) [Netscape]">
+</head>
+<body text="#c1c9ed" bgcolor="#8c6633">
+<p><!-- WEBMAGIC VERSION NUMBER="2.0.2" --><!-- WEBMAGIC TRANSLATION NAME="ServerRoot" SRC="/var/www/htdocs/" DST="/" --><!-- WEBMAGIC TRANSLATION NAME="ProjectRoot" SRC="./" DST="" -->
+</p>
+<hr>
+<p></p>
+<h1><font color="#ffff00">Auxiliary Tools in Felix 98.0</font></h1>
+<p>
+</p>
+<hr>
+<p></p>
+<h2><font color="#ffdead">Suggest Name</font></h2>
+<p><font color="#fdf5e6">This is a menu-driven macro/<b>nawk </b>script
+for assigning cross peaks in multi-dimensional NMR spectra. For a given
+cross peak in an nD spectrum, plausible assignments are presented for
+all
+dimensions. The search criterion is simply to match the coordinates of
+the cross peak with that of individual resonances that fall within a
+(user-specified)
+window of chemical shifts. Some salient features of this tool are:</font></p>
+<menu>
+<li><font color="#fdf5e6">2D and 3D homonuclear as well as <sup><font
+ size="-2">13</font></sup>C/<sup><font size="-2">15</font></sup>N-edited
+heteronuclear spectra can be analyzed </font></li>
+<li><font color="#fdf5e6">Searches can be restricted to certain classes
+of spins (exchangeable, non-exchangeable, aromatic, aliphatic) </font></li>
+<li><font color="#fdf5e6">Aliasing can be accounted for in all
+dimensions </font></li>
+<li><font color="#fdf5e6">Assignments can (almost) always be entered
+into
+the DBA without typing (exception: ambiguous assignments) </font></li>
+<li><font color="#fdf5e6">Multiple rounds of searches can be performed
+with different search parameters and without altering the DBA </font></li>
+</menu>
+<p><b><font color="#ffdead">Suggest Name</font></b><font color="#fdf5e6">
+can be accessed from the </font><b><font color="#ffdead">Peaks </font></b><font
+ color="#fdf5e6">menu
+in <b>Felix 98.0</b>. Obviously, you need a DBA file with the entity </font><b><tt><font
+ color="#00ffff">xpk:peaks</font></tt></b><font color="#fdf5e6">
+already present. The script requires a chemical shift table that is
+identical in format to the one developed in the lab</font><font
+ color="#fdf5e6">.
+A script file&nbsp;<b><a
+ href="http://www.scripps.edu/%7Eradhak/seq2tbl.s"></a></b>seq2tbl.s
+is available that will produce a chemical shift table (with dummy
+shifts)
+for any amino acid sequence. The actual chemical shifts can then be
+inserted
+manually or using <b>nawk </b>scripts or other programs.
+The table should be located in the directory specified by the </font><b><tt><font
+ color="#00ffff">&amp;etcpfx</font></tt></b><font color="#fdf5e6">
+symbol.</font></p>
+<p><font color="#fdf5e6">Clicking on </font><b><font color="#ffdead">Suggest
+Name</font></b><font color="#fdf5e6"> item will produce a cursor which
+enables selection of any cross peak in the display. A pop-up menu will
+then start-up to query the user for inputs. Note that the matrix needs
+to be always referenced in ppm (exception: D1 dimension of strip
+matrices).
+Also note that pre-existing assignments, if any, will be displayed in
+the
+window immediately below the results window. Click on this <a
+ href="http://www.scripps.edu/%7Eradhak/suggest.gif">link
+</a>to see an example pop-up menu with brief descriptions of
+functionalities.
+</font></p>
+<p><font color="#fdf5e6">The options available for the various flags in
+the pop-up menu are summarized:</font></p>
+<ul>
+  <li><b><font color="#ffd700">Covalent link</font></b><font
+ color="#fdf5e6"> </font></li>
+  <ul>
+    <li><font color="#fdf5e6">D1-D2</font></li>
+    <li><font color="#fdf5e6">D2-D3 (<b>3D&nbsp;matrices only</b>)</font></li>
+    <li><font color="#fdf5e6">D1-D3 (<b>3D matrices only</b>)</font></li>
+    <li><font color="#fdf5e6">None (for </font><font color="#ffffff">homonuclear
+      </font><font color="#fdf5e6">data)</font></li>
+  </ul>
+  <li><b><font color="#ffd700">Matrix type</font><font color="#ffb6c1">
+    </font></b><font color="#fdf5e6">( <b>2D matrices only</b>)</font></li>
+  <ul>
+    <li><font color="#fdf5e6">Regular matrix</font></li>
+    <li><font color="#fdf5e6">Strip matrix [atom subset automatically
+set to
+"Lock" in D1 dimension]</font></li>
+  </ul>
+  <li><b><font color="#ffd700">Nucleus</font></b></li>
+  <ul>
+    <li><font color="#fdf5e6"><sup><font size="-2">1</font></sup>H</font></li>
+    <li><font color="#fdf5e6"><sup><font size="-2">13</font></sup>C</font></li>
+    <li><font color="#fdf5e6"><sup><font size="-2">15</font></sup>N</font></li>
+  </ul>
+  <li><b><font color="#ffd700">Atom subset</font></b></li>
+  <ul>
+    <li><font color="#fdf5e6">Lock</font></li>
+    <li><font color="#fdf5e6">All</font></li>
+    <li><font color="#fdf5e6">Exchangeable</font></li>
+    <li><font color="#fdf5e6">Non-exchangeable</font></li>
+    <li><font color="#fdf5e6">Aliphatic</font></li>
+    <li><font color="#fdf5e6">Aromatic</font></li>
+  </ul>
+  <li><b><font color="#ffd700">Aliasing</font></b></li>
+  <ul>
+    <li><font color="#fdf5e6">Not aliased</font></li>
+    <li><font color="#fdf5e6">Aliased (+1x) [aliased once downfield]</font></li>
+    <li><font color="#fdf5e6">Aliased (-1x) [aliased once upfield]</font></li>
+    <li><font color="#fdf5e6">Aliased (+2x) [aliased twice downfield]</font></li>
+    <li><font color="#fdf5e6">Aliased (-2x) [aliased twice upfield]</font></li>
+  </ul>
+</ul>
+<p><font color="#fdf5e6">The </font><b><font color="#ffd700">tolerance
+</font></b><font color="#fdf5e6">parameter (in ppm) controls the width
+(+/- </font><b><font color="#ffd700">tolerance</font></b><font
+ color="#fdf5e6">)
+of the search region in each dimension. Search results are posted in
+the
+results window. Assignments can be selected using the cursor; the
+selections
+appear in the window immediately below it. In case one prefers to enter
+the assignment by hand (e.g. when the assignment is ambiguous), they
+can
+be entered in this space. </font><b><font color="#ffd700">Update DBA</font></b><font
+ color="#fdf5e6">&nbsp;will
+store the current assignments. </font><b><font color="#ffd700">Cancel </font></b><font
+ color="#fdf5e6">will
+exit without any changes to the DBA while </font><b><font
+ color="#ffd700">Run
+Search</font></b><font color="#fdf5e6"> will conduct another search.</font></p>
+<p><i><font color="#ffd700">Last updated: March 29th, 1998</font></i></p>
+</body>
+</html>

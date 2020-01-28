@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<HTML>
+<HEAD>
+<script LANGUAGE="JavaScript">
+<!-- Begin
+function loadFrames(frame1,page1,frame2,page2,frame3,page3) {
+eval("parent."+frame1+".location='"+page1+"'");
+eval("parent."+frame2+".location='"+page2+"'");
+eval("parent."+frame3+".location='"+page3+"'");
+}
+// End -->
+</script>
+</HEAD>
+<BODY TEXT="#000000">
+<CENTER>
+<B>Overview</B>
+</CENTER>
+<ul>
+<LI><b>Paper:</b> Nat.Struct.Biol Vol.6 #9 pp 819-824
+<LI><b>Description:</b> Calcium-bound Calmodulin complexed with a 26-residue peptide</LI>
+<LI><b>NMR Data:</b> 30 Models</LI>
+<LI><b>Residue List:</b> Derived from Fig 2a. Extra interactions mentioned in the text are referred to in the <A HREF="javascript:loadFrames('headers','1ckkheader.html','tables','1ckkeitable.html', 'descs','1ckkeitext.html')">[Extra Interactions]</A> section.
+<LI><b>Key residues:</b>
+<ul><li>TRP 444</li><li>PHE 459</li><li>ARG 455</li><li>LYS 456</li><li>ARG 457</li>
+</ul>
+</LI>
+</UL>
+<P><CENTER><B>Explanation</B></CENTER></P><P>
+<ul>
+<li>An interaction 'passes' (green/yellow) when interactions occur in more than half the models, else it 'fails' (red/orange).  This scheme was used to average out the bonds found in the different models, monster found a large number of bonds unique to many of the models, so it was important to find bonds that appeared consistently.<p></li>
+<li>Monster wouldn't display the bonds that didn't 'pass', but in the case of this testset it is useful to see how badly an expected bond failed to appear. For example, the paper lists Ser 452 to be interacting with both Glu 11 and Met 145.  Both expectations 'failed'. But the model count shows that Glu 11 - Ser 452 almost 'passed', whereas Met 145 - Ser 452 failed miserable with not one interaction recorded in 30 models.<p></li>
+<li>Electrostatic and Hydrogen bonds are only listed if any are found. If any 'pass', then the hydrophobic interactions, pass or fail, take a back seat. (See Arg 457 for example) <p></li>
+</ul>
+</P><P><B><CENTER>Results</B></CENTER></P><P>
+<ul>
+<li>Only 17 out of the 83 residue pairings 'failed', ~80% success.<p></li>
+<li>Monster did not find interactions in ANY model in only three residue pairings. ~96% psuedo-success.<p></li>
+<li>Almost all the hydrophobic interactions in both Trp 444 and Phe 459 'passed', apart from Phe 459-Phe 92, where hydrophobic interactions were found in only 11 models.<p></li>
+<li>The other three key residues, all basic, had a lot of marginal fails (orange).  In addition, especially with Lys 456, the paper only lists, in Fig 2a, two hydrophobic residues.  However in the text, it states that all three probably interacts with 4 Glu residues, please refer to the <A HREF="javascript:loadFrames('headers','1ckkheader.html','tables','1ckkeitable.html', 'descs','1ckkeitext.html')">[Extra Interactions]</A> section for further reference.<p></li>
+</ul>
+</P><P><B><CENTER>Conclusions</CENTER></B></P><P>
+<ul>
+<li>This was a testset in two ways:<ul>
+<li>Monster testing: <br/>-We wanted to see how reliable Monster is.</li><ul>
+<li>We conclude that in terms of finding interactions, Monster passed overwhelmingly. In only three suggested residue pairings, did Monster fail to find ANY interactions.<p></li>
+</ul>
+<li>Paper testing: <br/>-We wanted to see if Monster revealed more than stated in the paper.</li><ul>
+<li>We conclude that the authors of the paper did find most interactions as listed in the direct comparison.</li>
+<li>In addition we conclude that the low number of extra interactions that 'passed', plus the extra suggestions in the text, means that the authors hardly missed any interactions.</li>
+</ul>
+</ul>
+</ul>
+</BODY>
+</HTML>
