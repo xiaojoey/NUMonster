@@ -9,6 +9,7 @@ import sigma from 'sigma';
 
 Vue.config.productionTip = false;
 Vue.prototype.$server_url = 'http://localhost:9001';
+// Vue.prototype.$server_url = 'https://numonster-dev.biochem.northwestern.edu:9001'
 // Assign to global scope to make plugins work
 window.sigma = sigma;
 
