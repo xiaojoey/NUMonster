@@ -11,6 +11,11 @@ const cors = require('cors');
 const exec = require('child_process').exec;
 
 // Get environment variables
+<<<<<<< HEAD
+=======
+const PORT = process.env.PORT || 9001;
+
+>>>>>>> perl_dev
 const UPLOAD_DIR = process.env.UPLOAD_DIR || '/home/monster_uploads/upload';
 const UPLOAD_URL = process.env.UPLOAD_URL || 'http://monster.northwestern.edu/files/upload';
 const JOBS_DIR = process.env.JOBS_DIR || '/home/monster_uploads/jobs';
