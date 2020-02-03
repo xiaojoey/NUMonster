@@ -50,7 +50,7 @@ if(exists($ENV{'MONSTER_JOBS'})){
 }
 
 # Testing directory structure and files
-my $uploadsDir = $filebase.'uploads/';
+my $uploadsDir = $filebase.'upload/';
 if(!-d $uploadsDir){
     die "$uploadsDir doesn't exist\n";
 }
@@ -111,7 +111,7 @@ my $PDB = new PDB;
 # Re-write PDB file so that it works with WhatIf: will be discontinued
 ##################################################################
 
-#$PDB->wiWrite($path.$submit,$jobsDir,$xml);
+#$PDB->wiWrite($uploadsDir.$xml_obj->getFile(),$jobsDir,$xml);
 #print "WhatIf file written\n";
 
 ##################################################################
@@ -216,10 +216,10 @@ foreach my $file (get_pdb_files($jobDir)){
 	    $result = $jobsDir.$cp.$c.'consensus.txt';
 	    push(@jobfiles,$result);
 	}
-#	Email->resultEmail($job, $xml->getEmail, $submit, @jobfiles) if !$debug;
+	Email->resultEmail($job, $xml_obj->getEmail, $xml_obj->getFile(), @jobfiles) if !$debug;
 	Sheet->generate_sheet(@jobfiles);
     }else{
-#	Email->resultEmail($job, $xml->getEmail, $submit, get_text_results()) if !$debug;
+	Email->resultEmail($job, $xml_obj->getEmail, $xml_obj->getFile(), get_text_results($jobDir.'/1')) if !$debug;
     }
 #    WebDBI->print($job) if !$debug;
 } #end of get_files loop
@@ -248,7 +248,8 @@ sub get_xml{
 }
 
 sub get_text_results{
-    opendir(my $dh, $jobsDir."1/") || die "can't opendir $jobsDir: $!";
+    my $dir = shift;
+    opendir(my $dh, $dir) || die "can't opendir $dir: $!";
     my @files = grep { $_ =~ /\.txt$/ } readdir($dh);
     closedir $dh;
 
@@ -256,7 +257,8 @@ sub get_text_results{
 }
 
 sub get_excel_results{
-    opendir(my $dh, $jobsDir) || die "can't opendir $jobsDir: $!";
+    my $dir = shift;
+    opendir(my $dh, $dir) || die "can't opendir $dir: $!";
     my @files = grep { $_ =~ /\.xls$/ } readdir($dh);
     closedir $dh;
 
@@ -264,7 +266,8 @@ sub get_excel_results{
 }
 
 sub get_consensus_results{
-    opendir(my $dh, $jobsDir) || die "can't opendir $jobsDir: $!";
+    my $dir = shift;
+    opendir(my $dh, $dir) || die "can't opendir $dir: $!";
     my @files = grep { $_ =~ /consensus\.txt$/ } readdir($dh);
     closedir $dh;
 
