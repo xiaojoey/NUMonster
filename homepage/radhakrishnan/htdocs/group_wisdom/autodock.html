@@ -1,0 +1,140 @@
+<html>
+<head><title>Autodock help</title></head>
+<body>
+<center><h2>Autodock</h2></center>
+<H3><a href="../autodock/Using_AutoDock_305.html">Autodock manual</a></H3>
+<p><u><H3>Getting started:</H3></u><p>
+I had these paths in my $PATH environment:
+<ul><li>/home/autodock/bin/LinuxRH7.2 (this has the main autodock binaries)</li><li>/home/autodock/share (all utility scripts found in here)</li></ul>
+You alse need to set this environment variable: $AUTODOCK_UTI=/home/autodock/share<br/>
+
+<br/>
+<p><u><H3>Preparing the co-ordinate files</H3></u>
+<p><u>Ligand:</u>
+<p>To prepare the ligand you must complete the steps below<br/>Each output file is linked to a real example of what it should look like.
+<br/>an explanation of each step is provided below also.
+<ol type='i'>
+<li><pre>q.fixpdb lig1.pdb > lig2.pdb</pre>
+This step is ONLY necessary if using peptoids from the Barron Lab.<br/>
+This file will identify the different peptoids, and rename them specifically to allow correct allocation of atomic charges.
+</li>
+<li><pre>q.kolloid lig1.pdb/lig2.pdb > lig3.pdbq</pre>
+This step will assign the Kollman's partial atomic charges to each atom.  The script was extended to included peptoid atoms (see previous step).<br/>
+The output file simply has the atomic charge in an extra column.
+</li>
+<li><pre>renumber-residues lig3.pdbq > lig4.pdbq</pre>
+This script and the next speaks for themselves.
+</li>
+<li><pre>renumberatoms lig4.pdbq > lig5.pdbq</pre></li>
+<li><pre>pdbtoatm lig5.pdbq | atmtobnd lig6.bnd</pre>
+This step utilises two scripts in order to create a *.bnd file for use with Autotors.
+</li>
+<li><pre>autotors -A -a -h -b -r lig6.bnd lig5.pdbq lig7.pdbq</pre>
+Autotors inserts into the PDB file, the descriptions of the allowed torsions in the ligand.
+<br/>The paremeters used (though you may fiddle round with them, details in the manual) are:
+<ul><li><b>-A:</b>  This flag causes the program to check rings for aromaticity. If all the ring atoms are 'co-planar' enough, the program replaces 'C' by 'A' for all carbons in the ring. The test for planarity is whether the angle between two adjacent atoms' normal vectors is less than or equal to 7.5 degrees.</li>
+<li><b>-a:</b>  This flag instructs AutoTors to disallow torsion rotations in amide and peptide bonds, (C=O)--(NH).</li>
+<li><b>-h:</b>  This flag causes the program to detect non-polar hydrogens, that is hydrogen atoms bonded to carbon atoms, to merge the charge of each with the charge of the carbon to which it is bonded and to delete the line of output data pertaining to that hydrogen.</li>
+<li><b>-b:</b>  This flag is useful for peptides. It disallows rotations in backbone torsions, including phi, psi and omega (peptide) torsions.</li>
+<li><b>-r:</b>  This sets the 'ROOT' (from which all calculations are made) to be the non-hydrogen atom closest to the center of the molecule.</li>
+</ul>
+</li>
+</ol>
+<p>
+<p><u>Macromolecule:</u>
+<p>To prepare the macromolecule is simpler. Again Kollman's partial charges are added, and then addsol is run to add the solvation parameters:
+<ol type='i'><li><pre>q.kollua macro1.pdb > macro2.pdbq</pre></li>
+<li><pre>addsol macro2.pdbq macro3.pdbqs</pre></li></ol>
+<br/>
+<p><u><H3>Generating and editing the parameter files for AutoGrid</H3></u>
+
+<ul><li><pre>mkgpf3 lig7.pdbq macro3.pdbqs</pre></li></ul>
+
+<p><u>Edit macro3.gpf:</u>
+
+<p>Autogrid complains when it finds bonds that contain 'A', this is because it doesn't have the numbers for 'A'.
+<br/>So you need to add them. The numbers were assumed to be the same value as normal C-C bonds,
+<br/>Thus each line below goes into the list that corresponds to the atom listed, AND create a whole new list for 'A'
+<ul>
+<li><pre>nbp_r_eps  4.00 0.0222750 12  6	#C-A lj</pre></li>
+<li><pre>nbp_r_eps  4.00 0.0222750 12  6	#A-A lj</pre></li>
+<li><pre>nbp_r_eps  3.75 0.0230026 12  6	#N-A lj</pre></li>
+<li><pre>nbp_r_eps  3.60 0.0257202 12  6	#O-A lj</pre></li>
+<li><pre>nbp_r_eps  3.00 0.0081378 12  6	#H-A lj</pre></li>
+</ul>
+<br/>For example, O-A goes in the O list.
+<p><B><a href='macro3.gpf'>Example *.gpf</a></b>
+
+<br/>
+<p><u><H3>Running AutoGrid</H3></u>
+<ul><li><pre>autogrid3 -p macro3.gpf -l macro3.glg &</pre></li></ul>
+<br/>NB: *.glg is the log file. All grid maps are placed within their own files (suffix: *.map) and are to be used by autodock.
+
+
+<br/>
+<p><u><H3>Generating and editing the parameter files for AutoDock</H3></u>
+
+<ul><li><pre>mkdpf3 lig7.pdbq macro3.pdbqs</pre></li></ul>
+<p><u>Edit lig7.macro3.dpf:</u>
+
+<p>Edit these parameters:
+<ul>
+<li><pre>ga_num_evals 350000</pre> (forces extra energy evaluations per generation, and leads to a larger number of 'good' results)</li>
+<li><pre>ga_run 50 </pre> (increase number of times whole thing is run, and guarantees at least 10 'good' results)</li>
+</ul>
+<p>Add this parameters:
+<ul>
+<li><pre>intnbp_r_eps  4.00 0.0222750  12  6	#A-A lj</pre></li>
+</ul>
+<p>The first two parameters simply increase the likelihood of getting 'good' results.  They are probably unecessary, especially if the macromolecule is small.
+<br/>They also increase the processing time for AutoDock, so if you are looking for quick and not-so-reliable results, then reduce them, even by half.
+<br/>Each run can take approx one minute, so 50 runs can take about an hour.
+<br/>
+<p><b><a href='lig7.macro3.dpf'>Example *.dpf</a></b>
+<br/>
+<p><u><H3>Running AutoGrid</H3></u>
+<p>The stack limit must be removed:
+<ul><li>bash:<pre> ulimit -s unlimited</pre></li>
+<li>csh:<pre> limit stack unlimited</pre></li></ul>
+
+<ul><li><pre>autodock3 -p lig7.macro3.dpf -l lig7.macro3.dlg &</pre></li></ul>
+
+
+<p>The log file contains the results:
+<ul><li><pre> tail -f lig7.macro3.dlg </pre> (keeps track of whats going on...)</li></ul>
+
+<br/>
+<p><u><H3>Analyzing the results with AutoDock Tools(ADT)</H3></u>
+<a href="../autodock/README.html>ADT documentation</a>
+<p><B>NB:</B> I never used ADT to prepare and run Autogrid and Autodock. Only to analyze the results.
+
+<p><u>location:</u> /home/autodock/rel.1.beta
+<p>You need to 'source' the correct file:
+<ul><li>bash:<pre> source initPython.bash</pre></li>
+<li>csh:<pre> source initPython.csh</pre></li></ul>
+
+<p>To run ADT:
+<ul><li><pre>adt</pre></li></ul>
+
+<p>To load the results:
+<ul><li>Analyze->Docking Logs->Read Docking Log</li></ul>
+
+<p>To load the macromolecule:
+<ul><li>Analyze->Molecule->Show MacroMolecule</li></ul>
+
+<p>To color molecules:
+<ul><li>Color->by Molecules</li></ul>
+
+<p>To view all results (known as docking conformations):
+<ul><li>Analyze->Molecules->Choose Docking Conformation</li></ul>
+
+<p>Mouse actions:
+<ul>
+<li>left click: moves across screen.</li>
+<li>middle click: rotates.</li>
+<li>'Shift' & left click: zooms.</li>
+<li>'Shift' & middle click: 'cuts through'</li>
+</ul>
+<p>
+</body>
+</html>

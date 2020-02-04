@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- DW6 -->
+<head>
+<!-- Copyright 2005 Macromedia, Inc. All rights reserved. -->
+<title>Radhakrishnan Lab Directions Page</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="mm_health_nutr.css" type="text/css" />
+<script language="JavaScript" type="text/javascript">
+//--------------- LOCALIZEABLE GLOBALS ---------------
+var d=new Date();
+var monthname=new Array("January","February","March","April","May","June","July","August","September","October","November","December");
+//Ensure correct for language. English is "January 1, 2004"
+var TODAY = monthname[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+//---------------   END LOCALIZEABLE   ---------------
+</script>
+<style type="text/css">
+<!--
+.style2 {color: #A52C4A}
+.style3 {
+	color: #FFFFCC;
+	font-style: italic;
+}
+.style4 {
+	color: #FFFFCC;
+}
+.style5 {color: #0099FF}
+body {
+	background-color: #EAFFFF;
+}
+.style6 {color: #EFEBDE}
+.style7 {
+	color: #FF9966
+}
+.style8 {color: #FFFFCC; }
+-->
+</style>
+</head>
+<body>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" bordercolor="#66CCFF">
+  <tr bgcolor="#D5EDB3">
+    <td colspan="3" rowspan="2" bgcolor="#99CCFF"><img src="images/header.jpg" alt="northwestern radhakrishnan lab" width="382" height="100" longdesc="intro.jpg" /></td>
+    <td height="50" colspan="3" align="center" valign="bottom" nowrap="nowrap" bgcolor="#99CCFF" class="style8" id="logo">the radhakrishnan lab @ northwestern</td>
+    <td width="27" bgcolor="#99CCFF"><span class="style2"></span></td>
+  </tr>
+
+  <tr bgcolor="#D5EDB3">
+    <td height="52" colspan="3" align="center" valign="top" nowrap="nowrap" bgcolor="#99CCFF" id="tagline"><p class="style3">department of biochemistry, molecular biology and cell biology, evanston, il 60208</p>    </td>
+	<td width="27" bgcolor="#99CCFF"><span class="style2"></span></td>
+  </tr>
+
+  <tr>
+    <td height="2" colspan="7" bgcolor="#99CCFF"><img src="mm_spacer.gif" alt="" width="1" height="2" border="0" /></td>
+  </tr>
+
+  <tr bgcolor="#99CC66">
+  	<td height="20" colspan="7" bordercolor="#000000" bgcolor="#66CCFF" id="dateformat">&nbsp;</td>
+  </tr>
+
+  <tr>
+    <td colspan="7" bgcolor="#99CCFF"><img src="mm_spacer.gif" alt="" width="1" height="2" border="0" /></td>
+  </tr>
+
+ <tr>
+    <td width="165" valign="top" bgcolor="#3399FF">
+	<table border="0" cellspacing="0" cellpadding="0" width="165" id="navigation">
+        <tr>
+          <td width="165">&nbsp;<span class="style5"><br />
+		 &nbsp;</span><br /></td>
+        </tr>
+        <tr>
+          <td width="165"><a href="index.html" class="navText">home</a></td>
+        </tr>
+        <tr>
+          <td width="165"><a href="research.html" class="navText">research</a></td>
+        </tr>
+        <tr>
+          <td width="165"><a href="people.html" class="navText">people</a></td>
+        </tr>
+        <tr>
+          <td width="165"><a href="gallery.html" class="navText">gallery</a></td>
+        </tr>
+        <tr>
+          <td width="165"><a href="group_wisdom/group_wisdom.html" class="navText style4">knowledgebase</a></td>
+        </tr>
+        <tr>
+          <td><a href="affiliations.html" class="navText style6">affiliations</a></td>
+        </tr>
+      </table>
+ 	 <br />
+  	&nbsp;<br />
+  	&nbsp;<br />
+  	&nbsp;<br /> 	</td>
+    <td width="59" bgcolor="#EAFFFF"><img src="images/mm_spacer.gif" alt="" width="1" height="1" border="0" /><img src="images/mm_spacer.gif" alt="" width="1" height="1" border="0" /></td>
+    <td colspan="2" valign="top" bgcolor="#EFFFFF"><img src="mm_spacer.gif" alt="" width="305" height="1" border="0" /><br />
+	&nbsp;
+	&nbsp;<br />
+	<table border="0" cellspacing="0" cellpadding="0" width="613">
+        <tr>
+          <td width="613" class="pageName style7">Maps and Directions to the Lab</td>
+		</tr>
+
+		<tr>
+          <td valign="top" bgcolor="#EAFFFF" class="bodyText"><p align="center">
+            <img src="images/campus.jpeg" alt="northwestern evanston campus" width="600" height="399" border="1" usemap="#Map" /></p>
+            <p align="left">The lab is located near the northern end of the Evanston campus.  The  building where we are located is called Cook Hall (formerly, the  Materials and Life Sciences building or MLS).  Please refer to the <a href="http://aquavite.northwestern.edu/maps/buildinglookup.cgi?lookupfield=cook+hall&x=0&y=0">interactive map</a> for the exact location and directions. Once you are in the main lobby  of Cook Hall, proceed to the fourth floor. The elevator is near the  south end of the lobby. As you come out of the elevator on the fourth  floor, turn left and go past the double doors. The lab is the first  room on the left.</p>
+            <p>The physical address and  phone number for the lab is as follows:</p>
+            <p>Rooms 4104 and 4162, Cook Hall<br />
+2220 Campus Drive<br />
+Evanston, IL 60208<br />
+Tel: 847-467-1189<br />
+            </p>
+            <p>Ishwar's office is also located on the fourth floor of Cook Hall.         Take the elevator to the fourth floor. As you come out of the elevator,  turn left, go past the double doors, walk the length of the corridor  and turn left. Ishwar's office is the third door on the right.</p>
+            <p>The physical address and  phone number for Ishwar's office is as follows:</p>
+          <p>Room 4135, Cook Hall<br />
+2220 Campus Drive<br />
+Evanston, IL 60208<br />
+Tel: 847-467-1173</p>		</td>
+        </tr>
+      </table>
+	 <br />
+	&nbsp;<br />	</td>
+    <td width="31" bgcolor="#EAFFFF">&nbsp;</td>
+<td width="20" valign="top" bgcolor="#EAFFFF">&nbsp;</td>
+	<td width="27">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="165" bgcolor="#3399FF">&nbsp;</td>
+    <td width="59">&nbsp;</td>
+    <td width="177">&nbsp;</td>
+    <td width="464">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td width="20">&nbsp;</td>
+	<td width="27" bgcolor="#EAFFFF">&nbsp;</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr bgcolor="#99CC66">
+    <td height="20" colspan="7" bordercolor="#0099FF" bgcolor="#66CCFF" id="dateformat2"><div align="center" class="style4">website maintained by members of the Radhakrishnan laboratory; all rights reserved</div></td>
+  </tr>
+</table>
+
+<map name="Map" id="Map">
+<area shape="poly" coords="366,147,367,147,361,167,353,167,348,182,350,206,406,211,405,189,411,173,405,171,407,151,369,147" href="http://aquavite.northwestern.edu/maps/buildinglookup.cgi?lookupfield=cook+hall&x=0&y=0" alt="Cook Hall" />
+</map></body>
+</html>

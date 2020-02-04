@@ -1,0 +1,58 @@
+<html>
+<head><title>Samba set-up for Radhakrishnan Lab</title></head>
+<body>
+<center><h2>Samba set-up and instructions</h2></center>
+<p><u><H3>Description:</H3></u><p>
+Samba is designed to emulate windows networking using the SMB protocol (hence the name).<p>
+It is NOT for connecting *nix clients. To do this please refer to the NFS/NIS page <a href="nfsnis.html">here</a><p>
+The Samba configuration file is found on monster at /etc/smb.conf:<p>
+<ul>
+<li>The manual page for the configuration file can be found <a href="http://us2.samba.org/samba/docs/man/manpages-3/smb.conf.5.html">here</a>.<p></li>
+<li>The guide I used to help me create this configuration file is <s><a href="http://www-106.ibm.com/developerworks/eserver/tutorials/samba/index.html">here</a></s>.<p></li>
+<li>The most comprehensive list of 'HowTos' is <s><a href="http://us2.samba.org/samba/docs/man/howto/">here</a></s>.<p></li>
+<p><u><H3>Adding computers Part I: configure computer</H3></u><p>
+<ul>
+<li>Configure the computer in the 'TCP/IP' settings of the network card<p></li>
+<li>Gateway: 129.105.38.1<p></li>
+<li>1<sup>o</sup> DNS: 129.105.49.1<p></li>
+<li>2<sup>o</sup> DNS: 165.124.49.21<p></li>
+<li>WINS: 129.105.16.69 (can now be set to 129.105.11.202 (monster))<p></li>
+<i>Any typos will cause errors, please double check all numbers<p></i>
+</ul>
+<p><u><H3>Adding computers Part II: register on monster</H3></u><p>
+<ul>
+<li>First off the computer has to be entered into the smbpasswd system on monster.<p></li>
+<li>Do:<p>
+<ul>
+<li><pre>/usr/sbin/useradd -g machines -d /dev/null -c "machine id" -s /bin/false machine_name$<pre></li>
+<li><pre>passwd -l machine_name$<pre></li>
+<li><pre>smbpasswd -a -m machine_name<pre></li>
+</ul>
+</li>
+<li>Please note, when adding the machine name with the smbpasswd command, <i>DO NOT ENTER</i> '$' like for passwd<p></li>
+</ul>
+<p><u><H4>Part IIa: Deleting users and machines</H4></u><p>
+<p>Occasionally, there is a need to delete and recreate accounts (e.g. when the IP address changes), in which case this is accomplished as follows:<p>
+<ul>
+<li><pre>/usr/sbin/userdel machine_name$<pre></li>
+<li><pre>smbpasswd -x machine_name$<pre></li>
+<li><pre>cd /var/yp<pre></li>
+<li><pre>make<pre></li>
+</ul>
+<p>Register machine as described in part II.<p>
+<p><u><H3>Adding computers Part III: join domain</H3></u><p>
+Then the computer can be joined to the 'radhakrishnan' domain:<p>
+<ul>
+<li>The most painful part is actually editing the lmhosts file, this is found in C:\WINNT\SYSTEM32\DRIVERS\ETC.<p></li>
+<li>Add only one line: "129.105.11.202 monster #PRE #DOM:radhakrishnan"<p></li>
+<li>Save with quotes, choose the 'All Files' type and 'UTF-8' Encoding (see picture)<p></li>
+<img src='images/lmhostssave.bmp'/><p>
+<li>Click on 'My Computer->Properties->Network Identification'<p></li>
+<img src='images/system.bmp'/><p>
+<li>Click on 'Properties', click on 'Domain' and type 'RADHAKRISHNAN' then press OK.<p></li>
+<img src='images/idchange.bmp'/><p>
+<li>A pop-up box appears and you should now login as root (first time only for joining the domain)<p></li>
+<img src='./images/login.bmp'/>
+</ul>
+</body>
+</html>

@@ -1,0 +1,345 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+  <title>StripTool</title>
+  <meta name="GENERATOR"
+ content="Mozilla/3.01SGoldC-SGI (X11; I; IRIX 6.3 IP32) [Netscape]">
+  <meta name="Author" content="Ishwar Radhakrishnan">
+</head>
+<body text="#ffffff" bgcolor="#808080" link="#ffd700" vlink="#ffd700"
+ alink="#ffd700">
+<p><!-- WEBMAGIC VERSION NUMBER="2.0" --><!-- WEBMAGIC TRANSLATION NAME="ServerRoot" SRC="/var/www/htdocs/" DST="/" --><!-- WEBMAGIC TRANSLATION NAME="ProjectRoot" SRC="./" DST="" -->
+</p>
+<hr><a name="striptool"></a>
+<p></p>
+<h1><font color="#ffdead">StripTool in Felix 98.0</font></h1>
+<p>
+</p>
+<hr>
+<p></p>
+<p>StripTool was written for extracting and manipulating the most
+useful
+regions of three-dimensional heteronuclear NMR spectra. Most of the
+features
+wihtin the Tool are self-explanatory but if you are using it for the
+first
+time you are strongly advised to read the <b><a href="#caveats">Caveats</a></b>
+section before proceeding. The current implementation of the Tool does
+not have automated assignment capabilities. A routine to search for
+sequential
+connectivities is available.</p>
+<p>
+</p>
+<hr width="100%">
+<p></p>
+<h2><font color="#ffdead">Contents</font></h2>
+<ul>
+  <li><b><u><font color="#ffd700"><a href="#Open%20Strip%20Matrix">Open
+strip
+matrix</a></font></u></b></li>
+  <li><b><font color="#ffd700"><a href="#Close%20Strip%20Matrix">Close
+strip
+matrix</a></font></b></li>
+  <li><b><font color="#ffd700"><a href="#Projection...">Projection</a></font></b></li>
+  <li><b><font color="#ffd700"><a href="#Rescale%20DBA">Rescale DBA</a></font></b></li>
+  <li><b><font color="#ffd700"><a href="#Export%20DBA%202D-%3E3D">Export
+DBA&nbsp;2D
+-&gt;&nbsp;3D</a></font></b></li>
+  <li><b><font color="#ffd700"><a href="#Extract%20strips">Extract
+strips</a></font></b></li>
+  <li><b><font color="#ffd700"><a href="#Swap%20strips">Swap strips</a></font></b></li>
+  <li><b><font color="#ffd700"><a href="#Interleave%20strips">Interleave
+strips</a></font></b></li>
+  <li><b><font color="#ffd700"><a href="#Window%20strips">Window strips</a></font></b></li>
+  <li><b><font color="#ffd700"><a href="#Strip%20limits">Strip limits</a></font></b></li>
+  <li><b><font color="#ffd700"><a href="#Strip%20plot%20parameters">Strip
+plot
+parameters</a></font></b></li>
+  <li><b><font color="#ffd700"><a href="#Overlay%20plots">Overlay plots</a></font></b></li>
+  <li><b><font color="#ffd700"><a href="#Reference%20matrix">Reference
+matrix</a></font></b></li>
+  <li><b><font color="#ffd700"><a href="#Search%20along%20D1">Search
+along D1</a></font></b></li>
+  <li><b><font color="#ffd700"><a href="#Value%20via%20cursor">Value
+via cursor</a></font></b></li>
+  <li><b><font color="#ffd700"><a href="#Multiple%20cursors">Multiple
+cursors</a></font></b></li>
+</ul>
+<p>
+</p>
+<hr width="100%">
+<p></p>
+<h2><font color="#ffdead">Getting Started</font></h2>
+<p>Make the following changes to your .felixrc97 file: </p>
+<ul>
+  <li><tt>def sthome /monster/ishwar/sgi/felix/menus</tt> </li>
+  <li><tt>def macpf6 &amp;sthome/mac/</tt></li>
+  <li><tt>def mnupf4 &amp;sthome/mnu/</tt></li>
+  <li><tt>def motpfx &amp;sthome/mot/</tt></li>
+</ul>
+<p>Note that these changes should have little or no effect when you
+start-up
+Felix (i.e. if you have start-up preferences specified in your
+init.mac,
+it should still come up with those preferences). </p>
+<p>
+</p>
+<hr>
+<p></p>
+<h3><font color="#ffdead">The StripTool Palette</font></h3>
+<ul>
+  <li><a name="Open Strip Matrix"></a><font color="#ffd700"><b>Open
+Strip
+Matrix</b> </font></li>
+  <p>Same as the one found under the <b><font color="#ffdead">File </font></b>menu
+except matrices can be opened only with write access. <font
+ color="#adff2f">This
+is the preferred way of opening strip matrices.</font></p>
+  <li><a name="Close Strip Matrix"></a><font color="#ffd700"><b>Close
+Strip
+Matrix</b> </font></li>
+  <li><a name="Projection..."></a><b><font color="#ffd700">Projection...</font></b></li>
+  <p>Calculates a 2D projection (sum not skyline) of the 3D matrix. The
+projection
+matrix is particularly useful for peak-picking and creating the
+database
+needed to extract strips.</p>
+  <li><a name="Rescale DBA"></a><font color="#ffd700"><b>Rescale DBA</b>
+    </font></li>
+  <p>Rescales coordinates (and widths) of picked peaks. This is useful
+in
+instances when the matrix is resized. This utility assumes that the
+spectral
+widths remain unchanged.</p>
+  <li><a name="Export DBA 2D-&gt;3D"></a><font color="#ffd700"><b>Export
+DBA
+2D-&gt;3D</b> </font></li>
+  <p>This utility exports peaks picked in a 2D strip matrix to the
+original
+3D matrix. This is particularly useful when quantitating 3D <b><sup><font
+ size="-2">15</font></sup></b>N-edited
+NOESYs. Inputs: the DBA file containing this 2D cross peak information
+and the DBA file for the strip matrix.</p>
+  <li><a name="Extract strips"></a><font color="#ffd700"><b>Extract
+strips</b>
+    </font></li>
+  <p>Extracts regions (strips) from the 3D matrix selectively and
+collects
+them in a single matrix (strip matrix). Inputs include a 3D matrix,
+cross
+peak list specified by a DBA file, and a projected or reference matrix.
+The cross peak list is generated by picking peaks in the projected or
+reference
+matrix. Other inputs include specification of the strip <b><font
+ color="#adff2f"><i>half</i>-width</font></b>
+and dimension assignments for the strip and projected/reference
+matrices
+i.e. you need to specify which dimension of the 3D matrix corresponds
+to
+the D1 and D2 dimensions in the respective 2D matrices. Setting the <b>Create
+Peak ID# List</b> flag to `<b>Yes</b>' copies the item number to the
+`ptr1'
+element of each item in the DBA. This element thus retains the original
+Peak ID# and provides a way to keep track of each strip especially
+after
+they have undergone several rounds of swapping. </p>
+  <li><a name="Swap strips"></a><b><font color="#ffd700">Swap strips</font></b>
+  </li>
+  <p>Swaps any two strips in the current strip matrix. The strips can
+be
+specified explicitly or using the cursor. The DBA corresponding to the
+strip matrix should be open. The contents of the strips as well as the
+corresponding cross peak information are swapped in real time. </p>
+  <li><a name="Interleave strips"></a><b><font color="#ffd700">Interleave
+strips</font></b> </li>
+  <p>Interleaves strips from two strip matrices. A scaling feature
+allows
+contents of Matrix #1 to be multiplied by a specified factor prior to
+storing
+in the matrix. The DBA file corresponding to one of the strip matrices
+is copied to a separate file for the interleaved strip matrix. The
+contents
+of Strip Matrix #1 will appear on the left while those of the other
+matrix
+will appear on the right side of each strip. Note that the strip width
+is doubled in the interleaved strip matrix than in the regular matrix.
+Partitions are drawn only at strip width intervals for any strip matrix
+in the current implementation. </p>
+  <li><a name="Window strips"></a><b><font color="#ffd700">Window strips</font></b>
+  </li>
+  <p>Applies a sine^(3/2) bell window function to each strip in the D1
+dimension.
+This procedure de-emphasizes cross peaks that do not "belong"
+to the strip. The action is irreversible; <i><font color="#adff2f">caveat
+emptor</font></i>! It is advisable to perform interleaving after
+applying
+the window function to the individual matrices. Conversely, windowing
+is
+  <i><font color="#adff2f">not </font></i>recommended for <a
+ href="#Interleave%20strips">interleaved
+strip matrices</a>.</p>
+</ul>
+<ul>
+  <li><a name="Strip limits"></a><b><font color="#ffd700">Strip limits</font></b></li>
+  <p><font color="#ffffff">You may specify plot limits in strip units
+via
+this menu.</font></p>
+  <li><a name="Strip plot parameters"></a><b><font color="#ffd700">Strip
+plot parameters</font></b> </li>
+  <p><font color="#adff2f">The preferred way of adjusting plot
+parameters
+is through this menu</font>. Note that the values for the strip
+partitions
+get updated only when the contour level is changed. So don't be
+surprised
+when you open a matrix and draw contours and find no partitions between
+strips. You can make the program draw the partitions by simply changing
+the current contour level; even a small change will trigger this
+process.
+  </p>
+  <li><a name="Overlay plots"></a><b><font color="#ffd700">Overlay plots</font></b>
+  </li>
+  <p>With this tool any region of a strip matrix (e.g. HN(CO)CA) can be
+overlayed
+with the same region of another strip matrix (e.g. HNCA). Any pen color
+can be selected for the two plots. To get meaningful results, the data
+need to have been acquired with identical parameters at least for the
+D2
+dimension of the strip matrices. </p>
+  <li><a name="Reference matrix"></a><b><font color="#ffd700">Reference
+matrix</font></b>
+  </li>
+  <p>This is a dialog box for entering acquisition parameters for the
+D1
+and Dx (virtual) dimensions. It needs to be updated every time a
+different
+strip matrix is opened. The information is used by the <b><font
+ color="#ffd700"><a href="#Multiple%20cursors">Multiple
+cursors</a></font></b> item. It allows the user to obtain chemical
+shift
+information in the D1, D2 and virtual dimensions of the strip matrix. </p>
+  <li><a name="Search along D1"></a><b><font color="#ffd700">Search
+along
+D1</font></b> </li>
+  <p>Searches for peaks in other strips at a given D2 coordinate. This
+is
+useful when looking for inter-residue connectivities. The <b>Tolerance
+  </b>parameter specifies the width of the search window in points in
+the
+D1 and D2 dimensions (i.e. a value of 0 corresponds to a window width
+of
+1 and the search is performed only in the selected row; a value of 1
+corresponds
+to a window width of <font color="#ffffff">3 (i.e. (2*<b>Tolerance</b>)+1)</font>.
+The D1 coordinate is taken to be the center of each strip by default.
+The
+  <b>Threshold </b>parameter specifies the criterion for the
+identification
+of a peak which is based on intensity and is specified as a
+multiplicative
+factor relative to the current contour level. When working with
+interleaved
+strip matrices, it is also necessary to specify which region (left or
+right)
+of each strip to search. This parameter is ignored for regular sttrip
+matrices.
+  </p>
+  <p>New options for coordinated (positive and/or negative) peak
+searches
+implemented by <b><font color="#adff2f">Dr Michael J. Osborne</font></b>.
+These enhancements should allow rapid identification of sequential
+connectivities
+in <font color="#ffffff"><b>HNCACB:CBCA(CO)NH</b>, <b>HNCA:HN(CO)CA</b></font>
+type interleaved strip matrices. </p>
+</ul>
+<ul>
+  <li><a name="Value via cursor"></a><font color="#ffd700"><b>Value via
+cursor</b>
+    </font></li>
+  <p>Provides information including Strip#, D1 and D2 positions (in
+points)
+and the intensity at the current location dynamically. </p>
+  <li><a name="Multiple cursors"></a><b><font color="#ffd700">Multiple
+cursors</font></b>
+  </li>
+  <p>Provides information including Strip#, Original Peak ID# for the
+current
+strip, D1, D2 and Dx positions (in ppm) as well as the assignment for
+the
+current strip (i.e. contents of the asg1 column in the <font
+ color="#00ffff">xpk:peaks</font>
+entity). The input for this tool is specified within the <b><font
+ color="#ffd700"><a href="#Reference%20matrix">Reference
+matrix</a></font></b> menu. </p>
+</ul>
+<p>
+</p>
+<hr><a name="caveats"></a>
+<p></p>
+<h2><font color="#ffdead">Caveats and Recommendations</font></h2>
+<menu>
+<li><b><font color="#ffdead">StripTool </font></b>will work stably in
+single
+frame mode. No guarantees are made for multiple frame modes.</li>
+<li>All matrices opened within the Tool have write access by default.
+This
+is to allow write operations (e.g. strip swapping, rescaling values of
+strip partitions when changing contour levels) to be performed without
+producing error messages. <i><font color="#adff2f">This also means
+that
+opening matrices other than strip matrices within this Tool can result
+in undesirable consequences</font></i>. Conversely, opening strip
+matrices
+using the <b><font color="#ffd700">Open </font></b>sub-menu within
+the
+  <b><font color="#ffdead">File </font></b>menu without write access
+can
+produce errors when such operations are performed using the Tool. </li>
+<li>A strip matrix once generated within the Tool carries important
+information
+which is preserved in the space provided for referencing dimension D1.
+Therefore, <i><font color="#adff2f">changes made to the referencing
+parameters
+of dimension D1 can be potentially deleterious</font></i>. This
+restriction
+does not apply to the D2 dimension however. </li>
+<li>The item numbers in the <font color="#00ffff">xpk:peaks</font>
+entity
+of the DBA need to be <i><font color="#adff2f">continuous</font> </i>for
+the <b><font color="#ffd700"><a href="#Extract%20strips">Extract strips</a></font></b>
+tool to work properly. Use <font color="#ffd700">Renumber peaks</font>
+option within the <font color="#00ffff">xpk:peaks</font> spreadsheet
+(this
+is triggered by the following sequence:&nbsp;<font color="#ffdead">Edit</font>&gt;<font
+ color="#ffd700">Peaks</font>&gt;<font color="#ffd700">Peak</font>)</li>
+<li>It is a good idea to maintain a separate DBA for every strip
+matrix.
+</li>
+</menu>
+<p>
+</p>
+<hr>
+<p></p>
+<h2><font color="#ffdead">Updates</font></h2>
+<p>4/21/96: <b><font color="#ffd700">Search along D1</font></b> added.
+</p>
+<p>9/19/96: <b><font color="#ffd700">Search along D1</font></b>
+enhancements
+by <font color="#adff2f">Dr Michael J. Osborne</font>. </p>
+<p>4/01/97: Two bugs reported by <font color="#adff2f">Dr Brendan
+Duggan</font>
+fixed. </p>
+<p>4/15/97: <b><font color="#ffd700">Export DBA 2D-&gt;3D</font></b>
+added.</p>
+<p>2/20/98:&nbsp;<b><font color="#ffdead">StripTool</font></b> stably
+incorporated
+within <b>Felix 97.0</b>. </p>
+<p>
+</p>
+<hr>
+<p></p>
+<p></p>
+<p><i>Last modified: March 27th, 1998 </i></p>
+<p><a href="#striptool"><i>Back to the top of document</i> </a></p>
+</body>
+</html>

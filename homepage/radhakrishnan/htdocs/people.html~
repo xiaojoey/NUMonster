@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- DW6 -->
+<head>
+<!-- Copyright 2005 Macromedia, Inc. All rights reserved. -->
+<title>Radhakrishnan Lab Personnel</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="mm_health_nutr.css" type="text/css" />
+<script language="JavaScript" type="text/javascript">
+//--------------- LOCALIZEABLE GLOBALS ---------------
+var d=new Date();
+var monthname=new Array("January","February","March","April","May","June","July","August","September","October","November","December");
+//Ensure correct for language. English is "January 1, 2004"
+var TODAY = monthname[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+//---------------   END LOCALIZEABLE   ---------------
+</script>
+<style type="text/css">
+<!--
+.style2 {color: #A52C4A}
+.style3 {
+	color: #FFFFCC;
+	font-style: italic;
+}
+.style4 {
+	color: #FFFFCC;
+}
+.style5 {color: #0099FF}
+body {
+	background-color: #EAFFFF;
+}
+.style6 {color: #EFEBDE}
+.style8 {color: #FFFFCC; }
+.style12 {
+	color: #666666;
+	line-height: 20px;
+}
+.style13 {
+	color: #666666;
+	line-height: 20px;
+}
+.style14 {color: #666666}
+.style17 {
+	color: #FF9966
+}
+-->
+</style>
+</head>
+<body>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" bordercolor="#66CCFF">
+  <tr bgcolor="#D5EDB3">
+    <td colspan="3" rowspan="2" bgcolor="#99CCFF"><img src="images/header.jpg" alt="Northwestern Radhakrishnan Lab" width="382" height="100" longdesc="intro.jpg" /></td>
+    <td height="50" colspan="2" align="center" valign="bottom" nowrap="nowrap" bgcolor="#99CCFF" class="style8" id="logo">the radhakrishnan lab @ northwestern</td>
+    <td width="27" bgcolor="#99CCFF"><span class="style2"></span></td>
+  </tr>
+
+  <tr bgcolor="#D5EDB3">
+    <td height="52" colspan="2" align="center" valign="top" nowrap="nowrap" bgcolor="#99CCFF" id="tagline"><p class="style3">department of biochemistry, molecular biology and cell biology, evanston, il 60208</p>    </td>
+	<td width="27" bgcolor="#99CCFF"><span class="style2"></span></td>
+  </tr>
+
+  <tr>
+    <td height="2" colspan="6" bgcolor="#99CCFF"><img src="mm_spacer.gif" alt="" width="1" height="2" border="0" /></td>
+  </tr>
+
+  <tr bgcolor="#99CC66">
+  	<td height="20" colspan="6" bordercolor="#FFFFF7" bgcolor="#66CCFF" id="dateformat">&nbsp;</td>
+  </tr>
+
+  <tr>
+    <td colspan="6" bgcolor="#99CCFF"><img src="mm_spacer.gif" alt="" width="1" height="2" border="0" /></td>
+  </tr>
+
+ <tr>
+    <td width="165" valign="top" bgcolor="#3399FF">
+	<table border="0" cellspacing="0" cellpadding="0" width="165" id="navigation">
+        <tr>
+          <td width="165">&nbsp;<span class="style5"><br />
+		 &nbsp;</span><br /></td>
+        </tr>
+        <tr>
+          <td width="165"><a href="index.html" class="navText">home</a></td>
+        </tr>
+        <tr>
+          <td width="165"><a href="research.html" class="navText">research</a></td>
+        </tr>
+        <tr>
+          <td width="165"><a href="people.html" class="navText">people</a></td>
+        </tr>
+        <tr>
+          <td width="165"><a href="gallery.html" class="navText">gallery</a></td>
+        </tr>
+        <tr>
+          <td width="165"><a href="group_wisdom/group_wisdom.html" class="navText style4">knowledgebase</a></td>
+        </tr>
+        <tr>
+          <td><a href="affiliations.html" class="navText style6">affiliations</a></td>
+        </tr>
+      </table>
+ 	 <br />
+  	&nbsp;<br />
+  	&nbsp;<br />
+  	&nbsp;<br /> 	</td>
+    <td width="50" bgcolor="#EAFFFF"><img src="images/mm_spacer.gif" width="1" height="1" /></td>
+    <td colspan="2" valign="top" bgcolor="#EFFFFF"><table border="0" cellspacing="0" cellpadding="2" width="610">
+      <tr>
+        <td height="39" colspan="2" class="pageName">&nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan="2" class="pageName style17">People</td>
+      </tr>
+      <tr>
+        <td width="277" height="250" rowspan="2" align="center" bgcolor="#F9F9FF" class="subHeader"><img src="images/janny.jpg" alt="Janny Concha" border="0" /></td>
+        <td width="325" valign="top" bgcolor="#F9F9FF" class="bodyText"><p class="subHeader">JANNY CONCHA URDAY-ZAA</p>
+            <h3><span class="subsubheader">Research Technologist</span></h3>
+            <strong>Cook 4104; </strong><strong>x7-1189; <a href="mailto:j--zaa@northwestern.edu">Email</a></strong></td>
+      </tr>
+      
+      <tr>
+        <td width="325" valign="top" bgcolor="#F9F9FF" class="bodyText style12">Janny obtained her Bachelor's degree from Earlham College in 2008 and joined the  lab in the same year. Her projects relate to biochemical characterizations of multiple transcription factors including CREB, SF1, and the inv(16) gene product.</td>
+      </tr>
+      <tr>
+        <td height="250" rowspan="2" align="center" bgcolor="#FFFFF0" class="subHeader"><img src="images/senthil.jpg" alt="Senthil Kumar" border="0" /></td>
+        <td width="325" valign="top" bgcolor="#FFFFF0" class="bodyText"><p class="subHeader">SENTHIL KUMAR GANESAN</p>          <h3><span class="subsubheader">Post-doctoral Fellow</span></h3>          
+          <strong>Cook 4162; </strong><strong>x7-1189; <a href="mailto:g-kumar@northwestern.edu">Email</a></strong></td>
+      </tr>
+      
+      <tr>
+        <td width="325" valign="top" bgcolor="#FFFFF0" class="bodyText style12">Senthil Kumar earned his PhD from the Indian Institute of Science in 2009 and joined the lab as a visiting pre-doctoral fellow in 2008. He is currently investigating the mechanism of transcriptional activation by the GATA factors.</td>
+      </tr>
+      <tr>
+        <td height="250" rowspan="2" align="center" bgcolor="#F9F9FF" class="subHeader"><img src="images/jenny.jpg" alt="Jenny Luo" border="0" /></td>
+        <td width="325" valign="top" bgcolor="#F9F9FF" class="bodyText"><span class="subHeader">QIANYI (JENNY) LUO</span>          <h3><span class="subsubheader">Post-doctoral Fellow</span></h3>          
+        <strong>Cook 4162; </strong><strong>x7-1189; <a href="mailto:q-luo@northwestern.edu">Email</a></strong></td>
+      </tr>
+      
+      <tr>
+        <td width="325" valign="top" bgcolor="#F9F9FF" class="bodyText style13">Jenny earned her PhD from the University of Kansas in 2009 and joined the lab in the same year. She is currently investigating the structural aspects of the CREB-TORC interaction and the interaction between CREB and its diverse DNA targets (CREs). </td>
+      </tr>
+      <tr>
+        <td height="250" rowspan="2" align="center" bgcolor="#FFFFF0" class="subHeader"><img src="images/anand.jpg" alt="Anand Patel" border="0" /></td>
+        <td width="325" valign="top" bgcolor="#FFFFF0" class="bodyText"><span class="subHeader">ANAND PATEL</span>          <h3><span class="subsubheader">WCAS Senior</span></h3>          
+        <strong>Cook 4162; </strong><strong> x7-1189; <a href="mailto:anandpatel2007@u.northwestern.edu">Email</a></strong></td>
+      </tr>
+      
+      <tr>
+        <td width="325" valign="top" bgcolor="#FFFFF0" class="bodyText style14">Anand is an undergraduate student majoring in biological sciences and has been pursuing independent research in the lab  since the Winter quarter in 2008. Anand's project relates to studies of the interactions between chromodomains found in the Sin3 corepressor complex and chromatin.</td>
+      </tr>
+      <tr>
+        <td height="250" rowspan="2" align="center" bgcolor="#F9F9FF" class="subHeader"><img src="images/julie.jpg" alt="Julie Poposki" border="0" /></td>
+        <td width="325" valign="top" bgcolor="#F9F9FF" class="bodyText"><span class="subHeader">JULIE POPOSKI</span>          <h3><span class="subsubheader">Research Technologist</span></h3>          <strong>Cook 4104; x7-1189; <a href="mailto:j-poposki@northwestern.edu">Email</a></strong></td>
+      </tr>
+      
+      <tr>
+        <td width="325" valign="top" bgcolor="#F9F9FF" class="bodyText"><span class="bodyText style14">Julie obtained her Masters degree from Caltech in 2009 and joined the lab in the same year. Her project is focused on the reconstitution of core Sin3 corepressor complex.</span></td>
+      </tr>
+      <tr>
+        <td height="250" rowspan="2" align="center" bgcolor="#FFFFF0" class="subHeader"><img src="images/afsaneh.jpg" alt="Afsaneh Talai" border="0" /></td>
+        <td width="325" valign="top" bgcolor="#FFFFF0" class="bodyText"><span class="subHeader">AFSANEH TALAI</span>          <h3><span class="subsubheader">WCAS Senior</span></h3>          
+        <strong>Cook 4104; </strong><strong> x7-1189; <a href="mailto:a-talai@northwestern.edu">Email</a></strong></td>
+      </tr>
+      
+      <tr>
+        <td width="325" valign="top" bgcolor="#FFFFF0" class="bodyText"><span class="bodyText style14">Afsaneh is an undergraduate student majoring in Spanish  and has been pursuing independent research in the lab  since the Winter quarter in 2008. Afsaneh's project relates to the biochemical and biophysical characterizations of the CREB-TORC interaction.</span></td>
+      </tr>
+      <tr>
+        <td height="250" rowspan="2" align="center" bgcolor="#F9F9FF" class="subHeader"><img src="images/tao.jpg" alt="Tao Xie" border="0" /></td>
+        <td width="325" valign="top" bgcolor="#F9F9FF" class="bodyText"><span class="subHeader">TAO XIE</span>          <h3><span class="subsubheader">Post-doctoral Fellow</span></h3>          
+        <strong>Cook 4162; x7-1189; <a href="mailto:t-xie@northwestern.edu">Email</a></strong></td>
+      </tr>
+      
+      <tr>
+        <td width="325" valign="top" bgcolor="#F9F9FF" class="bodyText"><span class="bodyText style14">Tao earned his doctoral degree from the Institute of Biophysics, Chinese Academy of Sciences in 2008 and joined the lab in the same year. He is currently leading a number of research directions involving multiple components of the Sin3 corepressor complex.</span></td>
+      </tr>
+      <tr>
+        <td height="250" rowspan="2" align="center" bgcolor="#FFFFF0" class="subHeader"><img src="images/yongbo.jpg" alt="yongbo zhang" width="250" height="250" /></td>
+        <td valign="top" bgcolor="#FFFFF0" class="bodyText"><span class="subHeader">YONGBO ZHANG</span>
+          <h3><span class="subsubheader">NMR Manager</span></h3>
+          <strong>Tech KG86; x7-1222; <a href="mailto:ybzhang@northwestern.edu">Email</a></strong></td>
+      </tr>
+      <tr>
+        <td height="46" valign="top" bgcolor="#FFFFF0" class="bodyText"><p class="bodyText style14">Yongbo Zhang is an honorary member of the lab. He joined Northwestern as Manager of the Biological NMR Center in November 2004 after earning his PhD with Mike Zagorski and Frank Sonnichsen at Case Western Reserve University in 2001 followed by a post-doctoral stint with Erik Zuiderweg at the University of Michigan, Ann Arbor. The lab collaborates with Yongbo on a number of projects.</p>
+          </td>
+      </tr>
+    </table>
+    <p>&nbsp;</p></td>
+    <td colspan="2" bgcolor="#EAFFFF">&nbsp;</td>
+</tr>
+  <tr>
+    <td width="165" height="20" bgcolor="#3399FF">&nbsp;</td>
+    <td width="50">&nbsp;</td>
+    <td width="186">&nbsp;</td>
+    <td width="486">&nbsp;</td>
+    <td colspan="2">&nbsp;</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr bgcolor="#99CC66">
+    <td height="20" colspan="7" bordercolor="#0099FF" bgcolor="#66CCFF" id="dateformat2"><div align="center" class="style4">website maintained by members of the Radhakrishnan laboratory; all rights reserved</div></td>
+  </tr>
+</table>
+</body>
+</html>

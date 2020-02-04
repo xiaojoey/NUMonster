@@ -1,0 +1,139 @@
+/* Global Styles */
+
+body {
+	margin:0px;
+	}
+	
+td {
+	font:11px Arial, Helvetica, sans-serif;
+	color:#666666;
+	line-height: 20px;
+	letter-spacing: 0em;
+	}
+	
+a {
+	color: #993300;
+	}
+	
+a:hover {
+	color: #5C743D;
+	}
+a:hover, a:visited, a:link, a:active
+{
+    text-decoration: none;
+}
+
+/* ID Styles */
+
+#navigation td {
+	border-bottom: 1px solid #F4FFE4;
+	}
+	
+#navigation a {
+	font: bold 16px Arial, Helvetica, sans-serif;
+	color: #D5EDB3;
+	line-height:16px;
+	letter-spacing:.1em;
+	text-decoration: none;
+	display:block;
+	padding:8px 6px 10px 20px;
+	}
+	
+#navigation a:hover {
+	background: #FFFFCC;
+	color:#0099FF;
+	}
+	
+#logo 	{
+	font:24px Arial, Helvetica, sans-serif;
+	color: #FFFFCC;
+	letter-spacing:0.1em;
+	line-height:30px;
+	}
+
+#tagline 	{
+	font:11px Arial, Helvetica, sans-serif;
+	color: #993300;
+	letter-spacing:0.1em;
+	line-height:18px;
+	}
+
+#monthformat {
+	border-bottom: 1px dashed #5C743D;
+	}
+		
+#dateformat {
+	font:11px Arial, Helvetica, sans-serif;
+	color: #993300;
+	letter-spacing:.2em;
+	}
+	
+#dateformat a {
+	font:11px Arial, Helvetica, sans-serif;
+	color: #993300;
+	font-weight:bold;
+	letter-spacing:.1em;
+	text-decoration:none;
+	}
+	
+#dateformat a:hover {
+	color: #F4FFE4;
+	letter-spacing:.1em;
+	}
+	
+/* Class Styles */
+	
+.subsubheader {
+	font:bold 12px Arial, Helvetica, sans-serif;
+	color:#009933;
+	line-height:20px;
+	margin-top:0px;
+	letter-spacing: 0em;
+	}
+	
+.pageName{
+	font: 18px Arial, Helvetica, sans-serif;
+	color: #FF0000;
+	line-height:20px;
+	letter-spacing:0.21em;
+	}
+	
+.subHeader {
+	font:bold 12px Arial, Helvetica, sans-serif;
+	color: #FF0000;
+	line-height:22px;
+
+
+
+
+
+
+
+	letter-spacing: 0
+.em;
+	letter-spacing: 0.1em;
+	}
+
+.quote {
+	font: 20px Arial, Helvetica, sans-serif;
+	color: #759DA1;
+	line-height:30px;
+	}
+	
+.smallText {
+	font: 10px Arial, Helvetica, sans-serif;
+	color: #666666;
+	line-height: 20px;
+	list-style-position: outside;
+	list-style-image: none;
+	list-style-type: disc;
+	}
+	
+.navText {
+	font: 16px Arial, Helvetica, sans-serif;
+	color: #003366;
+	line-height:16px;
+	letter-spacing:.1em;
+	text-decoration: none;
+	}
+	
