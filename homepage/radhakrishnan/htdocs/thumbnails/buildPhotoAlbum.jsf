@@ -1,0 +1,12 @@
+App.progressCountTotal = 1;
+App.progressCountCurrent = 0;
+fw.dismissBatchDialogWhenDone = true;
+doc = fw.openDocument('file:///C|/Documents and Settings/ishwar/Desktop/radlab/gallery_images/sf1dbdsbs.png');
+App.progressCountCurrent = 1;
+App.batchStatusString = 'sf1dbdsbs.png';
+if (!Files.exists('file:///C|/Documents and Settings/ishwar/Desktop/radlab/images/sf1dbdsbs_png.jpg') || confirm('file:///C|/Documents and Settings/ishwar/Desktop/radlab/images/sf1dbdsbs_png.jpg already exists. Click OK to replace the file.')) 
+fw.exportDocumentAs(doc, 'file:///C|/Documents and Settings/ishwar/Desktop/radlab/images/sf1dbdsbs_png.jpg',({applyScale:false, colorMode:"24 bit", exportFormat:"JPEG", jpegQuality:80, jpegSmoothness:0, jpegSubsampling:0, name:"JPEG - Better Quality", numEntriesRequested:0, percentScale:"100", useScale:true, xSize:0, ySize:0}));
+if (!Files.exists('file:///C|/Documents and Settings/ishwar/Desktop/radlab/thumbnails/sf1dbdsbs_png.jpg') || confirm('file:///C|/Documents and Settings/ishwar/Desktop/radlab/thumbnails/sf1dbdsbs_png.jpg already exists. Click OK to replace the file.')) 
+fw.exportDocumentAs(doc, 'file:///C|/Documents and Settings/ishwar/Desktop/radlab/thumbnails/sf1dbdsbs_png.jpg',({applyScale:true, colorMode:"24 bit", exportFormat:"JPEG", jpegQuality:80, jpegSmoothness:0, jpegSubsampling:0, name:"JPEG - Better Quality", numEntriesRequested:0, percentScale:100, useScale:false, xSize:-200, ySize:-200}));
+fw.closeDocument(doc);
+'done';

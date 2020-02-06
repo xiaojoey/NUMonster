@@ -9,8 +9,11 @@ const fs = require('fs');
 //The xml string is taken from the test files
 const xml = fs.readFileSync('./test/jobs/27rv13g098/27rv13g098.xml', 'utf8');
 console.log(xml);
-const newXml = "xml=" + xml;
 
+const newXml = {
+    "xml": xml,
+    "job_id": "27rv13g098"
+};
 //Checking that testing framework works
 test('First test!', function(t){
     t.end();

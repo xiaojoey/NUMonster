@@ -16,6 +16,7 @@
     "3dmol": "^1.4.0",
     "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.1.0",
+    "dotenv-webpack": "^1.7.0",
     "jquery": "^3.4.1",
     "sigma": "^1.2.1",
     "vee-validate": "^2.2.15",

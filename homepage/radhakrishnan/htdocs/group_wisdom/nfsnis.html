@@ -1,0 +1,90 @@
+<html>
+<head><title>NFS/NIS set-up for Radhakrishnan Lab</title></head>
+<body>
+<center><h2>NFS/NIS set-up and instructions</h2></center>
+
+<center>These instructions are for the client, do not alter ANYTHING on monster</center><p>
+
+<H3><u>Firewall</u></H3>
+<p>
+Monster needs to be able to access the client's portmap service at port 111<br/>
+So add these lines to:
+<pre>/etc/sysconfig/iptables</pre><p>
+<ul>
+<li>Fedora:<p>
+<ul><li><pre>-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 111 -j ACCEPT</pre></li>
+<li><pre>-A RH-Firewall-1-INPUT -m state --state NEW -m udp -p udp --dport 111 -j ACCEPT</pre></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>RedHat 9:<p>
+<ul><li><pre>-A RH-Lokkit-0-50-INPUT -m state --state NEW -m tcp -p tcp --dport 111 -j ACCEPT</pre></li>
+<li><pre>-A RH-Lokkit-0-50-INPUT -m state --state NEW -m udp -p udp --dport 111 -j ACCEPT</pre></li>
+</ul>
+</li>
+</ul>
+
+<p>
+and run:
+<pre>iptables-restore < /etc/sysconfig/iptables</pre>
+<p>
+
+<H3><u>NFS (Networked File System)</u></H3>
+<p>
+Enables you to access a file system remotely as if it were local.<p>
+You need to be root to do the following.<p>
+<ul><li>make mount directory (eg: /monster) as root:
+<ul><li>
+<pre>mkdir /monster</pre></li>
+</ul></li></ul>
+<ul><li>edit /etc/fstab to insert this line:
+<ul><li>
+<pre>
+monster.northwestern.edu:/home /monster            nfs     rw,hard,intr    0 0
+</pre></li>
+</ul></li></ul>
+<ul><li>run: 
+<ul><li>
+<pre>
+mount /monster
+</pre></li>
+</ul></li></ul>
+<p>
+This will also mount automatically at startup, thanks to the line in /etc/fstab.<p>
+
+<H3><u>NIS (Network Information Service)</u></H3>
+<p>
+This provides the users, passwords and groups from a central server without having to create any new and identical users.<p>
+You need to be root to do the following.<p>
+<ul><li>edit /etc/yp.conf and insert this line:
+<ul><li><pre>
+domain radlab server 129.105.11.202
+</pre></li>
+</ul></li></ul>
+<ul><li>
+edit /etc/sysconfig/network and insert this line:
+<ul><li><pre>
+NISDOMAIN="radlab"
+</pre></li>
+</ul></li></ul>
+<ul><li>
+run:
+<ul><li><pre>
+nisdomainname radlab
+</pre></li>
+</ul></li></ul>
+<ul><li>
+start service:
+<ul><li><pre>
+sevice ypbind start
+</pre></li>
+</ul></li></ul>
+<p>
+Finally, to enable this service when booting up, run:
+<ul><li><pre>chkconfig --add ypbind</pre></li>
+<li><pre>chkconfig ypbind on</pre></li>
+</ul>
+
+</body>
+</html>

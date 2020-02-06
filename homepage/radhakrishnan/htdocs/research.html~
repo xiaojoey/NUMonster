@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!-- DW6 -->
+<head>
+<!-- Copyright 2005 Macromedia, Inc. All rights reserved. -->
+<!-- TemplateBeginEditable name="doctitle" -->
+<title>Radhakrishnan Lab Research Page</title>
+<!-- TemplateEndEditable -->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="mm_health_nutr.css" type="text/css" />
+<script language="JavaScript" type="text/javascript">
+//--------------- LOCALIZEABLE GLOBALS ---------------
+var d=new Date();
+var monthname=new Array("January","February","March","April","May","June","July","August","September","October","November","December");
+//Ensure correct for language. English is "January 1, 2004"
+var TODAY = monthname[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+//---------------   END LOCALIZEABLE   ---------------
+</script>
+<style type="text/css">
+<!--
+.style2 {color: #A52C4A}
+.style3 {
+	color: #FFFFCC;
+	font-style: italic;
+}
+.style4 {
+	color: #FFFFCC;
+}
+.style5 {color: #0099FF}
+body {
+	background-color: #EAFFFF;
+}
+.style6 {color: #EFEBDE}
+.style7 {
+	color: #FF9966
+}
+.style8 {color: #FFFFCC; }
+.style9 {color: #009966}
+-->
+</style>
+<!-- TemplateBeginEditable name="head" --><!-- TemplateEndEditable -->
+</head>
+<body>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" bordercolor="#66CCFF">
+  <tr bgcolor="#D5EDB3">
+    <td colspan="3" rowspan="2" bgcolor="#99CCFF"><img src="images/header.jpg" alt="header" width="382" height="100" longdesc="intro.jpg" /></td>
+    <td height="50" colspan="3" align="center" valign="bottom" nowrap="nowrap" bgcolor="#99CCFF" class="style8" id="logo">the radhakrishnan lab @ northwestern</td>
+    <td width="27" bgcolor="#99CCFF"><span class="style2"></span></td>
+  </tr>
+
+  <tr bgcolor="#D5EDB3">
+    <td height="52" colspan="3" align="center" valign="top" nowrap="nowrap" bgcolor="#99CCFF" id="tagline"><p class="style3">department of biochemistry, molecular biology and cell biology, evanston, il 60208</p>
+    </td>
+	<td width="27" bgcolor="#99CCFF"><span class="style2"></span></td>
+  </tr>
+
+  <tr>
+    <td height="2" colspan="7" bgcolor="#99CCFF"><img src="mm_spacer.gif" alt="" width="1" height="2" border="0" /></td>
+  </tr>
+
+  <tr bgcolor="#99CC66">
+  	<td height="20" colspan="7" bgcolor="#66CCFF" id="dateformat">&nbsp;</td>
+  </tr>
+
+  <tr>
+    <td colspan="7" bgcolor="#99CCFF"><img src="mm_spacer.gif" alt="" width="1" height="2" border="0" /></td>
+  </tr>
+
+ <tr>
+    <td width="165" valign="top" bgcolor="#3399FF">
+	<table border="0" cellspacing="0" cellpadding="0" width="165" id="navigation">
+        <tr>
+          <td width="165">&nbsp;<span class="style5"><br />
+		 &nbsp;</span><br /></td>
+        </tr>
+        <tr>
+          <td width="165"><a href="index.html" class="navText">home</a></td>
+        </tr>
+        <tr>
+          <td width="165"><a href="research.html" class="navText">research</a></td>
+        </tr>
+        <tr>
+          <td width="165"><a href="people.html" class="navText">people</a></td>
+        </tr>
+        <tr>
+          <td width="165"><a href="gallery.html" class="navText">gallery</a></td>
+        </tr>
+        <tr>
+          <td width="165"><a href="group_wisdom/group_wisdom.html" class="navText style4">knowledgebase</a></td>
+        </tr>
+        <tr>
+          <td><a href="affiliations.html" class="navText style6">affiliations</a></td>
+        </tr>
+      </table>
+ 	 <br />
+  	&nbsp;<br />
+  	&nbsp;<br />
+  	&nbsp;<br /> 	</td>
+    <td width="50" bgcolor="#EAFFFF"><img src="images/mm_spacer.gif" alt="" width="1" height="1" border="0" /></td>
+    <td colspan="2" valign="top" bgcolor="#EFFFFF"><img src="mm_spacer.gif" alt="" width="305" height="1" border="0" /><br />
+	&nbsp;
+	&nbsp;<br />
+	<table border="0" cellspacing="0" cellpadding="0" width="300">
+        <tr>
+          <td width="300" class="pageName style7">Research</td>
+		</tr>
+
+		<tr>
+          <td valign="top" bgcolor="#EAFFFF" class="bodyText"><p>The Radhakrishnan lab is interested in the mechanistic  aspects of eukaryotic transcription regulation at the molecular level.  A broad range of transcription factors and  coregulators important for normal cellular physiology and organ development are  presently under investigation. </p>
+            <h3 class="style9">Recruitment and Assembly of the HDAC-associated Sin3 Corepressor Complex</h3>
+            <p>Multiprotein complexes containing  chromatin-modifying enzymes play an important role in altering the histone code  thereby changing the transcriptional status of specific genetic loci.  Our lab is investigating how two functionally distinct forms of the Sin3 corepressor complex are recruited to specific sites on the  genome, how these complexes are assembled, and what role(s) the  constitutively-associated subunits of the complex play in effecting specific  transcriptional outcomes.  These  questions bear significance, as not only have multiple components been implicated  in the genesis and progression of cancers, the key enzymatic components of this  complex – the so-called Histone Deacetylases (aka HDACs) – are proven targets  of cancer therapy.  </p>
+            <h3 class="style9">Molecular Mechanism of Transcriptional Activation by the GATA-4  Transcription Factor</h3>
+            <p>The sequence-specific DNA-binding transcription factor  GATA-4 plays an important role in the proper development of the heart and has  been suggested to play a role in cardiac hypertrophy or thickening of the heart  muscle.  At the molecular level, GATA-4  regulates a number of cardiac-specific genes, but details of its mechanism of  action are presently unknown.  Besides  binding to specific DNA elements in the promoter regions of target genes,  GATA-4 has been shown to recruit coactivator proteins to activate  transcription.  We are seeking to clarify  how GATA-4 interacts with the p300 coactivator – a transcription factor with  intrinsic Histone Acetyltransferase (HAT) activity and another key player of  heart development – at atomic resolution, as this interaction appears to be a  crucial link in the network of protein-protein interactions seeded by  GATA-4.  A longer-term goal of this  project is to also elucidate at atomic resolution the interactions with other  transcription regulators.  </p>
+            <h3 class="style9">Phosphorylation-Independent Mechanism of Transcriptional Activation by CREB</h3>
+          <p>The cyclic AMP responsive  transcription factor CREB activates transcription via both  phosphorylation-dependent and -independent mechanisms.  Whereas the phosphorylation-dependent  mechanism involving cyclic AMP dependent kinases relies on the recruitment of  p300/CBP coactivators and is well characterized, phosphorylation-independent  mechanisms of transcriptional activation are poorly understood.  Members of the TORC family of coactivators  have been recently implicated in the latter pathway and we are seeking to  clarify the molecular basis of these interactions with CREB.  The TORC family in conjunction with CREB is  involved in regulating glucose levels under fasting conditions and this may  have implications in  diabetes.</p></td>
+        </tr>
+      </table>
+	 <br />
+	&nbsp;<br />	</td>
+    <td width="50" bgcolor="#EAFFFF"><img src="images/mm_spacer.gif" alt="" width="1" height="1" border="0" /></td>
+<td width="319" valign="top" bgcolor="#EAFFFF"><br />
+		&nbsp;<br />
+		<table border="0" cellspacing="0" cellpadding="0" width="282" id="leftcol">
+
+	   <tr>
+       <td width="10"><img src="mm_spacer.gif" alt="" width="10" height="1" border="0" /></td>
+		<td width="261" class="smallText"><p><span class="subHeader style7">SELECTED PUBLICATIONS</span><br />
+			</p>
+
+			<p>He, Y., Imhoff, R., Sahu, A., and Radhakrishnan, I. (2009). Solution structure of a novel zinc finger  motif in the SAP30 polypeptide of the Sin3 corepressor complex and its  potential role in nucleic acid recognition. <a href="http://www.ncbi.nlm.nih.gov/pubmed/19223330?ordinalpos=2&amp;itool=EntrezSystem2.PEntrez.Pubmed.Pubmed_ResultsPanel.Pubmed_DefaultReportPanel.Pubmed_RVDocSum"><em>Nucleic Acids Res.</em> <strong>37</strong>, 2142-2152.</a></p>
+			<p>Sahu, S.C., Swanson, K.A., Kang, R.S., Huang,  K., Brubaker, K., Ratcliff, K., &amp; Radhakrishnan, I. (2008). Conserved themes in target recognition by the  PAH1 and PAH2 domains of the Sin3 transcriptional corepressor. <a href="http://www.ncbi.nlm.nih.gov/pubmed/18089292?ordinalpos=4&amp;itool=EntrezSystem2.PEntrez.Pubmed.Pubmed_ResultsPanel.Pubmed_DefaultReportPanel.Pubmed_RVDocSum"><em>J. Mol. Biol.</em> <strong>375</strong>, 1444-1456.</a></p>
+			<p>Little,  T.H., Zhang, Y., Matulis, C.K., Weck, J., Zhang, Z.,  Ramachandran, A., Mayo, K.E. and Radhakrishnan, I. (2005).  Sequence-specific DNA recognition by Steroidogenic Factor 1: A helix at  the carboxy-terminus of the DNA binding domain is necessary for complex  stability. <a href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=pubmed&amp;dopt=Abstract&amp;list_uids=16339274&amp;query_hl=2&amp;itool=pubmed_docsum"><em>Mol.  Endocrinol.</em> 20, 831-843. </a></p>
+			<p>Swanson,  K.A., Knoepfler, P.S., Huang, K., Kang, R.S., Cowley,  S.M., Laherty, C.D., Eisenman, R.N., and Radhakrishnan, I. (2004). HBP1  and Mad1 repressors bind the Sin3 corepressor PAH2 domain with opposite  helical orientations. <a target="ncbi" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=pubmed&amp;dopt=Abstract&amp;list_uids=15235594"><em>Nat.  Struct. Mol. Biol.</em> 11, 738-746.</a><br />
+		    </p>
+			<p>Swanson,  K.A., Kang, R.S., Stamenova, S.D., Hicke, L., and Radhakrishnan, I.  (2003). Solution structure of Vps27 UIM-ubiquitin complex important for  endosomal sorting and receptor downregulation. <a target="ncbi" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=12970172&amp;dopt=Abstract"><em>EMBO  J.</em> 22, 4597-4606.</a></p>
+			<p>Kang,  R.S., Daniels, C.M., Francis, S.A., Shih, S.C., Salerno, W.J., Hicke,  L., and Radhakrishnan, I. (2003). Solution structure of a CUE-ubiquitin  complex reveals a conserved mode of ubiquitin binding. <a target="ncbi" href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=12787503&amp;dopt=Abstract"><em>Cell</em>  113, 621-630.</a></p>
+			<p>Brubaker,  K., Cowley, S.M., Huang, K., Loo, L., Yochum, G.S., Ayer, D.E.,  Eisenman, R.N., and Radhakrishnan, I. (2000). Solution  structure of the interacting domains of the Mad-Sin3 complex:  Implications for recruitment of a chromatin-modifying repression  complex. <a target="ncbi" href="http://www.ncbi.nlm.nih.gov:80/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=11106735&amp;dopt=Abstract"><em>Cell</em>  103, 655-665.</a></p>
+			<p>Radhakrishnan,  I., Pérez-Alvarado, G.C., Parker, D., Dyson, H.J., Montminy,  M.R., and Wright, P.E. (1997). Solution  structure of the KIX binding domain of CBP bound to the transactivation  domain of CREB: A model for activator:coactivator interactions. <a target="ncbi" href="http://www.ncbi.nlm.nih.gov:80/entrez/query.fcgi?cmd=Retrieve&amp;db=PubMed&amp;list_uids=9413984&amp;dopt=Abstract"><em>Cell</em>  91, 741-752.</a></p>
+			<p align="center"><img src="images/sf1dbdsbs.jpg" alt="sf1dbdsbs" width="221" height="282" border="1" /></p>
+<p align="center"><br />          
+	                    </p></td>
+         <td width="11">&nbsp;</td>
+        </tr>
+    </table>	</td>
+	<td width="27">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="165" bgcolor="#3399FF">&nbsp;</td>
+    <td width="50">&nbsp;</td>
+    <td width="185">&nbsp;</td>
+    <td width="147">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td width="319">&nbsp;</td>
+	<td width="27" bgcolor="#EAFFFF">&nbsp;</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr bgcolor="#99CC66">
+    <td height="20" colspan="7" bgcolor="#66CCFF" id="dateformat2"><div align="center" class="style4">website maintained by members of the Radhakrishnan laboratory; all rights reserved</div></td>
+  </tr>
+</table>
+</body>
+</html>

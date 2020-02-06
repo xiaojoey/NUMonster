@@ -1,0 +1,84 @@
+buried SES surface 261.936462 buried out of 1082.021484
+Reading buried atoms from /home/monster/web/jobs/x97AEWFTlg/1/CctB_19.vert
+	4689 buried vertices, 261.937 buried area
+Getting atom names from /home/monster/web/jobs/x97AEWFTlg/1/C.pdb
+Atom 	 	 Vertices 	 Area 	 Fraction (%)
+----------
+ 23 ILE    N      185 	        10.25      3.91
+ 23 ILE    CD1     12 	         0.75      0.29
+ 23 ILE    H       84 	         4.80      1.83
+ 23 ILE   HG12     25 	         1.34      0.51
+ 23 ILE   HD12     56 	         3.22      1.23
+ 24 GLU    CB       9 	         0.84      0.32
+ 24 GLU    OE1     42 	         2.38      0.91
+ 24 GLU    H       74 	         4.15      1.58
+ 24 GLU    HB2      8 	         0.56      0.21
+ 24 GLU    HB3     93 	         5.44      2.08
+ 25 ASN    N       12 	         0.64      0.24
+ 25 ASN    CB      43 	         2.78      1.06
+ 25 ASN    CG       5 	         0.34      0.13
+ 25 ASN    ND2     54 	         3.09      1.18
+ 25 ASN    H       86 	         5.06      1.93
+ 25 ASN    HB2     70 	         4.10      1.57
+ 25 ASN    HB3    123 	         6.58      2.51
+ 25 ASN   HD21    184 	         9.92      3.79
+ 25 ASN   HD22     42 	         2.23      0.85
+ 26 VAL    CG1     50 	         3.39      1.29
+ 26 VAL    CG2     81 	         5.40      2.06
+ 26 VAL   HG12    165 	         9.01      3.44
+ 26 VAL   HG13     44 	         2.36      0.90
+ 26 VAL   HG21    130 	         7.18      2.74
+ 26 VAL   HG22     24 	         1.51      0.58
+ 26 VAL   HG23    161 	         8.92      3.40
+ 29 LYS    C       46 	         2.60      0.99
+ 29 LYS    CB      32 	         2.12      0.81
+ 29 LYS    CD      76 	         4.16      1.59
+ 29 LYS    CE      21 	         1.30      0.50
+ 29 LYS    NZ      12 	         0.67      0.26
+ 29 LYS    HB2     81 	         4.54      1.73
+ 29 LYS    HB3     91 	         4.43      1.69
+ 29 LYS    HD3    111 	         6.28      2.40
+ 29 LYS    HE3    149 	         8.23      3.14
+ 29 LYS    HZ1    118 	         6.75      2.58
+ 29 LYS    HZ3     73 	         4.31      1.64
+ 30 ILE    CG1     53 	         3.42      1.31
+ 30 ILE    CG2     14 	         0.75      0.29
+ 30 ILE    CD1     43 	         2.96      1.13
+ 30 ILE    HA     107 	         5.13      1.96
+ 30 ILE   HG12    139 	         7.57      2.89
+ 30 ILE   HG13     98 	         5.05      1.93
+ 30 ILE   HG22    110 	         5.24      2.00
+ 30 ILE   HG23      7 	         0.36      0.14
+ 30 ILE   HD12     60 	         3.18      1.21
+ 30 ILE   HD13    105 	         6.09      2.32
+ 33 LYS    CG      30 	         1.85      0.70
+ 33 LYS    CD      33 	         2.01      0.77
+ 33 LYS    CE       9 	         0.38      0.15
+ 33 LYS    NZ       4 	         0.24      0.09
+ 33 LYS    HG2     95 	         4.90      1.87
+ 33 LYS    HG3     79 	         4.02      1.53
+ 33 LYS    HD2    190 	         9.85      3.76
+ 33 LYS    HD3     15 	         0.81      0.31
+ 33 LYS    HE3    118 	         6.23      2.38
+ 33 LYS    HZ1     34 	         1.64      0.63
+ 33 LYS    HZ2      4 	         0.29      0.11
+ 33 LYS    HZ3    143 	         8.35      3.19
+ 34 GLU    CG      64 	         3.77      1.44
+ 34 GLU    CD     105 	         6.27      2.39
+ 34 GLU    OE1    113 	         6.38      2.43
+ 34 GLU    OE2    154 	         8.36      3.19
+ 34 GLU    HG3     91 	         5.18      1.98
+----------
+Total 	 	  4689 	       261.94 
+----------
+Area by residue:
+Residue 	 Vertices 	 Area 	 Fraction (%)
+----------
+ 23 ILE            76 	        20.37      7.78 
+ 24 GLU           106 	        13.37      5.10 
+ 25 ASN            76 	        34.75     13.26 
+ 26 VAL           198 	        37.77     14.42 
+ 29 LYS           118 	        45.40     17.33 
+ 30 ILE           144 	        39.75     15.18 
+ 33 LYS           183 	        40.56     15.49 
+ 34 GLU           120 	        29.97     11.44 
