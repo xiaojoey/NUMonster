@@ -85,7 +85,7 @@ sub parseInfo{
     $self->{'email'} = $emailNode->textContent;
 
     my $fileNode = ${$doc->getElementsByTagName("File")}[0];
-    $self->{'file'} = substr($fileNode->textContent, 31);
+    $self->{'file'} = $fileNode->textContent();
 
     my $osNode = ${$doc->getElementsByTagName("OS")}[0];
     $self->{'os'} = $osNode->textContent;

@@ -1,13 +1,20 @@
-I use PerlBrew to manage my perl installations:
+I typically PerlBrew to manage my perl installations:
 https://metacpan.org/pod/App::perlbrew
 
+But for NUMonster, we are using system perl
+
 I use cpanm to manage my perl packages:
+https://metacpan.org/pod/App::cpanminus
 https://perlbrew.pl/Perlbrew-and-Friends.html
 
 You will need to make sure your SSL libraries are up to date, I use openssl
 
-Perl dependencies:
-DBI
+Perl dependencies (asterix denotes requirement in NUMonster, to date):
+*File::Stream
+*XML::LibXML
+*Excel::Writer::XLSX
+
+(Untested in NUMonster)
 Net::SSLeay
 HTTP::Daemon::SSL
 XMLRPC::Transport::HTTP
@@ -15,5 +22,4 @@ Carp
 Net::SMTP
 IO::Uncompress::Gunzip
 IO::File
-File::Stream
-Excel::Writer::XLSX
+DBI

@@ -11,11 +11,10 @@ const cors = require('cors');
 const exec = require('child_process').exec;
 
 // Get environment variables
-const UPLOAD_DIR = process.env.UPLOAD_DIR || '/home/monster_uploads/upload';
-const UPLOAD_URL = process.env.UPLOAD_URL || 'http://monster.northwestern.edu/files/upload';
-const JOBS_DIR = process.env.JOBS_DIR || '/home/monster_uploads/jobs';
-const DL_URL = process.env.DL_URL || 'http://monster.northwestern.edu/jobs';
-
+const UPLOAD_DIR = process.env.UPLOAD_DIR;
+const UPLOAD_URL = process.env.UPLOAD_URL;
+const JOBS_DIR = process.env.JOBS_DIR;
+const DL_URL = process.env.DL_URL;
 
 const app = express();
 app.use(cors());
@@ -141,7 +140,7 @@ app.post('/upload', function(req, res) {
 			}
 			response.pipe(file).on('finish', function () {
 				console.log('Download PDB from RCSB: ' + file_path);
-				url_path = `${UPLOAD_URL}/${epoch}/${pdbID}.pdb`;
+				url_path = `${epoch}/${pdbID}.pdb`;
 				parse(file_path, url_path, res);
 			});
 		});
@@ -154,7 +153,7 @@ app.post('/upload', function(req, res) {
         let pdb = req.files.pdbFile;
 
         file = dir + '/' + pdb.name;
-        url_path = `${UPLOAD_URL}/${epoch}/${pdb.name}`;
+        url_path = `${epoch}/${pdb.name}`;
 
         pdb.mv(file, function (err) {
             if (err) {

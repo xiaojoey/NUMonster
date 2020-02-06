@@ -6,7 +6,7 @@ cd ../perl_backend
 echo 'executing shell script with arg:' $*
 
 #pipes the first argument to monster_web
-echo $1 | ./monster_web
+./monster_web $1
 
 echo 'current directory is:'
 pwd
