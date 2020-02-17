@@ -47,30 +47,33 @@ if($ARGV[1]){
 # Testing directory structure and files
 my $uploadsDir = '/home/monster_uploads/upload/';
 if(exists($ENV{'UPLOAD_DIR'})){
-    $uploadsDir = $ENV{"UPLOAD_DIR"}."/";
+    $uploadsDir = $ENV{"UPLOAD_DIR"};
 }
+$uploadsDir.="/" if $uploadsDir !~ /\/$/;
 if(!-d $uploadsDir){
     die "$uploadsDir doesn't exist\n";
 }
 
 my $jobsDir = '/home/monster_uploads/jobs/';
 if(exists($ENV{'JOBS_DIR'})){
-    $jobsDir = $ENV{"JOBS_DIR"}."/";
+    $jobsDir = $ENV{"JOBS_DIR"};
 }
+$jobsDir.="/" if $jobsDir !~ /\/$/;
 if(!-d $jobsDir){
     die "$jobsDir doesn't exist\n";
 }
 
 my $logsDir = '/home/monster_uploads/jobs/';
 if(exists($ENV{'LOGS_DIR'})){
-    $logsDir = $ENV{"LOGS_DIR"}."/";
+    $logsDir = $ENV{"LOGS_DIR"};
 }
+$logsDir.="/" if $logsDir !~ /\/$/;
 if(!-d $logsDir){
     die "$logsDir doesn't exist\n";
 }
 
 # Redirect output for logging
-if(!$debug){
+if(!$debug && $job ne "perl_test"){
     open SAVEERR, ">&STDERR";
     open SAVEOUT, ">&STDOUT";
     $|=1;
@@ -81,7 +84,7 @@ if(!$debug){
 }
 
 # Testing for output of web server
-my $jobDir .= $jobsDir.'/'.$job.'/';
+my $jobDir .= $jobsDir.$job.'/';
 if(!-d $jobDir){
     die "$job: $jobDir doesn't exist\n";
 }
