@@ -43,6 +43,7 @@ if($ARGV[1]){
 	die "Second argument for debug flat must be 0/1\n";
     }
 }
+$debug = 1 if $job eq "perl_test";
 
 # Testing directory structure and files
 my $uploadsDir = '/home/monster_uploads/upload/';
@@ -73,7 +74,7 @@ if(!-d $logsDir){
 }
 
 # Redirect output for logging
-if(!$debug && $job ne "perl_test"){
+if(!$debug){
     open SAVEERR, ">&STDERR";
     open SAVEOUT, ">&STDOUT";
     $|=1;
@@ -125,7 +126,7 @@ HAAD->run($jobDir.$job_pdb_file, $jobDir."/haad.log");
 ##################################################################
 # Iterate through conformations (not actually used)
 ##################################################################
-foreach my $file (get_pdb_files($jobDir)){
+foreach my $file (get_files($jobDir,"\.pdb\.h")){
     my $c = substr($file, -5, 1);
     $c = '' if $c eq 'i'; #no conformations if find last letter of 'wi'
     $c = ''; #ignoring conformations
@@ -152,7 +153,10 @@ foreach my $file (get_pdb_files($jobDir)){
 ##################################################################
 
 	my $tempDir = $jobDir.$c.$i.'/';
-	mkdir $tempDir or warn "couldn't make $tempDir: $!\n";
+	if(-d $tempDir){
+	    unlink $tempDir;
+	}
+	mkdir $tempDir;
 
 ##################################################################
 # Iterate through chainpairs in model
@@ -197,57 +201,23 @@ foreach my $file (get_pdb_files($jobDir)){
 	    my $result = $jobsDir.$cp.$c.'consensus.txt';
 	    push(@jobfiles,$result);
 	}
-	Email->resultEmail($job, $xml_obj->getEmail, $xml_obj->getFile(), @jobfiles) if !$debug;
+	Email->resultEmail($job, $xml_obj->getEmail, $original_pdb_file, @jobfiles) if !$debug;
 	Sheet->generate_sheet(@jobfiles);
     }else{
-	Email->resultEmail($job, $xml_obj->getEmail, $xml_obj->getFile(), get_text_results($jobDir.'/1')) if !$debug;
+	Email->resultEmail($job, $xml_obj->getEmail, $original_pdb_file, get_files($jobDir.'/1',"\.txt")) if !$debug;
     }
 } #end of get_files loop
-print("$job: finishing ".$xml_obj->getFile()." at: ".scalar(localtime)."\n");
+print("$job: finishing ".$original_pdb_file." at: ".scalar(localtime)."\n");
 exit(0);
 
 ####################################################################
-# Utility subroutines
+# Utility subroutine
 
-sub get_pdb_files{
+sub get_files{
     my $dir = shift;
+    my $suffix = shift;
     opendir(my $dh, $dir) || die "can't opendir $dir: $!";
-    my @files = grep { $_ =~ /\.pdb$/ && $_ ne "out.pdb"} readdir($dh);
-    closedir $dh;
-
-    return @files;
-}
-
-sub get_xml{
-    opendir(my $dh, $jobsDir) || die "can't opendir $jobsDir: $!";
-    my $file = (grep { $_ =~ /\.xml/ } readdir($dh))[0];
-    closedir $dh;
-
-    return $file;
-}
-
-sub get_text_results{
-    my $dir = shift;
-    opendir(my $dh, $dir) || die "can't opendir $dir: $!";
-    my @files = grep { $_ =~ /\.txt$/ } readdir($dh);
-    closedir $dh;
-
-    return @files;
-}
-
-sub get_excel_results{
-    my $dir = shift;
-    opendir(my $dh, $dir) || die "can't opendir $dir: $!";
-    my @files = grep { $_ =~ /\.xls$/ } readdir($dh);
-    closedir $dh;
-
-    return @files;
-}
-
-sub get_consensus_results{
-    my $dir = shift;
-    opendir(my $dh, $dir) || die "can't opendir $dir: $!";
-    my @files = grep { $_ =~ /consensus\.txt$/ } readdir($dh);
+    my @files = grep { $_ =~ /${suffix}$/} readdir($dh);
     closedir $dh;
 
     return @files;
