@@ -6,12 +6,14 @@ use strict;
 use File::Find qw(find);
 use File::Basename;
 
+# environment library
+# loads same variables used by web server
+use Dotenv -load => '../.env';
+
 # custom libraries
-#use lib "./perl_backend";
 use PDB;
 use PDB::Bonds;
 use XML::In;
-#use WebDBI;
 
 # these libraries interact with external programs
 use WhatIf;
@@ -43,24 +45,27 @@ if($ARGV[1]){
     }
 }
 
-# Set up where jobs are run
-my $filebase = '/home/monster_uploads/';
-if(exists($ENV{'MONSTER_JOBS'})){
-    $filebase = $ENV{'MONSTER_JOBS'};
-}
-
 # Testing directory structure and files
-my $uploadsDir = $filebase.'upload/';
+my $uploadsDir = '/home/monster_uploads/upload/';
+if(exists($ENV{'UPLOAD_DIR'})){
+    $uploadsDir = $ENV{"UPLOAD_DIR"}."/";
+}
 if(!-d $uploadsDir){
     die "$uploadsDir doesn't exist\n";
 }
 
-my $jobsDir = $filebase.'jobs/';
+my $jobsDir = '/home/monster_uploads/jobs/';
+if(exists($ENV{'JOBS_DIR'})){
+    $jobsDir = $ENV{"JOBS_DIR"}."/";
+}
 if(!-d $jobsDir){
     die "$jobsDir doesn't exist\n";
 }
 
-my $logsDir = $filebase.'logs/';
+my $logsDir = '/home/monster_uploads/jobs/';
+if(exists($ENV{'LOGS_DIR'})){
+    $logsDir = $ENV{"LOGS_DIR"}."/";
+}
 if(!-d $logsDir){
     die "$logsDir doesn't exist\n";
 }
