@@ -12,7 +12,6 @@ const exec = require('child_process').exec;
 
 // Get environment variables
 const UPLOAD_DIR = process.env.UPLOAD_DIR;
-const UPLOAD_URL = process.env.UPLOAD_URL;
 const JOBS_DIR = process.env.JOBS_DIR;
 const DL_URL = process.env.DL_URL;
 

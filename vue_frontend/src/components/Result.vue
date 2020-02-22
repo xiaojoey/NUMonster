@@ -269,7 +269,7 @@ export default {
 
 <style scoped>
   .display-container {
-    height: 400px;
+    height: 70vh;
     width: 100%;
     margin: auto;
   }
@@ -277,5 +277,8 @@ export default {
     float: none;
     display: table-cell;
     vertical-align: bottom;
+  }
+  .container{
+      min-width: 100%;
   }
 </style>
