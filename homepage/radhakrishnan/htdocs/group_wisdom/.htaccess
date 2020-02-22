@@ -1,4 +1,0 @@
-AuthUserFile .htpasswd
-AuthName "Radhakrishnan Lab Knowledge Base"
-AuthType Basic
-require valid-user
