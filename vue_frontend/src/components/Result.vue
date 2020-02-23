@@ -129,19 +129,33 @@ export default {
       &select=chain:${chain2}&style=cartoon:color~yellow;stick`;
       setTimeout(() => {
         this.$el.querySelector('#container-01').style.display = 'block';
-        this.makeModel();
+        this.makeModel(pdb_url);
       }, 200)
     },
-    makeModel: function () {
+    makeModel: function (pdb_url) {
       $(function () {
         let element = $('#container-01');
         console.log(element);
-        let config = {backgroundColor: 'blue'};
+        let config = {backgroundColor: 'white'};
         let viewer = $3Dmol.createViewer(element, config);  // eslint-disable-line
-        viewer.addSphere({ center: {x: 0, y: 0, z: 0}, radius: 1000.0, color: 'green' });
-        viewer.zoomTo();
-        viewer.render();
-        viewer.zoom(0.8, 2000);
+        let pdbUri = pdb_url;
+        jQuery.ajax(pdbUri, {
+          success: function (data) {
+            let v = viewer;
+            v.addModel( data, 'pdb');                        /* load data */ // eslint-disable-line
+            v.setStyle({}, {cartoon: {color: 'spectrum'}});  /* style all atoms */// eslint-disable-line
+            v.zoomTo();                                      /* set camera */ // eslint-disable-line
+            v.render();                                      /* render scene */ // eslint-disable-line
+            v.zoom(1.2, 1000);                               /* slight zoom */ // eslint-disable-line
+          },
+          error: function (hdr, status, err) {
+            console.error('Failed to load PDB ' + pdbUri + ': ' + err);
+          },
+        });
+        // viewer.addSphere({ center: {x: 0, y: 0, z: 0}, radius: 1000.0, color: 'green' });
+        // viewer.zoomTo();
+        // viewer.render();
+        // viewer.zoom(0.8, 2000);
         console.log(viewer);
       });
     },
