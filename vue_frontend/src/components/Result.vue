@@ -129,7 +129,7 @@ export default {
       &select=chain:${chain2}&style=cartoon:color~yellow;stick`;
       setTimeout(() => {
         this.$el.querySelector('#container-01').style.display = 'block';
-        this.makeModel(pdb_url);
+        this.makeModel(pdb_url, chain1, chain2, label);
       }, 200)
     },
     makeModel: function (pdb_url) {
