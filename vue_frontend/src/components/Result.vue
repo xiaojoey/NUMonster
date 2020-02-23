@@ -5,8 +5,9 @@
         <span>{{display_label}}</span>
         <b-button-close v-on:click="closeDisplay()" class="btn"></b-button-close>
       </div>
-      <div v-if="url_3D" class="card-body">
-        <iframe :src="url_3D" class="display-container" frameborder="0"></iframe>
+      <div v-if="url_3D" class="card-body" id="target-box">
+        <div v-if="url_3D" id="container-01" class="mol-container"></div>
+        <!-- <iframe :src="url_3D" class="display-container" frameborder="0"></iframe> -->
       </div>
       <div v-if="display_graph" class="row card-body">
         <div  class="col-10">
@@ -108,6 +109,9 @@ export default {
     s: undefined,
   }),
   mounted: function () {
+    let mol_js = document.createElement('script');
+    mol_js.setAttribute('src', 'http://3Dmol.csb.pitt.edu/build/3Dmol-min.js');
+    document.head.appendChild(mol_js);
     this.selected_edges = Object.keys(this.all_edges);
     this.$http.get(this.$server_url + '/results/' + this.$route.params.job_id).then(function (response) {
       this.result = response.body;
@@ -123,6 +127,23 @@ export default {
       this.url_3D = `https://3dmol.csb.pitt.edu/viewer.html?url=${pdb_url}
       &select=chain:${chain1}&style=cartoon:color~green
       &select=chain:${chain2}&style=cartoon:color~yellow;stick`;
+      setTimeout(() => {
+        this.$el.querySelector('#container-01').style.display = 'block';
+        this.makeModel();
+      }, 200)
+    },
+    makeModel: function () {
+      $(function () {
+        let element = $('#container-01');
+        console.log(element);
+        let config = {backgroundColor: 'blue'};
+        let viewer = $3Dmol.createViewer(element, config);  // eslint-disable-line
+        viewer.addSphere({ center: {x: 0, y: 0, z: 0}, radius: 1000.0, color: 'green' });
+        viewer.zoomTo();
+        viewer.render();
+        viewer.zoom(0.8, 2000);
+        console.log(viewer);
+      });
     },
     parsepdb: function (pdb) {
       let residues = [];
@@ -218,6 +239,9 @@ export default {
       this.s = undefined;
     },
     open2D: function (pdbFile, parsed_xml, label) {
+      if (this.url_3D !== false) {
+        this.$el.querySelector('#container-01').innerHTML = '';
+      }
       this.url_3D = false;
       this.display_label = label;
       this.display_graph = true;
@@ -279,6 +303,11 @@ export default {
     vertical-align: bottom;
   }
   .container{
-      min-width: 100%;
+    min-width: 100%;
+  }
+  .mol-container {
+    width: 100%;
+    height: 70vh;
+    position: relative;
   }
 </style>
