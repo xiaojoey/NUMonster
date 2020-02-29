@@ -100,9 +100,9 @@ export default {
       15
     ],
     all_edges: {
-      HYDPHB: {id: 'HYDPHB', name: 'Hydrophobic', color: '#880000'},
-      ELCSTA: {id: 'ELCSTA', name: 'Electrostatic', color: '#000088'},
-      HYBOND: {id: 'HYBOND', name: 'Hydrogen Bond', color: '#008800'},
+      HYDPHB: {id: 'HYDPHB', name: 'Hydrophobic', color: '#808080'},
+      ELCSTA: {id: 'ELCSTA', name: 'Electrostatic', color: '#008800'},
+      HYBOND: {id: 'HYBOND', name: 'Hydrogen Bond', color: '#880000'},
       SLTBDG: {id: 'SLTBDG', name: 'Salt Bridge', color: '#6e0088'},
     },
     open_xml: {},
