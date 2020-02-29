@@ -56,7 +56,7 @@
               <td>{{chain.slice(0,1)}}</td>
               <td>{{chain.slice(1,2)}}</td>
               <td><button v-if="links.PDB" class="btn btn-secondary" v-on:click='open2D(links.PDB.PDB, links.parsed_bonds, `${chain.slice(0,1)} and ${chain.slice(1,2)} chains from model ${model}`)'>2D Display</button></td>
-              <td><button v-if="links.PDB" class="btn btn-secondary" v-on:click='open3D(links.PDB.PDB, chain.slice(0,1), chain.slice(1,2), `${chain.slice(0,1)} and ${chain.slice(1,2)} chains from model ${model}`)'>3D Display</button></td>
+              <td><button v-if="links.PDB" class="btn btn-secondary" v-on:click='open3D(links.PDB.PDB, chain.slice(0,1), chain.slice(1,2), `${chain.slice(0,1)} and ${chain.slice(1,2)} chains from model ${model}`, links.parsed_bonds)'>3D Display</button></td>
               <td><a v-if="links.PDB" v-bind:href="links.PDB.PDB">PDB File</a></td>
               <td>
                 <a target="_blank" v-bind:href="links.Results.XML">XML File</a>
@@ -121,21 +121,23 @@ export default {
     });
   },
   methods: {
-    open3D: function (pdb_url, chain1, chain2, label) {
+    open3D: function (pdb_url, chain1, chain2, label, parsed_xml) {
       this.closeDisplay();
       this.display_label = label;
       this.url_3D = `https://3dmol.csb.pitt.edu/viewer.html?url=${pdb_url}
       &select=chain:${chain1}&style=cartoon:color~green
       &select=chain:${chain2}&style=cartoon:color~yellow;stick`;
+      this.open_xml = parsed_xml;
+      let graph = this.extractParsedXML(this.open_xml, this.selected_edges);
+      let color_chart = this.all_edges;
       setTimeout(() => {
         this.$el.querySelector('#container-01').style.display = 'block';
-        this.makeModel(pdb_url, chain1, chain2, label);
+        this.makeModel(pdb_url, chain1, chain2, label, graph, color_chart);
       }, 200)
     },
-    makeModel: function (pdb_url) {
+    makeModel: function (pdb_url, chain1, chain2, label, graph, color_chart) {
       $(function () {
         let element = $('#container-01');
-        console.log(element);
         let config = {backgroundColor: 'white'};
         let viewer = $3Dmol.createViewer(element, config);  // eslint-disable-line
         let pdbUri = pdb_url;
@@ -143,19 +145,37 @@ export default {
           success: function (data) {
             let v = viewer;
             v.addModel( data, 'pdb');                        /* load data */ // eslint-disable-line
-            v.setStyle({}, {cartoon: {color: 'spectrum'}});  /* style all atoms */// eslint-disable-line
-            v.zoomTo();                                      /* set camera */ // eslint-disable-line
+            v.setStyle({chain: chain1}, {cartoon: {color: 'green'}});  /* style all atoms */// eslint-disable-line
+            v.setStyle({chain: chain2}, {cartoon: {color: 'yellow'}}); // eslint-disable-line
+            for (let i = 0; i < graph.nodes.length; i++) {
+              let atom = graph.nodes[i].id;
+              let atom_chain = atom.substring(0, 1);
+              let atom_id = atom.substring(1, atom.length);
+              v.addResLabels({resi: atom_id, chain: atom_chain}, {backgroundOpacity: 0.5});
+              if (atom_chain === chain1) {
+                v.setStyle({resi: atom_id, chain: atom_chain}, {stick: {color: 'green'}});
+                v.addSphere({center: {resi: atom_id, chain: atom_chain}, radius: 0.5, color: 'green'});
+              } else {
+                v.setStyle({resi: atom_id, chain: atom_chain}, {stick: {color: 'yellow'}});
+                v.addSphere({center: {resi: atom_id, chain: atom_chain}, radius: 0.5, color: 'yellow'});
+              }
+            }
+            for (let i = 0; i < graph.edges.length; i++) {
+              let bond = graph.edges[i];
+              let source = bond.source;
+              let target = bond.target;
+              let bond_color = color_chart[bond.type].color;
+              v.addCylinder({start: {resi: source.substring(1, source.length), chain: source.substring(0, 1)}, end: {resi: target.substring(1, target.length), chain: target.substring(0, 1)}, radius: bond.radius, fromCap: 2, toCap: 2, dashed: false, color: bond_color, opacity: 0.9});
+            }
+            // v.addCylinder({start: {resi: '335', chain: chain1}, end: {resi: '335', chain: chain2}, radius: 0.2, fromCap: 1, toCap: 1, dashed: false, color: 'red'});
+            v.zoomTo();                                      /* set camera */  // eslint-disable-line
             v.render();                                      /* render scene */ // eslint-disable-line
-            v.zoom(1.2, 1000);                               /* slight zoom */ // eslint-disable-line
+            // v.zoom(1.2, 1000);                               /* slight zoom */ // eslint-disable-line
           },
           error: function (hdr, status, err) {
             console.error('Failed to load PDB ' + pdbUri + ': ' + err);
           },
         });
-        // viewer.addSphere({ center: {x: 0, y: 0, z: 0}, radius: 1000.0, color: 'green' });
-        // viewer.zoomTo();
-        // viewer.render();
-        // viewer.zoom(0.8, 2000);
         console.log(viewer);
       });
     },
