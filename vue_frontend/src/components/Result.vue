@@ -110,7 +110,7 @@ export default {
   }),
   mounted: function () {
     let mol_js = document.createElement('script');
-    mol_js.setAttribute('src', 'http://3Dmol.csb.pitt.edu/build/3Dmol-min.js');
+    mol_js.setAttribute('src', 'https://3Dmol.csb.pitt.edu/build/3Dmol-min.js');
     document.head.appendChild(mol_js);
     this.selected_edges = Object.keys(this.all_edges);
     this.$http.get(this.$server_url + '/results/' + this.$route.params.job_id).then(function (response) {
@@ -145,18 +145,18 @@ export default {
           success: function (data) {
             let v = viewer;
             v.addModel( data, 'pdb');                        /* load data */ // eslint-disable-line
-            v.setStyle({chain: chain1}, {cartoon: {color: 'green'}});  /* style all atoms */// eslint-disable-line
-            v.setStyle({chain: chain2}, {cartoon: {color: 'yellow'}}); // eslint-disable-line
+            v.setStyle({chain: chain1}, {cartoon: {color: 'green', opacity: 0.7}});  /* style all atoms */// eslint-disable-line
+            v.setStyle({chain: chain2}, {cartoon: {color: 'yellow', opacity: 0.7}}); // eslint-disable-line
             for (let i = 0; i < graph.nodes.length; i++) {
               let atom = graph.nodes[i].id;
               let atom_chain = atom.substring(0, 1);
               let atom_id = atom.substring(1, atom.length);
-              v.addResLabels({resi: atom_id, chain: atom_chain}, {backgroundOpacity: 0.5});
+              v.addResLabels({resi: atom_id, chain: atom_chain}, {backgroundOpacity: 0.3});
               if (atom_chain === chain1) {
-                v.setStyle({resi: atom_id, chain: atom_chain}, {stick: {color: 'green'}});
+                // v.setStyle({resi: atom_id, chain: atom_chain}, {stick: {color: 'green'}});
                 v.addSphere({center: {resi: atom_id, chain: atom_chain}, radius: 0.5, color: 'green'});
               } else {
-                v.setStyle({resi: atom_id, chain: atom_chain}, {stick: {color: 'yellow'}});
+                // v.setStyle({resi: atom_id, chain: atom_chain}, {stick: {color: 'yellow'}});
                 v.addSphere({center: {resi: atom_id, chain: atom_chain}, radius: 0.5, color: 'yellow'});
               }
             }
