@@ -153,11 +153,11 @@ export default {
               let atom_id = atom.substring(1, atom.length);
               v.addResLabels({resi: atom_id, chain: atom_chain}, {backgroundOpacity: 0.3});
               if (atom_chain === chain1) {
-                // v.setStyle({resi: atom_id, chain: atom_chain}, {stick: {color: 'green'}});
-                v.addSphere({center: {resi: atom_id, chain: atom_chain}, radius: 0.5, color: 'green'});
+                v.setStyle({resi: atom_id, chain: atom_chain}, {stick: {color: 'green'}});
+                // v.addSphere({center: {resi: atom_id, chain: atom_chain}, radius: 0.5, color: 'green'});
               } else {
-                // v.setStyle({resi: atom_id, chain: atom_chain}, {stick: {color: 'yellow'}});
-                v.addSphere({center: {resi: atom_id, chain: atom_chain}, radius: 0.5, color: 'yellow'});
+                v.setStyle({resi: atom_id, chain: atom_chain}, {stick: {color: 'yellow'}});
+                // v.addSphere({center: {resi: atom_id, chain: atom_chain}, radius: 0.5, color: 'yellow'});
               }
             }
             for (let i = 0; i < graph.edges.length; i++) {
@@ -165,7 +165,7 @@ export default {
               let source = bond.source;
               let target = bond.target;
               let bond_color = color_chart[bond.type].color;
-              v.addCylinder({start: {resi: source.substring(1, source.length), chain: source.substring(0, 1)}, end: {resi: target.substring(1, target.length), chain: target.substring(0, 1)}, radius: bond.radius, fromCap: 2, toCap: 2, dashed: false, color: bond_color, opacity: 0.9});
+              v.addCylinder({start: {resi: source.substring(1, source.length), chain: source.substring(0, 1), atom: bond.source_atom}, end: {resi: target.substring(1, target.length), chain: target.substring(0, 1), atom: bond.target_atom}, radius: 0.1, fromCap: 2, toCap: 2, dashed: false, color: bond_color, opacity: 0.9});
             }
             // v.addCylinder({start: {resi: '335', chain: chain1}, end: {resi: '335', chain: chain2}, radius: 0.2, fromCap: 1, toCap: 1, dashed: false, color: 'red'});
             v.zoomTo();                                      /* set camera */  // eslint-disable-line
@@ -228,7 +228,12 @@ export default {
       let node_ids = new Set();
       JSON.parse(xml_json).BONDS.BOND.forEach((bond, index) => {
         const source = bond.RESIDUE[0].chain._text + bond.RESIDUE[0]._attributes.index;
+        const source_atom = bond.RESIDUE[0].atom._text;
+        // console.log(bond);
+        // console.log(source);
         const target = bond.RESIDUE[1].chain._text + bond.RESIDUE[1]._attributes.index;
+        const target_atom = bond.RESIDUE[1].atom._text;
+        // console.log(target);
         if (!node_ids.has(source)) {
           new_nodes.push({
             id: source,
@@ -258,7 +263,9 @@ export default {
           label: this.all_edges[bond.type._text].name,
           size: 1 / parseFloat(bond.dist._text),
           source: source,
+          source_atom: source_atom,
           target: target,
+          target_atom: target_atom,
           color: this.all_edges[bond.type._text].color,
           type: bond.type._text,
           dist: bond.dist._text,
