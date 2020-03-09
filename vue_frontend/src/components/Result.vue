@@ -166,8 +166,25 @@ export default {
               let target = bond.target;
               let bond_color = color_chart[bond.type].color;
               v.addCylinder({start: {resi: source.substring(1, source.length), chain: source.substring(0, 1), atom: bond.source_atom}, end: {resi: target.substring(1, target.length), chain: target.substring(0, 1), atom: bond.target_atom}, radius: 0.1, fromCap: 2, toCap: 2, dashed: false, color: bond_color, opacity: 0.9});
+              v.setClickable({resi: source.substring(1, source.length), chain: source.substring(0, 1), atom: bond.source_atom}, true, function (atom, viewer, event, container) {
+                // console.log(atom);
+                if (!atom.label) {
+                  atom.label = viewer.addLabel(atom.resn + ':' + atom.atom, {position: atom, backgroundColor: 'yellow', backgroundOpacity: 0.5, fontColor: 'black'});
+                } else {
+                  viewer.removeLabel(atom.label);
+                  delete atom.label;
+                }
+              });
+              v.setClickable({resi: target.substring(1, target.length), chain: target.substring(0, 1), atom: bond.target_atom}, true, function (atom, viewer, event, container) {
+                // console.log(atom);
+                if (!atom.label) {
+                  atom.label = viewer.addLabel(atom.resn + ':' + atom.atom, {position: atom, backgroundColor: 'green', backgroundOpacity: 0.5, fontColor: 'black'});
+                } else {
+                  viewer.removeLabel(atom.label);
+                  delete atom.label;
+                }
+              });
             }
-            // v.addCylinder({start: {resi: '335', chain: chain1}, end: {resi: '335', chain: chain2}, radius: 0.2, fromCap: 1, toCap: 1, dashed: false, color: 'red'});
             v.zoomTo();                                      /* set camera */  // eslint-disable-line
             v.render();                                      /* render scene */ // eslint-disable-line
             // v.zoom(1.2, 1000);                               /* slight zoom */ // eslint-disable-line
