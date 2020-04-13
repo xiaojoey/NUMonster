@@ -118,7 +118,7 @@ export default {
       console.log(response.body.models);
       if (jQuery.isEmptyObject(response.body.models)) {
         console.error('Response models are empty objects');
-        alert('Job not finished, fetched jobs does not contain any models');
+        alert('Job not finished, fetched job does not contain any models');
       } else {
         this.result = response.body;
       }
