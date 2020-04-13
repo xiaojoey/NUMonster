@@ -114,7 +114,14 @@ export default {
     document.head.appendChild(mol_js);
     this.selected_edges = Object.keys(this.all_edges);
     this.$http.get(this.$server_url + '/results/' + this.$route.params.job_id).then(function (response) {
-      this.result = response.body;
+      console.log(response.body);
+      console.log(response.body.models);
+      if (jQuery.isEmptyObject(response.body.models)) {
+        console.error('Response models are empty objects');
+        alert('Job not finished, fetched job does not contain any models');
+      } else {
+        this.result = response.body;
+      }
     }, function (response) {
       console.error(response);
       alert('File job fetch failed. Check your browser console for details');

@@ -18,7 +18,7 @@
     "express-fileupload": "^1.1.6",
     "express-validator": "^4.3.0",
     "express-validators": "^1.0.4",
-    "mkdirp": "^0.5.1",
+    "mkdirp": "^0.5.5",
     "pug": "^2.0.4",
     "tape": "^4.13.2",
     "xml-js": "^1.6.11"
