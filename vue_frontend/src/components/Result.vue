@@ -355,10 +355,11 @@ export default {
           });
           this.s.bind('overNode', e => {
             this.selected_info = `${e.data.node.label}`;
+            this.$el.querySelector('#related-info').innerHTML = '';
           });
           this.s.bind('overEdge', e => {
             const edge = e.data.edge;
-            this.$el.querySelector('#related-info').innerHTML = '<h5>Bonds</h5>';
+            this.$el.querySelector('#related-info').innerHTML = '<h5>Interactions</h5>';
             let currentBond = `<span style="color:${edge.color}">${edge.source_label}:${edge.source_atom}<>${edge.target_label}:${edge.target_atom}</span>`;
             this.$el.querySelector('#related-info').innerHTML += currentBond + '<br>';
             for (let i = 0; i < edge.related.length; i++) {
