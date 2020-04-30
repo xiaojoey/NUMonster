@@ -105,6 +105,12 @@ export default {
       HYBOND: {id: 'HYBOND', name: 'Hydrogen Bond', color: '#880000'},
       SLTBDG: {id: 'SLTBDG', name: 'Salt Bridge', color: '#6e0088'},
     },
+    amino_acid: {
+      ALA: 'A', ARG: 'R', ASN: 'N', ASP: 'D', CYS: 'C', GLN: 'Q', GLU: 'E', // eslint-disable-line
+      GLY: 'G', HIS: 'H', ILE: 'I', LEU: 'L', LYS: 'K', MET: 'M', PHE: 'F', // eslint-disable-line
+      PRO: 'P', PYL: 'O', SEC: 'U', SER: 'S', THR: 'T', TRP: 'W', TYR: 'Y', // eslint-disable-line
+      VAL: 'V',
+    },
     open_xml: {},
     s: undefined,
   }),
@@ -114,8 +120,8 @@ export default {
     document.head.appendChild(mol_js);
     this.selected_edges = Object.keys(this.all_edges);
     this.$http.get(this.$server_url + '/results/' + this.$route.params.job_id).then(function (response) {
-      console.log(response.body);
-      console.log(response.body.models);
+      console.log(response);
+      // console.log(response.body.models);
       if (jQuery.isEmptyObject(response.body.models)) {
         console.error('Response models are empty objects');
         alert('Job not finished, fetched job does not contain any models');
@@ -268,6 +274,8 @@ export default {
             y: 50,
             size: 1,
             color: '#008888',
+            direction: 'down',
+            sigma_label: `${this.amino_acid[bond.RESIDUE[0].name._text]}${source.substr(1)} ${source.charAt(0)}`,
           });
           node_ids.add(source)
         }
@@ -278,6 +286,8 @@ export default {
             x: 3 * new_nodes.length,
             y: 0,
             size: 1,
+            direction: 'up',
+            sigma_label: `${this.amino_acid[bond.RESIDUE[0].name._text]}${target.substr(1)} ${target.charAt(0)}`,
           });
           node_ids.add(target)
         }
@@ -331,6 +341,9 @@ export default {
               edgeHoverExtremities: true,
               sideMargin: 5,
               singleHover: true,
+              labelAlignment: 'top',
+              defaultLabelAlignment: 'top',
+              labelThreshold: 0
             }
           });
           this.s.bind('overNode', e => {
@@ -340,6 +353,12 @@ export default {
             const edge = e.data.edge;
             this.selected_info = `ID: ${edge.id} Type: ${edge.label} Distance: ${edge.dist}`
           });
+          this.s.settings({
+            drawLabels: true,
+            // labelThreshold: 0
+          });
+          console.log(this.s.renderers[0]);
+          // this.s.renderers[0].contexts.labels.font = '20px sans-serif';
           this.renderGraph();
         }, 100);
       } else {
@@ -349,7 +368,7 @@ export default {
     renderGraph: function () {
       if (!this.s) { return }
       let graph = this.extractParsedXML(this.open_xml, this.selected_edges);
-      console.log(graph);
+      // console.log(graph);
       this.s.graph.clear();
       this.s.graph.read(graph);
       this.s.refresh();

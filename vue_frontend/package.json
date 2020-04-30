@@ -18,7 +18,7 @@
     "bootstrap-vue": "^2.11.0",
     "dotenv-webpack": "^1.7.0",
     "jquery": "^3.5.0",
-    "sigma": "^1.2.1",
+    "sigma": "github:xiaojoey/sigma.js",
     "vee-validate": "^2.2.15",
     "vue-resource": "^1.5.1",
     "vue-router": "^3.1.6",
