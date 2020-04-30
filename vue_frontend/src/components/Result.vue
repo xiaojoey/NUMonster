@@ -29,6 +29,9 @@
           <br/>
           <h5>Info</h5>
           {{selected_info}}
+          <div id="related-info">
+            <h6>Related</h6>
+          </div>
         </div>
       </div>
     </div>
@@ -300,11 +303,15 @@ export default {
           size: 1 / parseFloat(bond.dist._text),
           source: source,
           source_atom: source_atom,
+          source_label: `${this.amino_acid[bond.RESIDUE[0].name._text]}${source.substr(1)}.${source.charAt(0)}`,
           target: target,
+          target_label: `${this.amino_acid[bond.RESIDUE[0].name._text]}${target.substr(1)}.${target.charAt(0)}`,
           target_atom: target_atom,
           color: this.all_edges[bond.type._text].color,
           type: bond.type._text,
           dist: bond.dist._text,
+          related: [],
+          added: [],
         })
       });
       return {'nodes': new_nodes, 'edges': new_edges}
@@ -351,13 +358,23 @@ export default {
           });
           this.s.bind('overEdge', e => {
             const edge = e.data.edge;
-            this.selected_info = `ID: ${edge.id} Type: ${edge.label} Distance: ${edge.dist}`
+            this.$el.querySelector('#related-info').innerHTML = '<h5>Bonds</h5>';
+            let currentBond = `<span style="color:${edge.color}">${edge.source_label}:${edge.source_atom}<>${edge.target_label}:${edge.target_atom}</span>`;
+            this.$el.querySelector('#related-info').innerHTML += currentBond + '<br>';
+            for (let i = 0; i < edge.related.length; i++) {
+              let related_edge = edge.related[i];
+              // console.log(related_edge);
+              let related_info = `<span style="color:${related_edge.color}">${related_edge.source_label}:${related_edge.source_atom}<>${related_edge.target_label}:${related_edge.target_atom}</span>`;
+              this.$el.querySelector('#related-info').innerHTML += related_info + '<br>';
+            }
+            this.selected_info = `ID: ${edge.id} Type: ${edge.label} Distance: ${edge.dist}`;
+            // console.log(related);
           });
           this.s.settings({
             drawLabels: true,
             // labelThreshold: 0
           });
-          console.log(this.s.renderers[0]);
+          // console.log(this.s.renderers[0]);
           // this.s.renderers[0].contexts.labels.font = '20px sans-serif';
           this.renderGraph();
         }, 100);
@@ -368,7 +385,31 @@ export default {
     renderGraph: function () {
       if (!this.s) { return }
       let graph = this.extractParsedXML(this.open_xml, this.selected_edges);
-      // console.log(graph);
+      for (let i = 0; i < graph.edges.length; i++) {
+        let bond = graph.edges[i];
+        let id1 = bond.id;
+        let source = bond.source;
+        let target = bond.target;
+        // let bond_color = this.all_edges[bond.type].color;
+        // console.log('bond:' + bond + ' source:' + source + 'target: ' + target + 'bond_color:' + bond_color);
+        for (let x = 0; x < graph.edges.length; x++) {
+          let bond2 = graph.edges[x];
+          let id2 = bond2.id;
+          let source2 = bond2.source;
+          let target2 = bond2.target;
+          // let bond_color2 = this.all_edges[bond.type].color;
+          if (id2 !== id1 && (((source === source2) && (target === target2)) || ((source === target2) && (target === source2)))) {
+            if (!bond.added.includes(id2)) {
+              bond.added.push(id2);
+              bond.related.push(bond2);
+              bond2.added.push(id1);
+              bond2.related.push(bond);
+            }
+          }
+          // console.log('bond:' + bond2 + ' source:' + source2 + 'target: ' + target2 + 'bond_color:' + bond_color2);
+        }
+      }
+      console.log(graph);
       this.s.graph.clear();
       this.s.graph.read(graph);
       this.s.refresh();
@@ -379,7 +420,7 @@ export default {
 
 <style scoped>
   .display-container {
-    height: 70vh;
+    height: 75vh;
     width: 100%;
     margin: auto;
   }
@@ -393,7 +434,7 @@ export default {
   }
   .mol-container {
     width: 100%;
-    height: 70vh;
+    height: 75vh;
     position: relative;
   }
 </style>
