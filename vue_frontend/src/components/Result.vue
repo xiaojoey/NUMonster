@@ -58,7 +58,7 @@
               <td>{{model}}</td>
               <td>{{chain.slice(0,1)}}</td>
               <td>{{chain.slice(1,2)}}</td>
-              <td><button v-if="links.PDB" class="btn btn-secondary" v-on:click='open2D(links.PDB.PDB, links.parsed_bonds, `${chain.slice(0,1)} and ${chain.slice(1,2)} chains from model ${model}`)'>2D Display</button></td>
+              <td><button v-if="links.PDB" class="btn btn-secondary" v-on:click='open2D(links.PDB.PDB, links.parsed_bonds, `${chain.slice(0,1)} and ${chain.slice(1,2)} chains from model ${model}`, chain.slice(0,1), chain.slice(1,2))'>2D Display</button></td>
               <td><button v-if="links.PDB" class="btn btn-secondary" v-on:click='open3D(links.PDB.PDB, chain.slice(0,1), chain.slice(1,2), `${chain.slice(0,1)} and ${chain.slice(1,2)} chains from model ${model}`, links.parsed_bonds)'>3D Display</button></td>
               <td><a v-if="links.PDB" v-bind:href="links.PDB.PDB">PDB File</a></td>
               <td>
@@ -98,6 +98,8 @@ export default {
     url_3D: false,
     selected_edges: [],
     selected_info: '',
+    chain1: '',
+    chain2: '',
     dist_filter: [
       0,
       15
@@ -161,18 +163,18 @@ export default {
           success: function (data) {
             let v = viewer;
             v.addModel( data, 'pdb');                        /* load data */ // eslint-disable-line
-            v.setStyle({chain: chain1}, {cartoon: {color: 'pink', opacity: 0.7}});  /* style all atoms */// eslint-disable-line
-            v.setStyle({chain: chain2}, {cartoon: {color: 'cyan', opacity: 0.7}}); // eslint-disable-line
+            v.setStyle({chain: chain1}, {cartoon: {color: 'cyan', opacity: 0.7}});  /* style all atoms */// eslint-disable-line
+            v.setStyle({chain: chain2}, {cartoon: {color: 'pink', opacity: 0.7}}); // eslint-disable-line
             for (let i = 0; i < graph.nodes.length; i++) {
               let atom = graph.nodes[i].id;
               let atom_chain = atom.substring(0, 1);
               let atom_id = atom.substring(1, atom.length);
               v.addResLabels({resi: atom_id, chain: atom_chain}, {backgroundOpacity: 0.3});
               if (atom_chain === chain1) {
-                v.setStyle({resi: atom_id, chain: atom_chain}, {stick: {color: 'pink'}});
+                v.setStyle({resi: atom_id, chain: atom_chain}, {stick: {color: 'cyan'}});
                 // v.addSphere({center: {resi: atom_id, chain: atom_chain}, radius: 0.5, color: 'green'});
               } else {
-                v.setStyle({resi: atom_id, chain: atom_chain}, {stick: {color: 'cyan'}});
+                v.setStyle({resi: atom_id, chain: atom_chain}, {stick: {color: 'pink'}});
                 // v.addSphere({center: {resi: atom_id, chain: atom_chain}, radius: 0.5, color: 'yellow'});
               }
             }
@@ -183,8 +185,6 @@ export default {
               let bond_color = color_chart[bond.type].color;
               v.addCylinder({start: {resi: source.substring(1, source.length), chain: source.substring(0, 1), atom: bond.source_atom}, end: {resi: target.substring(1, target.length), chain: target.substring(0, 1), atom: bond.target_atom}, radius: 0.1, fromCap: 2, toCap: 2, dashed: false, color: bond_color, opacity: 0.9});
               v.setClickable({resi: source.substring(1, source.length), chain: source.substring(0, 1), atom: bond.source_atom}, true, function (atom, viewer, event, container) {
-                // console.log(atom);
-                // console.log(atom.style.stick.color);
                 if (!atom.label) {
                   atom.label = viewer.addLabel(atom.resn + ':' + atom.atom, {position: atom, backgroundColor: atom.style.stick.color, backgroundOpacity: 0.5, fontColor: 'black'});
                 } else {
@@ -193,8 +193,6 @@ export default {
                 }
               });
               v.setClickable({resi: target.substring(1, target.length), chain: target.substring(0, 1), atom: bond.target_atom}, true, function (atom, viewer, event, container) {
-                // console.log(atom);
-                // console.log(atom.style.stick.color);
                 if (!atom.label) {
                   atom.label = viewer.addLabel(atom.resn + ':' + atom.atom, {position: atom, backgroundColor: atom.style.stick.color, backgroundOpacity: 0.5, fontColor: 'black'});
                 } else {
@@ -264,45 +262,65 @@ export default {
       let node_indices = [];
       JSON.parse(xml_json).BONDS.BOND.forEach((bond, index) => {
         if (!bond_types.includes(bond.type._text)) { return }
-        const source = bond.RESIDUE[0].chain._text + bond.RESIDUE[0]._attributes.index;
-        const source_atom = bond.RESIDUE[0].atom._text;
-        // console.log(bond);
-        // console.log(source);
-        const target = bond.RESIDUE[1].chain._text + bond.RESIDUE[1]._attributes.index;
-        const target_atom = bond.RESIDUE[1].atom._text;
-        // console.log(target);
+        var target = 0;
+        var target_atom = 0;
+        var source_residue = 0;
+        var target_residue = 0;
+        var source = 0;
+        var source_atom = 0;
+        var source_index = 0;
 
+        var target_index = 0;
+        if (bond.RESIDUE[0].chain._text === this.chain1) {
+          source_index = bond.RESIDUE[0]._attributes.index;
+          target_index = bond.RESIDUE[1]._attributes.index;
+          source = bond.RESIDUE[0].chain._text + source_index;
+          source_atom = bond.RESIDUE[0].atom._text;
+          target = bond.RESIDUE[1].chain._text + target_index;
+          target_atom = bond.RESIDUE[1].atom._text;
+          source_residue = bond.RESIDUE[0].name._text;
+          target_residue = bond.RESIDUE[1].name._text;
+        } else {
+          source_index = bond.RESIDUE[1]._attributes.index;
+          target_index = bond.RESIDUE[0]._attributes.index;
+          source = bond.RESIDUE[1].chain._text + source_index;
+          source_atom = bond.RESIDUE[1].atom._text;
+          target = bond.RESIDUE[0].chain._text + target_index;
+          target_atom = bond.RESIDUE[0].atom._text;
+          source_residue = bond.RESIDUE[1].name._text;
+          target_residue = bond.RESIDUE[0].name._text;
+        }
         if (!node_ids.has(source)) {
-          if (!node_indices.includes(bond.RESIDUE[0]._attributes.index)) {
-            node_indices.push(bond.RESIDUE[0]._attributes.index);
+          if (!node_indices.includes(source_index)) {
+            node_indices.push(source_index);
           }
           new_nodes.push({
             id: source,
-            label: `${source}: ${bond.RESIDUE[0].name._text}`,
-            x: 0,
-            y: 50,
-            size: 1,
-            color: 'pink',
-            index: bond.RESIDUE[0]._attributes.index,
-            direction: 'down',
-            sigma_label: `${this.amino_acid[bond.RESIDUE[0].name._text]}${source.substr(1)} ${source.charAt(0)}`,
-          });
-          node_ids.add(source)
-        }
-        if (!node_ids.has(target)) {
-          if (!node_indices.includes(bond.RESIDUE[1]._attributes.index)) {
-            node_indices.push(bond.RESIDUE[1]._attributes.index);
-          }
-          new_nodes.push({
-            id: target,
-            label: `${target}: ${bond.RESIDUE[1].name._text}`,
+            label: `${source}: ${source_residue}`,
             x: 0,
             y: 0,
             size: 1,
             color: 'cyan',
-            index: bond.RESIDUE[1]._attributes.index,
+            index: source_index,
             direction: 'up',
-            sigma_label: `${this.amino_acid[bond.RESIDUE[1].name._text]}${target.substr(1)} ${target.charAt(0)}`,
+            sigma_label: `${this.amino_acid[source_residue]}${source.substr(1)} ${source.charAt(0)}`,
+          });
+          node_ids.add(source)
+        }
+        if (!node_ids.has(target)) {
+          if (!node_indices.includes(target_index)) {
+            node_indices.push(target_index);
+          }
+          new_nodes.push({
+            id: target,
+            label: `${target}: ${target_residue}`,
+            x: 0,
+            y: 40,
+            size: 1,
+            color: 'pink',
+            index: target_index,
+            direction: 'down',
+            sigma_label: `${this.amino_acid[target_residue]}${target.substr(1)} ${target.charAt(0)}`,
           });
           node_ids.add(target)
         }
@@ -315,14 +333,13 @@ export default {
           size: 1 / parseFloat(bond.dist._text),
           source: source,
           source_atom: source_atom,
-          source_label: `${this.amino_acid[bond.RESIDUE[0].name._text]}${source.substr(1)}.${source.charAt(0)}`,
+          source_label: `${this.amino_acid[source_residue]}${source.substr(1)}.${source.charAt(0)}`,
           target: target,
-          target_label: `${this.amino_acid[bond.RESIDUE[0].name._text]}${target.substr(1)}.${target.charAt(0)}`,
+          target_label: `${this.amino_acid[target_residue]}${target.substr(1)}.${target.charAt(0)}`,
           target_atom: target_atom,
           color: this.all_edges[bond.type._text].color,
           type: bond.type._text,
           dist: bond.dist._text,
-          related: [],
           added: [],
         })
       });
@@ -338,11 +355,13 @@ export default {
       this.display_graph = false;
       this.s = undefined;
     },
-    open2D: function (pdbFile, parsed_xml, label) {
+    open2D: function (pdbFile, parsed_xml, label, chain1, chain2) {
       if (this.url_3D !== false) {
         this.$el.querySelector('#container-01').innerHTML = '';
       }
       this.url_3D = false;
+      this.chain1 = chain1;
+      this.chain2 = chain2;
       this.display_label = label;
       this.display_graph = true;
       this.open_xml = parsed_xml;
@@ -378,21 +397,17 @@ export default {
             this.$el.querySelector('#related-info').innerHTML = '<h5>Interactions</h5>';
             let currentBond = `<span style="color:${edge.color}">${edge.source_label}:${edge.source_atom}<>${edge.target_label}:${edge.target_atom}</span>`;
             this.$el.querySelector('#related-info').innerHTML += currentBond + '<br>';
-            for (let i = 0; i < edge.related.length; i++) {
-              let related_edge = edge.related[i];
-              // console.log(this.s.renderers[0].edgesOnScreen);
+            for (const id of edge.added) {
+              let related_edge = this.s.renderers[0].edgesOnScreen.find(x => x.id === id);
               let related_info = `<span style="color:${related_edge.color}">${related_edge.source_label}:${related_edge.source_atom}<>${related_edge.target_label}:${related_edge.target_atom}</span>`;
               this.$el.querySelector('#related-info').innerHTML += related_info + '<br>';
             }
             this.selected_info = `ID: ${edge.id} Type: ${edge.label} Distance: ${edge.dist}`;
-            // console.log(related);
           });
           this.s.settings({
             drawLabels: true,
             // labelThreshold: 0
           });
-          // console.log(this.s.renderers[0]);
-          // this.s.renderers[0].contexts.labels.font = '20px sans-serif';
           this.renderGraph();
         }, 100);
       } else {
@@ -402,32 +417,24 @@ export default {
     renderGraph: function () {
       if (!this.s) { return }
       let graph = this.extractParsedXML(this.open_xml, this.selected_edges);
-      console.log(graph)
       for (let i = 0; i < graph.edges.length; i++) {
         let bond = graph.edges[i];
         let id1 = bond.id;
         let source = bond.source;
         let target = bond.target;
-        // let bond_color = this.all_edges[bond.type].color;
-        // console.log('bond:' + bond + ' source:' + source + 'target: ' + target + 'bond_color:' + bond_color);
         for (let x = 0; x < graph.edges.length; x++) {
           let bond2 = graph.edges[x];
           let id2 = bond2.id;
           let source2 = bond2.source;
           let target2 = bond2.target;
-          // let bond_color2 = this.all_edges[bond.type].color;
           if (id2 !== id1 && (((source === source2) && (target === target2)) || ((source === target2) && (target === source2)))) {
             if (!bond.added.includes(id2)) {
               bond.added.push(id2);
-              bond.related.push(bond2);
               bond2.added.push(id1);
-              bond2.related.push(bond);
             }
           }
-          // console.log('bond:' + bond2 + ' source:' + source2 + 'target: ' + target2 + 'bond_color:' + bond_color2);
         }
       }
-      // console.log(graph);
       this.s.graph.clear();
       this.s.graph.read(graph);
       this.s.refresh();
@@ -438,7 +445,7 @@ export default {
 
 <style scoped>
   .display-container {
-    height: 75vh;
+    height: 70vh;
     width: 100%;
     margin: auto;
   }
