@@ -161,18 +161,18 @@ export default {
           success: function (data) {
             let v = viewer;
             v.addModel( data, 'pdb');                        /* load data */ // eslint-disable-line
-            v.setStyle({chain: chain1}, {cartoon: {color: 'green', opacity: 0.7}});  /* style all atoms */// eslint-disable-line
-            v.setStyle({chain: chain2}, {cartoon: {color: 'yellow', opacity: 0.7}}); // eslint-disable-line
+            v.setStyle({chain: chain1}, {cartoon: {color: 'pink', opacity: 0.7}});  /* style all atoms */// eslint-disable-line
+            v.setStyle({chain: chain2}, {cartoon: {color: 'cyan', opacity: 0.7}}); // eslint-disable-line
             for (let i = 0; i < graph.nodes.length; i++) {
               let atom = graph.nodes[i].id;
               let atom_chain = atom.substring(0, 1);
               let atom_id = atom.substring(1, atom.length);
               v.addResLabels({resi: atom_id, chain: atom_chain}, {backgroundOpacity: 0.3});
               if (atom_chain === chain1) {
-                v.setStyle({resi: atom_id, chain: atom_chain}, {stick: {color: 'green'}});
+                v.setStyle({resi: atom_id, chain: atom_chain}, {stick: {color: 'pink'}});
                 // v.addSphere({center: {resi: atom_id, chain: atom_chain}, radius: 0.5, color: 'green'});
               } else {
-                v.setStyle({resi: atom_id, chain: atom_chain}, {stick: {color: 'yellow'}});
+                v.setStyle({resi: atom_id, chain: atom_chain}, {stick: {color: 'cyan'}});
                 // v.addSphere({center: {resi: atom_id, chain: atom_chain}, radius: 0.5, color: 'yellow'});
               }
             }
@@ -211,7 +211,7 @@ export default {
             console.error('Failed to load PDB ' + pdbUri + ': ' + err);
           },
         });
-        console.log(viewer);
+        // console.log(viewer);
       });
     },
     parsepdb: function (pdb) {
@@ -261,7 +261,9 @@ export default {
       let new_nodes = [];
       let new_edges = [];
       let node_ids = new Set();
+      let node_indices = [];
       JSON.parse(xml_json).BONDS.BOND.forEach((bond, index) => {
+        if (!bond_types.includes(bond.type._text)) { return }
         const source = bond.RESIDUE[0].chain._text + bond.RESIDUE[0]._attributes.index;
         const source_atom = bond.RESIDUE[0].atom._text;
         // console.log(bond);
@@ -269,32 +271,42 @@ export default {
         const target = bond.RESIDUE[1].chain._text + bond.RESIDUE[1]._attributes.index;
         const target_atom = bond.RESIDUE[1].atom._text;
         // console.log(target);
+
         if (!node_ids.has(source)) {
+          if (!node_indices.includes(bond.RESIDUE[0]._attributes.index)) {
+            node_indices.push(bond.RESIDUE[0]._attributes.index);
+          }
           new_nodes.push({
             id: source,
             label: `${source}: ${bond.RESIDUE[0].name._text}`,
-            x: 2 * new_nodes.length,
+            x: 0,
             y: 50,
             size: 1,
-            color: '#008888',
+            color: 'pink',
+            index: bond.RESIDUE[0]._attributes.index,
             direction: 'down',
             sigma_label: `${this.amino_acid[bond.RESIDUE[0].name._text]}${source.substr(1)} ${source.charAt(0)}`,
           });
           node_ids.add(source)
         }
         if (!node_ids.has(target)) {
+          if (!node_indices.includes(bond.RESIDUE[1]._attributes.index)) {
+            node_indices.push(bond.RESIDUE[1]._attributes.index);
+          }
           new_nodes.push({
             id: target,
-            label: `${target}: ${bond.RESIDUE[0].name._text}`,
-            x: 3 * new_nodes.length,
+            label: `${target}: ${bond.RESIDUE[1].name._text}`,
+            x: 0,
             y: 0,
             size: 1,
+            color: 'cyan',
+            index: bond.RESIDUE[1]._attributes.index,
             direction: 'up',
-            sigma_label: `${this.amino_acid[bond.RESIDUE[0].name._text]}${target.substr(1)} ${target.charAt(0)}`,
+            sigma_label: `${this.amino_acid[bond.RESIDUE[1].name._text]}${target.substr(1)} ${target.charAt(0)}`,
           });
           node_ids.add(target)
         }
-        if (!bond_types.includes(bond.type._text)) { return }
+
         if (parseFloat(bond.dist._text) < this.dist_filter[0]) { return }
         if (parseFloat(bond.dist._text) > this.dist_filter[1]) { return }
         new_edges.push({
@@ -314,6 +326,10 @@ export default {
           added: [],
         })
       });
+      node_indices.sort((a, b) => a - b);
+      for (const node of new_nodes) {
+        node.x = 5 * node_indices.indexOf(node.index);
+      }
       return {'nodes': new_nodes, 'edges': new_edges}
     },
     closeDisplay: function () {
@@ -364,7 +380,7 @@ export default {
             this.$el.querySelector('#related-info').innerHTML += currentBond + '<br>';
             for (let i = 0; i < edge.related.length; i++) {
               let related_edge = edge.related[i];
-              // console.log(related_edge);
+              // console.log(this.s.renderers[0].edgesOnScreen);
               let related_info = `<span style="color:${related_edge.color}">${related_edge.source_label}:${related_edge.source_atom}<>${related_edge.target_label}:${related_edge.target_atom}</span>`;
               this.$el.querySelector('#related-info').innerHTML += related_info + '<br>';
             }
@@ -386,6 +402,7 @@ export default {
     renderGraph: function () {
       if (!this.s) { return }
       let graph = this.extractParsedXML(this.open_xml, this.selected_edges);
+      console.log(graph)
       for (let i = 0; i < graph.edges.length; i++) {
         let bond = graph.edges[i];
         let id1 = bond.id;
@@ -410,7 +427,7 @@ export default {
           // console.log('bond:' + bond2 + ' source:' + source2 + 'target: ' + target2 + 'bond_color:' + bond_color2);
         }
       }
-      console.log(graph);
+      // console.log(graph);
       this.s.graph.clear();
       this.s.graph.read(graph);
       this.s.refresh();
@@ -432,6 +449,12 @@ export default {
   }
   .container{
     min-width: 100%;
+  }
+  .col-10{
+    max-width: calc(100% - 230px);
+  }
+  .col-2{
+    min-width: 230px;
   }
   .mol-container {
     width: 100%;
