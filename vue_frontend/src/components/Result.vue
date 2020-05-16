@@ -143,8 +143,8 @@ export default {
   methods: {
     open3D: function (pdb_url, chain1, chain2, parsed_xml, _graph) {
       // this.closeDisplay();
-      console.log('starting open3d');
-      console.log(chain1, chain2, parsed_xml);
+      // console.log('starting open3d');
+      // console.log(chain1, chain2, parsed_xml);
       if (this.url_3D !== false) {
         this.$el.querySelector('#container-01').innerHTML = '';
       }
@@ -365,7 +365,7 @@ export default {
       //   this.$el.querySelector('#container-01').innerHTML = '';
       // }
       // this.url_3D = false;
-      console.log('starting open 2d');
+      // console.log('starting open 2d');
       this.chain1 = chain1;
       this.chain2 = chain2;
       this.display_label = label;
@@ -423,7 +423,7 @@ export default {
       // this.open3D(pdbFile, chain1, chain2, parsed_xml);
     },
     renderGraph: function () {
-      console.log('starting render');
+      // console.log('starting render');
       if (!this.s) { return }
       let graph = this.extractParsedXML(this.open_xml, this.selected_edges);
       for (let i = 0; i < graph.edges.length; i++) {
@@ -447,7 +447,7 @@ export default {
       this.s.graph.clear();
       this.s.graph.read(graph);
       this.s.refresh();
-      console.log(this.display_graph);
+      // console.log(this.display_graph);
       this.open3D(this.pdbFile, this.chain1, this.chain2, this.open_xml, graph);
     },
   }
