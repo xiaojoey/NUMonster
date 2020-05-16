@@ -5,10 +5,6 @@
         <span>{{display_label}}</span>
         <b-button-close v-on:click="closeDisplay()" class="btn"></b-button-close>
       </div>
-      <div v-if="url_3D" class="card-body" id="target-box">
-        <div v-if="url_3D" id="container-01" class="mol-container"></div>
-        <!-- <iframe :src="url_3D" class="display-container" frameborder="0"></iframe> -->
-      </div>
       <div v-if="display_graph" class="row card-body">
         <div  class="col-10">
           <div id="graph-container" class="display-container"></div>
@@ -35,6 +31,11 @@
         </div>
       </div>
     </div>
+    <div v-if="url_3D" class="card" id="target-box">
+        <div v-if="url_3D" class="card-body">
+          <div v-if="url_3D" id="container-01" class="mol-container"></div>
+        </div>
+    </div>
     <br/>
     <h3>
       Results for {{$route.params.job_id}}
@@ -45,7 +46,7 @@
         <th>Model</th>
         <th>Chain 1</th>
         <th>Chain 2</th>
-        <th colspan="2">View Results</th>
+        <th colspan="1">View Results</th>
         <th>PDB</th>
         <th>Results</th>
         <th>Logs</th>
@@ -58,8 +59,8 @@
               <td>{{model}}</td>
               <td>{{chain.slice(0,1)}}</td>
               <td>{{chain.slice(1,2)}}</td>
-              <td><button v-if="links.PDB" class="btn btn-secondary" v-on:click='open2D(links.PDB.PDB, links.parsed_bonds, `${chain.slice(0,1)} and ${chain.slice(1,2)} chains from model ${model}`, chain.slice(0,1), chain.slice(1,2))'>2D Display</button></td>
-              <td><button v-if="links.PDB" class="btn btn-secondary" v-on:click='open3D(links.PDB.PDB, chain.slice(0,1), chain.slice(1,2), `${chain.slice(0,1)} and ${chain.slice(1,2)} chains from model ${model}`, links.parsed_bonds)'>3D Display</button></td>
+              <td><button v-if="links.PDB" class="btn btn-secondary" v-on:click='open2D(links.PDB.PDB, links.parsed_bonds, `${chain.slice(0,1)} and ${chain.slice(1,2)} chains from model ${model}`, chain.slice(0,1), chain.slice(1,2))'>2D and 3D Display</button></td>
+              <!-- <td><button v-if="links.PDB" class="btn btn-secondary" v-on:click='open3D(links.PDB.PDB, chain.slice(0,1), chain.slice(1,2), `${chain.slice(0,1)} and ${chain.slice(1,2)} chains from model ${model}`, links.parsed_bonds)'>3D Display</button></td> -->
               <td><a v-if="links.PDB" v-bind:href="links.PDB.PDB">PDB File</a></td>
               <td>
                 <a target="_blank" v-bind:href="links.Results.XML">XML File</a>
@@ -100,6 +101,7 @@ export default {
     selected_info: '',
     chain1: '',
     chain2: '',
+    pdbFile: '',
     dist_filter: [
       0,
       15
@@ -139,21 +141,24 @@ export default {
     });
   },
   methods: {
-    open3D: function (pdb_url, chain1, chain2, label, parsed_xml) {
-      this.closeDisplay();
-      this.display_label = label;
+    open3D: function (pdb_url, chain1, chain2, parsed_xml, _graph) {
+      // this.closeDisplay();
+      console.log('starting open3d');
+      console.log(chain1, chain2, parsed_xml);
+      if (this.url_3D !== false) {
+        this.$el.querySelector('#container-01').innerHTML = '';
+      }
       this.url_3D = `https://3dmol.csb.pitt.edu/viewer.html?url=${pdb_url}
       &select=chain:${chain1}&style=cartoon:color~green
       &select=chain:${chain2}&style=cartoon:color~yellow;stick`;
-      this.open_xml = parsed_xml;
-      let graph = this.extractParsedXML(this.open_xml, this.selected_edges);
+      let graph = _graph || this.extractParsedXML(this.open_xml, this.selected_edges);
       let color_chart = this.all_edges;
       setTimeout(() => {
         this.$el.querySelector('#container-01').style.display = 'block';
-        this.makeModel(pdb_url, chain1, chain2, label, graph, color_chart);
+        this.makeModel(pdb_url, chain1, chain2, graph, color_chart);
       }, 200)
     },
-    makeModel: function (pdb_url, chain1, chain2, label, graph, color_chart) {
+    makeModel: function (pdb_url, chain1, chain2, graph, color_chart) {
       $(function () {
         let element = $('#container-01');
         let config = {backgroundColor: 'white'};
@@ -350,21 +355,23 @@ export default {
       return {'nodes': new_nodes, 'edges': new_edges}
     },
     closeDisplay: function () {
-      this.display_label = '';
+      // this.display_label = '';
       this.url_3D = false;
-      this.display_graph = false;
+      // this.display_graph = false;
       this.s = undefined;
     },
     open2D: function (pdbFile, parsed_xml, label, chain1, chain2) {
-      if (this.url_3D !== false) {
-        this.$el.querySelector('#container-01').innerHTML = '';
-      }
-      this.url_3D = false;
+      // if (this.url_3D !== false) {
+      //   this.$el.querySelector('#container-01').innerHTML = '';
+      // }
+      // this.url_3D = false;
+      console.log('starting open 2d');
       this.chain1 = chain1;
       this.chain2 = chain2;
       this.display_label = label;
       this.display_graph = true;
       this.open_xml = parsed_xml;
+      this.pdbFile = pdbFile;
       if (!this.s) {
         // Instantiate sigma, use SetTimeout to give Vue a chance to load the container
         setTimeout(() => {
@@ -413,8 +420,10 @@ export default {
       } else {
         this.renderGraph();
       }
+      // this.open3D(pdbFile, chain1, chain2, parsed_xml);
     },
     renderGraph: function () {
+      console.log('starting render');
       if (!this.s) { return }
       let graph = this.extractParsedXML(this.open_xml, this.selected_edges);
       for (let i = 0; i < graph.edges.length; i++) {
@@ -438,6 +447,8 @@ export default {
       this.s.graph.clear();
       this.s.graph.read(graph);
       this.s.refresh();
+      console.log(this.display_graph);
+      this.open3D(this.pdbFile, this.chain1, this.chain2, this.open_xml, graph);
     },
   }
 }
@@ -455,17 +466,26 @@ export default {
     vertical-align: bottom;
   }
   .container{
-    min-width: 100%;
+    min-width: 97%;
   }
   .col-10{
-    max-width: calc(100% - 230px);
+    max-width: calc(100% - 250px);
   }
   .col-2{
-    min-width: 230px;
+    min-width: 250px;
   }
   .mol-container {
     width: 100%;
     height: 75vh;
     position: relative;
+  }
+  #target-box{
+    margin-top: 30px;
+  }
+  .card-body {
+    padding: 5px;
+  }
+  #undefined {
+    max-width: 100%;
   }
 </style>
