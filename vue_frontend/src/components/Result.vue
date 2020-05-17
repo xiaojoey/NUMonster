@@ -101,6 +101,7 @@ export default {
     selected_info: '',
     chain1: '',
     chain2: '',
+    viewer: false,
     pdbFile: '',
     dist_filter: [
       0,
@@ -142,27 +143,24 @@ export default {
   },
   methods: {
     open3D: function (pdb_url, chain1, chain2, parsed_xml, _graph) {
-      // this.closeDisplay();
-      // console.log('starting open3d');
-      // console.log(chain1, chain2, parsed_xml);
-      if (this.url_3D !== false) {
-        this.$el.querySelector('#container-01').innerHTML = '';
-      }
-      this.url_3D = `https://3dmol.csb.pitt.edu/viewer.html?url=${pdb_url}
-      &select=chain:${chain1}&style=cartoon:color~green
-      &select=chain:${chain2}&style=cartoon:color~yellow;stick`;
       let graph = _graph || this.extractParsedXML(this.open_xml, this.selected_edges);
       let color_chart = this.all_edges;
+      let element = $('#container-01');
+      let config = {backgroundColor: 'white'};
+      if (!this.viewer) {
+        this.viewer = $3Dmol.createViewer(element, config); // eslint-disable-line
+      }
+      let viewer = this.viewer;
+      // console.log(viewer)
       setTimeout(() => {
         this.$el.querySelector('#container-01').style.display = 'block';
-        this.makeModel(pdb_url, chain1, chain2, graph, color_chart);
+        this.makeModel(pdb_url, chain1, chain2, graph, color_chart, viewer);
       }, 200)
     },
-    makeModel: function (pdb_url, chain1, chain2, graph, color_chart) {
+    makeModel: function (pdb_url, chain1, chain2, graph, color_chart, _viewer) {
       $(function () {
-        let element = $('#container-01');
-        let config = {backgroundColor: 'white'};
-        let viewer = $3Dmol.createViewer(element, config);  // eslint-disable-line
+        let viewer = _viewer;
+        viewer.clear();
         let pdbUri = pdb_url;
         jQuery.ajax(pdbUri, {
           success: function (data) {
@@ -206,9 +204,9 @@ export default {
                 }
               });
             }
-            v.zoomTo();                                      /* set camera */  // eslint-disable-line
+            v.zoomTo();                              /* set camera */  // eslint-disable-line
             v.render();                                      /* render scene */ // eslint-disable-line
-            // v.zoom(1.2, 1000);                               /* slight zoom */ // eslint-disable-line
+            v.zoom(1.5, 1000);                               /* slight zoom */ // eslint-disable-line
           },
           error: function (hdr, status, err) {
             console.error('Failed to load PDB ' + pdbUri + ': ' + err);
@@ -361,17 +359,18 @@ export default {
       this.s = undefined;
     },
     open2D: function (pdbFile, parsed_xml, label, chain1, chain2) {
-      // if (this.url_3D !== false) {
-      //   this.$el.querySelector('#container-01').innerHTML = '';
-      // }
-      // this.url_3D = false;
-      // console.log('starting open 2d');
       this.chain1 = chain1;
       this.chain2 = chain2;
       this.display_label = label;
       this.display_graph = true;
       this.open_xml = parsed_xml;
       this.pdbFile = pdbFile;
+      this.url_3D = `https://3dmol.csb.pitt.edu/viewer.html?url=${pdbFile}
+      &select=chain:${chain1}&style=cartoon:color~green
+      &select=chain:${chain2}&style=cartoon:color~yellow;stick`;
+      if (this.viewer) {
+        this.viewer.clear();
+      }
       if (!this.s) {
         // Instantiate sigma, use SetTimeout to give Vue a chance to load the container
         setTimeout(() => {
