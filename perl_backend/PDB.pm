@@ -239,7 +239,6 @@ sub parse{
 	    #
 	    $temp = new PDB::Atom('-line' => $_, '-number'=>$i);
 
-	    print $temp->chainId,"\n";
 	    if( $temp->chainId ne "" && ( $current_chain eq "" || 
 					  ( $current_chain ne $temp->chainId ) ) ){
 		$current_chain=$temp->chainId;
@@ -364,10 +363,6 @@ sub parse{
             #NB: Whatif handles new terminal protons incorrectly for nucleic residues 
             # 
 	    next if $temp->proton && $temp->atomName =~ /^H[123]$/ && $temp->isNA && notTerminalProtons($self,$temp,$bonds);
-
-	    if($temp->proton){
-		print $temp->chainId(),"\n";
-	    }
 
 	    if($xml){
 		$temp->clearChainIds;
