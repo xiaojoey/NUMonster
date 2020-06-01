@@ -121,12 +121,12 @@ my $job_pdb_file = (split('/',$original_pdb_file))[-1];
 ##################################################################
 
 print("$job: starting ".$job_pdb_file." at: ".scalar(localtime)."\n");
-HAAD->run($jobDir.$job_pdb_file, $jobDir."/haad.log");
+#HAAD->run($jobDir.$job_pdb_file, $jobDir."/haad.log");
 
 ##################################################################
 # Iterate through conformations (not actually used)
 ##################################################################
-foreach my $file (get_files($jobDir,"\.pdb\.h")){
+foreach my $file (get_files($jobDir,"\.pdb")){
     my $c = substr($file, -5, 1);
     $c = '' if $c eq 'i'; #no conformations if find last letter of 'wi'
     $c = ''; #ignoring conformations
@@ -167,10 +167,10 @@ foreach my $file (get_files($jobDir,"\.pdb\.h")){
 	    print("$job: analyzing $cp in ".$file." at: ".scalar(localtime)."\n");
 
 ##################################################################
-# Run MSMS
+# Run MSMS (xml_obj needed to find user-defined end of chains)
 ##################################################################
 
-#	    MSMS->doMSMS($PDB,$tempDir,unpack('AA', $cp),$xml);
+	    MSMS->doMSMS($PDB,$tempDir,unpack('AA', $cp),$xml_obj);
 
 ##################################################################
 # Run HBPlus
