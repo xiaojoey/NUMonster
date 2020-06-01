@@ -1,0 +1,31 @@
+MSMS 2.6.1 started on sam-seaver-csi0353443.lan
+Copyright M.F. Sanner (1994)
+Compilation flags -O3 -DVERBOSE -DTIMING -DFUNCPROTO -force_cpusubtype_ALL  -arch ppc -arch i686
+INPUT  1a1n.xyzr 3511 spheres 0 collision only, radii  1.400 to  2.000
+PARAM  Probe_radius  1.500 density  1.000 hdensity  3.000
+REDUCED SURFACE ...
+    RS component 0 identified 3250 3249 3293
+    6 free edge(s) found in component 0
+    RS component  #faces  #edges #free_edges  #vertices   genus
+         0        2932     4398          6       1373      50.5
+    Time Reduced Surface real: 0.06 user: 0.05 sys: 0.00
+ANALYTICAL SOLVENT EXCLUDED SURFACE...
+    Component   0
+        Time Surface real: 0.01 user: 0.01 sys: 0.00
+        Time Singularities real: 0.00 user: 0.00 sys: 0.00
+    SES comp.  #fac.  #edg. #s_edg. #vert. #s_vert. R_h C_h genus
+         0     9022  18235    212    9226      420   0   9    -1
+ANALYTICAL SURFACE AREA :
+    Comp. probe_radius,   reent,    toric,   contact    SES       SAS
+      0       1.500    4860.718  6293.075  5389.613 16543.406 19033.832
+TRIANGULATION...
+    Component 0
+    component#, vertices,  edges,  faces, genus, density
+        0          17572   52704   35136    -1     1.062
+        Time Triangulation real: 0.04 user: 0.03 sys: 0.00
+NUMERICAL VOLUMES AND AREA
+    Comp. probe_radius SES_volume SES_area)
+       0      1.50    62699.953  15675.668
+    Total ses_volume: 62699.953
+MSMS terminated normally
+Total Time real: 0.11 user: 0.10 sys: 0.00
