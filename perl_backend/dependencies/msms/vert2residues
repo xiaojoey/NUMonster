@@ -1,0 +1,85 @@
+#! /bin/sh
+# vert2residues	pdbfile vertfile < density >
+#	awk script to read a .vert file produced by msmsContact
+# and report the atoms and residues found to be buried
+#	optional input of vertex density to calculate areas
+#
+#Modified: Sam Seaver 10/27/03 Updated retrieval of resnum and names
+#to be retrieved using substring, instead of FS. Many names AND alternate location will not
+#leave a space, thus fields are parsed incorrectly.
+#
+
+awk 'BEGIN{
+	if ( ARGC != 3 ) {
+		print "Usage: vert2residues pdbfile vertex_file"
+		exit
+	}
+
+  pdbfile = ARGV[1]
+  vertfile = ARGV[2]
+  aformat = "%3d %-5s %-5s"
+  resnum = 0
+  atname = ""
+  resname = ""
+
+# get mappings
+# find buried atoms
+#	These have a "1" in field #10 of .vert file
+#	Field #8 is the PDB atom number
+  print "Reading buried atoms from", vertfile
+
+  while ( getline < vertfile > 0 ) {
+	if ( $10 == 1 ) {
+		buried[$8]++
+		sum_vertices++
+		area[$8] = area[$8] + $11
+		sum_area = sum_area + $11
+	}
+  }
+  close( vertfile )
+  print "\t" sum_vertices " buried vertices, " sum_area " buried area"
+
+
+# get atom names from PDB file
+
+  print "Getting atom names from", pdbfile 
+  print "Atom \t \t Vertices \t Area \t Fraction (%)"
+  print "----------"
+  while ( getline < pdbfile > 0 ) {
+	if ( $1 ~ /ATOM|HETATM/ && NF > 0) {
+		atom++
+		if ( atom in buried ) {
+			atname = substr($0,13,4)
+			resname = substr($0,18,3)
+			resnum = substr($0,23,4)
+
+		  res_area[ resnum FS resname ] = \
+			res_area[ resnum FS resname ] + area[ atom ]
+		  res_vert[ resnum FS resname ] = \
+			res_area[ resnum FS resname ] + buried[ atom ]
+		  sum = sum + buried[ atom ]
+		  fraction = ( area[ atom ] / sum_area ) * 100
+		  printf(aformat " %5d \t %12.2f %9.2f\n",resnum,resname,atname,
+			buried[ atom ], area[ atom ],
+			fraction )
+		}
+	}
+  }
+  close( pdbfile )
+
+  print "----------"
+  printf("Total \t \t %5d \t %12.2f \n",sum, sum_area) 
+
+# now by residue
+  print "----------"
+  print "Area by residue:"
+  print "Residue \t Vertices \t Area \t Fraction (%)"
+  print "----------"
+  for ( res in res_area ){
+	split(res, RES)
+	fraction = ( res_area[res] / sum_area ) * 100
+	printf("%3d %-5s %11d \t %12.2f %9.2f \n", RES[1], RES[2],
+		res_vert[res], res_area[res], fraction) \
+		| "sort -n +0 -1"
+  }
+}' $*

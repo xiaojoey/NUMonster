@@ -1,0 +1,41 @@
+#! /bin/bash
+#	Modified from original buried.csh to work with bash
+#
+
+if [ ! -s "${1}.xyzr" ] ;
+then
+    echo "Missing input file: ${1}.xyzr";
+    exit;
+elif [ ! -s "${2}.xyzr" ] ;
+then
+    echo "Missing input file: ${2}.xyzr";
+    exit;
+fi ;
+
+density=19
+if [ ! -z $3 ] ;
+then
+    density=$3
+fi ;
+
+OF="${1}ct${2}_${density}"
+echo $OF
+echo
+echo "Computing surface of ${1} buried by ${2} -- density = ${density}"
+echo "Running MSMS"
+
+echo "Surface of ${1} buried by ${2} -- density = ${density}" > ${OF}.log
+#/home/monster/execs/msms/msms -density $density -probe_radius 1.4 \
+#	-if $1:r.xyzr -buried $2:r.xyzr \
+#	-of $OF >> $OF.log 
+
+echo
+echo "Analyzing buried surface..."
+if [ ! -s ${1}.pdb ] ;
+then
+    echo "Missing PDB file ${1}.pdb";
+else
+    grep "buried SES" ${OF}.log > ${OF}.anal;
+    ./vert2residues ${1}.pdb ${OF}.vert >> ${OF}.anal;
+fi
+echo "Done. Write AVS fld files and surface analysis files ${OF}"
