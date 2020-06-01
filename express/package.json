@@ -9,24 +9,24 @@
     "devstart": "nodemon server.js"
   },
   "dependencies": {
-    "body-parser": "*",
+    "body-parser": "^1.19.0",
     "child_process": "^1.0.2",
-    "cors": "^2.8.4",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
-    "ejs": "^2.5.8",
-    "express": "^4.16.3",
+    "ejs": "^2.7.4",
+    "express": "^4.17.1",
     "express-fileupload": "^1.1.6",
     "express-validator": "^4.3.0",
     "express-validators": "^1.0.4",
-    "mkdirp": "^0.5.1",
-    "pug": "^2.0.3",
-    "tape": "^4.10.1",
-    "xml-js": "^1.6.7"
+    "mkdirp": "^0.5.5",
+    "pug": "^2.0.4",
+    "tape": "^4.13.2",
+    "xml-js": "^1.6.11"
   },
   "author": "Richard Huang",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^1.18.2",
+    "nodemon": "^1.19.4",
     "supertest": "^4.0.2"
   }
 }
