@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 # extract x,y,z from PDB file, generate radius of each atom
 # Hydrogens are presumed to be missing ("united atom" approach) unless -h given
 # later: options for alternate radius and pattern files
@@ -28,10 +28,14 @@ if test $# -ge 1 ;then
 	shift
 	fi
 fi
-awk 'BEGIN{
+
+#Find CWD of script, can break for a number of reasons
+DIR="$( cd "$( dirname $0 )" && pwd )"
+
+awk -v DIR="$DIR" 'BEGIN{
 	# read radius table and patterns from supplied file
 	npats=0
-	numfile = "/home/monster/execs/msms/atmtypenumbers"
+	numfile = DIR"/atmtypenumbers"
 	while ((getline < numfile) > 0) {
 		if(NF==0||substr($1,1,1)=="#") continue;
 		if($1=="radius") {

@@ -27,12 +27,6 @@ sub doMSMS{
     my $pdb=shift;
     ($job,$c1,$c2,$xml)=@_;
 
-    #To avoid issues with changing paths, this is copied to the cwd
-    #for pdb_to_xyzr to work
-    if(!-f "./atmtypenumbers"){
-	system("cp ".$default_path."atmtypenumbers .");
-    }
-
     get_buried_surface($pdb);
 }
 
@@ -106,7 +100,7 @@ sub get_buried_surface {
 	      # wait for the other process to signal that it is
 	      # safe to continue
 	      until( -e "$cf1.done" ) {}
-	      
+
 	      my $outfile = run_msms($cf2,$cf1);
 	      
 	      rename( $outfile, "$cpf2.anal" ) or warn "\ncouldn't rename $outfile: $!";
@@ -158,16 +152,14 @@ sub convert_to_xyzr {
 sub run_msms {
 	my( $cf1, $cf2 ) = @_;
 
-	print "Running MSMS on: $cf1 $cf2\n";
-	my $msms = "$default_path/msms";
+	my $msms = "$default_path/buried";
 
 	my $mslog = $job.$c1.$c2."msms.log";
-	print $mslog,"\n";
 
 	# STDERR is redirected to STDOUT because
 	# MSMS will emit some random diagnostic messages.
 	# Running msms now
-	qx "$msms $cf1.xyzr $cf2.xyzr 19 > $mslog 2>&1";
+	qx "$msms $cf1 $cf2 19 >> $mslog 2>&1";
 
 	my $outbase = $job.substr($cf1,-1)."ct".substr($cf2,-1)."_19";
 	qx "cat $outbase.log >> $mslog";
