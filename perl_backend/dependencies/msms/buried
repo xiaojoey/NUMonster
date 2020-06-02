@@ -35,7 +35,7 @@ LOG="$( cd "$( dirname $1 )" && pwd )"
 echo "Surface of ${bn1} buried by ${bn2} -- density = ${density}" > "${LOG}/${OF}.log"
 "${DIR}"/msms -density $density -probe_radius 1.4 \
 	-if "${1}.xyzr" -buried "${2}.xyzr" \
-	-of $OF >> "${LOG}/${OF}.log"
+	-of "${LOG}/${OF}" >> "${LOG}/${OF}.log"
 
 echo
 echo "Analyzing buried surface..."
