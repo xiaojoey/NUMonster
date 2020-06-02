@@ -197,6 +197,11 @@ sub wiWrite{
     }
 }
 
+sub haadWrite{
+    my $self = shift;
+    my $file = shift;
+}
+
 sub parse{
     my $self=shift;
     my $file=shift;
@@ -211,15 +216,16 @@ sub parse{
 	    $self->{'chainPairs'}{$cp}=1;
 	}
     }
-    
-    #open(FILE, "< $file") or die "\ncouldn't open FILE: ".$file.": $! ";
-    #my $stream = (File::Stream->new(\*FILE, separator => qr{[\cM\r\n]}))[1];
 
     my $stream=getFileHandle($file);
 
     my $i=0;
     my ($temp,$first,$chain);
     my($firstH,$secondH,$thirdH,$oxt);
+
+    # I'm adding this code to remember and insert the current chain if it goes missing for some atoms (as in HAAD's new protons)
+    my $current_chain="";
+
     while(<$stream>){
 	%tChs=();
 	if($_ =~ /^ATOM/){
@@ -232,7 +238,22 @@ sub parse{
 	    #when shallow copying referents.
 	    #
 	    $temp = new PDB::Atom('-line' => $_, '-number'=>$i);
+
+	    if( $temp->chainId ne "" && ( $current_chain eq "" || 
+					  ( $current_chain ne $temp->chainId ) ) ){
+		$current_chain=$temp->chainId;
+	    }
+
+	    if($current_chain ne "" && $temp->chainId eq ""){
+#		$temp->setChainId($current_chain);
+	    }
+
 	    $first = new PDB::Atom('-line' => $_) unless $first;
+
+	    if($current_chain ne "" && $first->chainId eq ""){
+		$first->setChainId($current_chain);
+	    }
+
 	    if($first){
 		if($temp->resNumber eq $first->resNumber && 
 		   $temp->chainId eq $first->chainId &&
@@ -252,10 +273,20 @@ sub parse{
 		if($chain){
 		    if($chain->chainId ne $temp->chainId){
 			$chain = new PDB::Atom('-line' => $_);
+
+			if($current_chain ne "" && $chain->chainId eq ""){
+			    $chain->setChainId($current_chain);
+			}
+
 			$temp->chargeN;
 		    }
 		}else{
 		    $chain = new PDB::Atom('-line' => $_);
+
+		    if($current_chain ne "" && $chain->chainId eq ""){
+			$chain->setChainId($current_chain);
+		    }
+
 		    $temp->chargeN;
 		}
 	    }
@@ -269,29 +300,58 @@ sub parse{
                 if($chain){
 		    if($secondH && !$thirdH && $firstH->hydNumber eq '1'){
 			$thirdH = new PDB::Atom('-line' =>$_);
+
+			if($current_chain ne "" && $thirdH->chainId eq ""){
+			    $thirdH->setChainId($current_chain);
+			}
+
 			$thirdH->setModel($modelCount);
 			$i--;
 			next;
 		    }elsif($firstH && !$secondH){
 			$secondH  = new PDB::Atom('-line' => $_);
+
+			if($current_chain ne "" && $secondH->chainId eq ""){
+			    $secondH->setChainId($current_chain);
+			}
+
 			$secondH->setModel($modelCount);
 			$i--;
 			next;
 		    }elsif($oxt && !$firstH){
                         $firstH  = new PDB::Atom('-line' => $_);
+
+			if($current_chain ne "" && $firstH->chainId eq ""){
+			    $firstH->setChainId($current_chain);
+			}
+
 			$firstH->setModel($modelCount);
                         $i--;
 			next;
                     }elsif($chain->chainId ne $temp->chainId && !$oxt && $temp->atomName eq 'OXT'){
                         $oxt = new PDB::Atom('-line' => $_);
+
+			if($current_chain ne "" && $oxt->chainId eq ""){
+			    $oxt->setChainId($current_chain);
+			}
+
 			$oxt->setModel($modelCount);
 			$i--;
 			next;
                     }else{
 			$chain = new PDB::Atom('-line' => $_);
+
+			if($current_chain ne "" && $chain->chainId eq ""){
+			    $chain->setChainId($current_chain);
+			}
+
 		    }
                 }else{
                     $chain = new PDB::Atom('-line' => $_);
+
+		    if($current_chain ne "" && $chain->chainId eq ""){
+			$chain->setChainId($current_chain);
+		    }
 		}
 	    }
 
@@ -326,6 +386,7 @@ sub parse{
 		#or floss teeth for that matter either.
 		#
 	    }
+
             ##################################### add ####################################################
             #############################################################################################
 	    addToMemory($self, $temp, $i);

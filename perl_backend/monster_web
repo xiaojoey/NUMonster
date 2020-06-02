@@ -6,15 +6,16 @@ use strict;
 use File::Find qw(find);
 use File::Basename;
 
+# environment library
+# loads same variables used by web server
+use Dotenv -load => '../.env';
+
 # custom libraries
-#use lib "./perl_backend";
 use PDB;
 use PDB::Bonds;
 use XML::In;
-#use WebDBI;
 
 # these libraries interact with external programs
-use WhatIf;
 use MSMS;
 use HAAD;
 use HBplus;
@@ -42,25 +43,32 @@ if($ARGV[1]){
 	die "Second argument for debug flat must be 0/1\n";
     }
 }
-
-# Set up where jobs are run
-my $filebase = '/home/monster_uploads/';
-if(exists($ENV{'MONSTER_JOBS'})){
-    $filebase = $ENV{'MONSTER_JOBS'};
-}
+$debug = 1 if $job eq "perl_test";
 
 # Testing directory structure and files
-my $uploadsDir = $filebase.'upload/';
+my $uploadsDir = '/home/monster_uploads/upload/';
+if(exists($ENV{'UPLOAD_DIR'})){
+    $uploadsDir = $ENV{"UPLOAD_DIR"};
+}
+$uploadsDir.="/" if $uploadsDir !~ /\/$/;
 if(!-d $uploadsDir){
     die "$uploadsDir doesn't exist\n";
 }
 
-my $jobsDir = $filebase.'jobs/';
+my $jobsDir = '/home/monster_uploads/jobs/';
+if(exists($ENV{'JOBS_DIR'})){
+    $jobsDir = $ENV{"JOBS_DIR"};
+}
+$jobsDir.="/" if $jobsDir !~ /\/$/;
 if(!-d $jobsDir){
     die "$jobsDir doesn't exist\n";
 }
 
-my $logsDir = $filebase.'logs/';
+my $logsDir = '/home/monster_uploads/jobs/';
+if(exists($ENV{'LOGS_DIR'})){
+    $logsDir = $ENV{"LOGS_DIR"};
+}
+$logsDir.="/" if $logsDir !~ /\/$/;
 if(!-d $logsDir){
     die "$logsDir doesn't exist\n";
 }
@@ -76,7 +84,8 @@ if(!$debug){
     open( STDOUT, ">& STDERR" ) or die "\ncouldn't redirect STDOUT to STDERR: $! ";
 }
 
-my $jobDir .= $jobsDir.'/'.$job.'/';
+# Testing for output of web server
+my $jobDir .= $jobsDir.$job.'/';
 if(!-d $jobDir){
     die "$job: $jobDir doesn't exist\n";
 }
@@ -92,62 +101,43 @@ if(!defined($xml_obj)){
     die "$job: couldnt parse $xmlFile!\n";
 }
 
-if(!-f $uploadsDir.$xml_obj->getFile()){
-    die "$job: PDB file (".$uploadsDir.$xml_obj->getFile().") not found\n";
+# Arranging directory for output of perl backend
+my $original_pdb_file = $xml_obj->getFile();
+if(!-f $uploadsDir.$original_pdb_file){
+    die "$job: PDB file (".$uploadsDir.$original_pdb_file.") not found\n";
 }
-print("$job: starting ".$xml_obj->getFile()." at: ".scalar(localtime)."\n");
+print("$job: copying ".$uploadsDir.$original_pdb_file." to ".$jobDir." at: ".scalar(localtime)."\n");
+system("cp ".$uploadsDir.$original_pdb_file." ".$jobDir);
+
+# original_pdb_file contains upload timestamp directory name so remove
+my $job_pdb_file = (split('/',$original_pdb_file))[-1];
 
 ##################################################################
 # Start actual job
 ##################################################################
 
-# Ignoring use of DB for time being
-# WebDBI->start($job,$xml_obj) if !$debug;
-
-my $Bonds;
-my $PDB = new PDB;
-
 ##################################################################
-# Re-write PDB file so that it works with WhatIf: will be discontinued
+# Run HAAD to replace/correct protons
 ##################################################################
 
-#$PDB->wiWrite($uploadsDir.$xml_obj->getFile(),$jobsDir,$xml);
-#print "WhatIf file written\n";
-
-##################################################################
-# Run HAAD
-##################################################################
-
-print("$job: copying ".$xml_obj->getFile()." at: ".scalar(localtime)."\n");
-#HAAD->run($PDB,$upload_file.$xml_obj->getFile());
-system("cp ".$uploadsDir.$xml_obj->getFile()." ".$jobDir);
+print("$job: starting ".$job_pdb_file." at: ".scalar(localtime)."\n");
+#HAAD->run($jobDir.$job_pdb_file, $jobDir."/haad.log");
 
 ##################################################################
 # Iterate through conformations (not actually used)
 ##################################################################
-my $result = undef;
-foreach my $file (get_pdb_files($jobDir)){
+foreach my $file (get_files($jobDir,"\.pdb")){
     my $c = substr($file, -5, 1);
     $c = '' if $c eq 'i'; #no conformations if find last letter of 'wi'
     $c = ''; #ignoring conformations
-
-##################################################################
-# Process protons using WhatIf (To be Replaced by HAAD)
-##################################################################
-
-#    if($xml->getProtons){
-#	print $file,"\tRedoing Protons\n";
-#	$file = WhatIf->doWhatif($file,$PDB); #file updated to be WhatIf output
-#    }
-
-#    WebDBI->whatif($job) if !$debug;
 
 ##################################################################
 # Parse PDB file and calculate interatomic interactions
 ##################################################################
 
     print("$job: parsing ".$file." at: ".scalar(localtime)."\n");
-    $Bonds = new PDB::Bonds();
+    my $Bonds = new PDB::Bonds();
+    my $PDB = new PDB;
     $PDB->parse($jobDir.$file, $xml_obj, $Bonds);
     print("$job: parsed ".$file." at: ".scalar(localtime)."\n");
 
@@ -156,18 +146,17 @@ foreach my $file (get_pdb_files($jobDir)){
 ##################################################################
 
     my $models = $PDB->getModels;
-#    WebDBI->parse($job, $models, $xml->chains()) if !$debug;
-
-    my $tempDir;
     for(my $i=1;$i<=$models;$i++){
 
 ##################################################################
 # Make a new results directory for each model
 ##################################################################
 
-	$tempDir = $jobDir.$c.$i.'/';
-	mkdir $tempDir or warn "couldn't make $tempDir: $!\n";
-	chdir $tempDir or die "couldn't chdir $tempDir: $!\n"; #Dies if cant chdir
+	my $tempDir = $jobDir.$c.$i.'/';
+	if(-d $tempDir){
+	    unlink $tempDir;
+	}
+	mkdir $tempDir;
 
 ##################################################################
 # Iterate through chainpairs in model
@@ -175,31 +164,27 @@ foreach my $file (get_pdb_files($jobDir)){
 
 	$PDB->setModel($i);
 	foreach my $cp (sort $PDB->chainPairs){
-#	    WebDBI->set_model($job,$i,$cp) if !$debug;
+	    print("$job: analyzing $cp in ".$file." at: ".scalar(localtime)."\n");
 
 ##################################################################
-# Run MSMS
+# Run MSMS (xml_obj needed to find user-defined end of chains)
 ##################################################################
 
-#	    MSMS->doMSMS($PDB,$tempDir,unpack('AA', $cp),$xml);
-#	    WebDBI->set_time($job,$i,$cp,'msms') if !$debug;
+	    MSMS->doMSMS($PDB,$tempDir,unpack('AA', $cp),$xml_obj);
 
 ##################################################################
 # Run HBPlus
 ##################################################################
 
 #	    HBplus->doHBplus($PDB,$tempDir,unpack('AA', $cp),$xml,$Bonds);
-#	    WebDBI->set_time($job,$i,$cp,'hbplus') if !$debug;
 
 ##################################################################
 # Print all interatomic interactions
 ##################################################################
 
+	    print("$job: printing $cp analysis for ".$file." at: ".scalar(localtime)."\n");
 	    $Bonds->printBonds($PDB,$tempDir.$cp.'bonds.txt',$i,unpack('AA', $cp));
 	    $Bonds->printXMLBonds($PDB,$tempDir.$cp.'bonds.xml',$i,unpack('AA', $cp));
-#	    WebDBI->set_time($job,$i,$cp,'print_bonds') if !$debug;
-	    $result = $tempDir.$cp.'bonds.txt' unless $result;
-#	    WebDBI->result($job,$i,$cp, $result) if !$debug;
 	}
     }
 
@@ -213,62 +198,26 @@ foreach my $file (get_pdb_files($jobDir)){
 	foreach my $cp (sort $PDB->chainPairs){
 	    $Bonds->printModelCount($PDB, $jobsDir.$cp.$c.'consensus.txt', ($models/2), unpack('AA', $cp));
 	    $Bonds->printXMLModelCount($PDB, $jobsDir.$cp.$c.'consensus.xml', ($models/2), unpack('AA', $cp));
-	    $result = $jobsDir.$cp.$c.'consensus.txt';
+	    my $result = $jobsDir.$cp.$c.'consensus.txt';
 	    push(@jobfiles,$result);
 	}
-	Email->resultEmail($job, $xml_obj->getEmail, $xml_obj->getFile(), @jobfiles) if !$debug;
+	Email->resultEmail($job, $xml_obj->getEmail, $original_pdb_file, @jobfiles) if !$debug;
 	Sheet->generate_sheet(@jobfiles);
     }else{
-	Email->resultEmail($job, $xml_obj->getEmail, $xml_obj->getFile(), get_text_results($jobDir.'/1')) if !$debug;
+	Email->resultEmail($job, $xml_obj->getEmail, $original_pdb_file, get_files($jobDir.'/1',"\.txt")) if !$debug;
     }
-#    WebDBI->print($job) if !$debug;
 } #end of get_files loop
-# WebDBI->end($job) if !$debug;
-print("$job: finishing ".$xml_obj->getFile()." at: ".scalar(localtime)."\n");
+print("$job: finishing ".$original_pdb_file." at: ".scalar(localtime)."\n");
 exit(0);
 
 ####################################################################
-# Utility subroutines
+# Utility subroutine
 
-sub get_pdb_files{
+sub get_files{
     my $dir = shift;
+    my $suffix = shift;
     opendir(my $dh, $dir) || die "can't opendir $dir: $!";
-    my @files = grep { $_ =~ /\.pdb$/ && $_ ne "out.pdb"} readdir($dh);
-    closedir $dh;
-
-    return @files;
-}
-
-sub get_xml{
-    opendir(my $dh, $jobsDir) || die "can't opendir $jobsDir: $!";
-    my $file = (grep { $_ =~ /\.xml/ } readdir($dh))[0];
-    closedir $dh;
-
-    return $file;
-}
-
-sub get_text_results{
-    my $dir = shift;
-    opendir(my $dh, $dir) || die "can't opendir $dir: $!";
-    my @files = grep { $_ =~ /\.txt$/ } readdir($dh);
-    closedir $dh;
-
-    return @files;
-}
-
-sub get_excel_results{
-    my $dir = shift;
-    opendir(my $dh, $dir) || die "can't opendir $dir: $!";
-    my @files = grep { $_ =~ /\.xls$/ } readdir($dh);
-    closedir $dh;
-
-    return @files;
-}
-
-sub get_consensus_results{
-    my $dir = shift;
-    opendir(my $dh, $dir) || die "can't opendir $dir: $!";
-    my @files = grep { $_ =~ /consensus\.txt$/ } readdir($dh);
+    my @files = grep { $_ =~ /${suffix}$/} readdir($dh);
     closedir $dh;
 
     return @files;
