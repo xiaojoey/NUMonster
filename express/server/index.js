@@ -54,6 +54,10 @@ app.get('/', function (req, res) {
 	});
 });
 
+app.get('/ping', function (req, res) {
+    res.send('1');
+})
+
 app.get('/results/:job_id', function(req, res) {
 	const jobs_dir = `${JOBS_DIR}/${req.params.job_id}`;
 	const dl_url = `${DL_URL}/${req.params.job_id}`;
@@ -183,11 +187,11 @@ app.post('/jobxml', function (req, res) {
     let sh = './perlbackend.sh';
     //gets xml sent in the request
     console.log(req.body)
-    console.log(req.headers)
+    // console.log(req.headers)
     xml = req.body.xml;
     job_id = req.body.job_id;
     //finds job_id
-    console.log(xml)
+    // console.log(xml)
 
     // job_id = xml.match(regex)[1];
 
@@ -198,6 +202,11 @@ app.post('/jobxml', function (req, res) {
     makeXMLFile(job_id, file, xml, (err) => {
         let message = (err) ? err : job_id + '.xml has been saved';
         console.log(message);
+        var today = new Date();
+        var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var dateTime = 'Current Time is : ' + date + ' ' + time;
+        console.log(dateTime);
         //returns the job_id
         res.json(job_id);
         if(!err){
@@ -278,7 +287,7 @@ function makeXMLFile(job_id, file, xml, callback) {
 
     //makes the directory with the file path generated
     fs.mkdirSync(dirxml);
-    console.log('New folder created!');
+    // console.log('New folder created!');
     //changes permissions on the directory
     fs.chmodSync(dirxml, 0o777);
     filexml = dirxml + '/' + job_id + '.xml';
@@ -286,6 +295,6 @@ function makeXMLFile(job_id, file, xml, callback) {
     fs.writeFile(filexml, xml, (err) => {
         if (err) callback(err);
         console.log('The xml file has been saved!');
-        callback(err);
+        callback(null);
     });
 }
