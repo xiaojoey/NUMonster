@@ -294,7 +294,7 @@ function makeXMLFile(job_id, file, xml, callback) {
     //makes the new xml file and writes to it
     fs.writeFile(filexml, xml, (err) => {
         if (err) callback(err);
-        console.log('The xml file has been saved!');
+        // console.log('The xml file has been saved!');
         callback(null);
     });
 }

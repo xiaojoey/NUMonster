@@ -175,10 +175,10 @@ export default {
               let atom_id = atom.substring(1, atom.length);
               v.addResLabels({resi: atom_id, chain: atom_chain}, {backgroundOpacity: 0.3});
               if (atom_chain === chain1) {
-                v.setStyle({resi: atom_id, chain: atom_chain}, {stick: {color: 'cyan'}});
+                v.setStyle({resi: atom_id, chain: atom_chain}, {cartoon: {color: 'cyan', opacity: 0.7}, stick: {color: 'cyan'}});
                 // v.addSphere({center: {resi: atom_id, chain: atom_chain}, radius: 0.5, color: 'green'});
               } else {
-                v.setStyle({resi: atom_id, chain: atom_chain}, {stick: {color: 'pink'}});
+                v.setStyle({resi: atom_id, chain: atom_chain}, {cartoon: {color: 'pink', opacity: 0.7}, stick: {color: 'pink'}});
                 // v.addSphere({center: {resi: atom_id, chain: atom_chain}, radius: 0.5, color: 'yellow'});
               }
             }
