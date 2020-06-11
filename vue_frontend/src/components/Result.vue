@@ -145,6 +145,7 @@ export default {
     open3D: function (pdb_url, chain1, chain2, parsed_xml, _graph) {
       let graph = _graph || this.extractParsedXML(this.open_xml, this.selected_edges);
       let color_chart = this.all_edges;
+      let amino_acid = this.amino_acid;
       let element = $('#container-01');
       let config = {backgroundColor: 'white'};
       if (!this.viewer) {
@@ -154,10 +155,10 @@ export default {
       // console.log(viewer)
       setTimeout(() => {
         this.$el.querySelector('#container-01').style.display = 'block';
-        this.makeModel(pdb_url, chain1, chain2, graph, color_chart, viewer);
+        this.makeModel(pdb_url, chain1, chain2, graph, color_chart, amino_acid, viewer);
       }, 200)
     },
-    makeModel: function (pdb_url, chain1, chain2, graph, color_chart, _viewer) {
+    makeModel: function (pdb_url, chain1, chain2, graph, color_chart, amino_acid, _viewer) {
       $(function () {
         let viewer = _viewer;
         viewer.clear();
@@ -174,10 +175,10 @@ export default {
               let atom_id = atom.substring(1, atom.length);
               v.addResLabels({resi: atom_id, chain: atom_chain}, {backgroundOpacity: 0.3});
               if (atom_chain === chain1) {
-                v.setStyle({resi: atom_id, chain: atom_chain}, {stick: {color: 'cyan'}});
+                v.setStyle({resi: atom_id, chain: atom_chain}, {cartoon: {color: 'cyan', opacity: 0.7}, stick: {color: 'cyan'}});
                 // v.addSphere({center: {resi: atom_id, chain: atom_chain}, radius: 0.5, color: 'green'});
               } else {
-                v.setStyle({resi: atom_id, chain: atom_chain}, {stick: {color: 'pink'}});
+                v.setStyle({resi: atom_id, chain: atom_chain}, {cartoon: {color: 'pink', opacity: 0.7}, stick: {color: 'pink'}});
                 // v.addSphere({center: {resi: atom_id, chain: atom_chain}, radius: 0.5, color: 'yellow'});
               }
             }
@@ -189,7 +190,7 @@ export default {
               v.addCylinder({start: {resi: source.substring(1, source.length), chain: source.substring(0, 1), atom: bond.source_atom}, end: {resi: target.substring(1, target.length), chain: target.substring(0, 1), atom: bond.target_atom}, radius: 0.1, fromCap: 2, toCap: 2, dashed: false, color: bond_color, opacity: 0.9});
               v.setClickable({resi: source.substring(1, source.length), chain: source.substring(0, 1), atom: bond.source_atom}, true, function (atom, viewer, event, container) {
                 if (!atom.label) {
-                  atom.label = viewer.addLabel(atom.resn + ':' + atom.atom, {position: atom, backgroundColor: atom.style.stick.color, backgroundOpacity: 0.5, fontColor: 'black'});
+                  atom.label = viewer.addLabel(amino_acid[atom.resn] + ':' + atom.atom, {position: atom, backgroundColor: atom.style.stick.color, backgroundOpacity: 0.5, fontColor: 'black'});
                 } else {
                   viewer.removeLabel(atom.label);
                   delete atom.label;
@@ -197,7 +198,7 @@ export default {
               });
               v.setClickable({resi: target.substring(1, target.length), chain: target.substring(0, 1), atom: bond.target_atom}, true, function (atom, viewer, event, container) {
                 if (!atom.label) {
-                  atom.label = viewer.addLabel(atom.resn + ':' + atom.atom, {position: atom, backgroundColor: atom.style.stick.color, backgroundOpacity: 0.5, fontColor: 'black'});
+                  atom.label = viewer.addLabel(amino_acid[atom.resn] + ':' + atom.atom, {position: atom, backgroundColor: atom.style.stick.color, backgroundOpacity: 0.5, fontColor: 'black'});
                 } else {
                   viewer.removeLabel(atom.label);
                   delete atom.label;
