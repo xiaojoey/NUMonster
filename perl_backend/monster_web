@@ -176,7 +176,7 @@ foreach my $file (get_files($jobDir,"\.pdb")){
 # Run HBPlus
 ##################################################################
 
-#	    HBplus->doHBplus($PDB,$tempDir,unpack('AA', $cp),$xml,$Bonds);
+	    HBplus->doHBplus($PDB,$tempDir,unpack('AA', $cp),$xml_obj,$Bonds);
 
 ##################################################################
 # Print all interatomic interactions
