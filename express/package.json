@@ -20,7 +20,7 @@
     "express-validators": "^1.0.4",
     "mkdirp": "^0.5.5",
     "pug": "^2.0.4",
-    "tape": "^4.13.2",
+    "tape": "^4.13.3",
     "xml-js": "^1.6.11"
   },
   "author": "Richard Huang",

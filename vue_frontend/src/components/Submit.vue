@@ -15,7 +15,7 @@
     <div class='row'>
       <!-- COL 1 -->
       <div class='col-sm'>
-        <div class='card'>
+        <div class='card' id='card1'>
           <div class='card-header'>
             <h3>File Upload/Enter PDB ID</h3>
           </div>
@@ -108,7 +108,7 @@
 
       <!-- COL 3 -->
       <div class='col-sm'>
-        <div class='card'>
+        <div class='card' id='card3'>
           <div class='card-header'>
             <h3>Retrieve a result</h3>
           </div>
@@ -252,7 +252,9 @@ export default {
           this.loading = false;
           this.new_job_id = job_xml[1];
           this.showSuccessAlert = true;
+          this.job_id = job_xml[1];
           this.selected_pairs = [];
+          this.selected_chains = [];
         }).catch((err) => {
           this.loading = false;
           console.error(err);
@@ -294,3 +296,6 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+</style>
