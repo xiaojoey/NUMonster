@@ -1,0 +1,23 @@
+# configuration file for HBPLUS
+# used by monster
+#
+# created by Brian Armstrong
+# 7.18.02
+
+# minimum bond angles: D-H-A, H-A-AA, D-A-AA
+-A 90.0 90.0 90.0
+
+# for aromatic hydrogen bonds: H-A-Perpendicular, D-A-Perpendicular angles
+-B 20.0 20.0
+
+# maximum D-A distance
+-D 3.9
+
+# maximum H-A distance
+-H 2.5
+
+# allows amino-aromatic hydrogen bonds with TYR, TRP, PHE
+-R
+
+# maximum distance for a disulfide bridge
+-S 3.0
