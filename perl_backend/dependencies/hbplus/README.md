@@ -16,3 +16,11 @@ donors: O doesnt donate h-bonds
 
 *HO2 not realised/understood
 H5T/H3T neither```
+
+Below are simple steps for compiling and running hbplus
+
+```
+$ make clean
+$ make hbplus
+$ ./hbplus -f hbplus.opt test/AC.pdb > test/log
+```

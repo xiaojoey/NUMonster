@@ -1,7 +1,8 @@
-HBPLUS Hydrogen Bond Calculator v 3.15            Jun 20 17:09:56 CDT 2020
+HBPLUS Hydrogen Bond Calculator v 3.15            Jun 20 19:10:22 CDT 2020
 (c) I McDonald, D Naylor, D Jones and J Thornton 1993 All Rights Reserved.
 
 Configured for 25000 atoms and  3000 residues.
+Opening options file hbplus.opt.
 
 Criteria
 
@@ -11,8 +12,8 @@ Maximum angles at aromatic acceptors DAAX 20.00, HAAAX 20.00
 Minimum covalent separation 3 Covalent bonds
 
 
-Processing file "AC.pdb" . . .
-Opening "AC.pdb" for protein co-ordinates. . .
+Processing file "test/AC.pdb" . . .
+Opening "test/AC.pdb" for protein co-ordinates. . .
 
 	Hydrogens Recognized in Brookhaven File
 WARNING: Heavy atom for pdb file Hydrogen not found.
@@ -639,4 +640,4 @@ Checking for disulphide bridges . . .
 Adding Polar Hydrogens.
 Opened output file "AC.hb2".
 Checking for hydrogen bonds . . . 
-414 hydrogen bonds found.
+415 hydrogen bonds found.
