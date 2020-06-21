@@ -1,0 +1,642 @@
+HBPLUS Hydrogen Bond Calculator v 3.15            Jun 20 17:09:56 CDT 2020
+(c) I McDonald, D Naylor, D Jones and J Thornton 1993 All Rights Reserved.
+
+Configured for 25000 atoms and  3000 residues.
+
+Criteria
+
+Minimum Angles; DHA 90.00, HAAA 90.00, DAAA 90.00
+Maximum Distances; D-A 3.9, H-A 2.5, S-S 3.0
+Maximum angles at aromatic acceptors DAAX 20.00, HAAAX 20.00
+Minimum covalent separation 3 Covalent bonds
+
+
+Processing file "AC.pdb" . . .
+Opening "AC.pdb" for protein co-ordinates. . .
+
+	Hydrogens Recognized in Brookhaven File
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM      7  H1  SER A   1      78.350  -2.096  39.790  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM     12  H2  SER A   1      79.938  -1.871  39.482  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM     13  H3  SER A   1      78.979  -0.589  39.804  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM    655  HZ1 LYS A  44      58.320  26.094   1.029  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM    656  HZ2 LYS A  44      59.791  26.388   1.055  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM    657  HZ3 LYS A  44      59.044  26.409  -0.246  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM    677  HZ1 LYS A  45      52.404  13.766   1.294  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM    678  HZ2 LYS A  45      52.269  15.152   0.736  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM    679  HZ3 LYS A  45      52.330  13.973  -0.190  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM    790  HZ1 LYS A  52      59.502  13.629  15.404  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM    791  HZ2 LYS A  52      58.527  12.654  14.816  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM    792  HZ3 LYS A  52      58.426  13.034  16.263  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM    887  HZ1 LYS A  58      68.319  -1.970  17.050  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM    888  HZ2 LYS A  58      69.725  -1.654  16.636  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM    889  HZ3 LYS A  58      69.417  -1.963  18.072  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   1384  HB2 TYR A  90      73.042  18.329  19.708  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   1385  HB3 TYR A  90      73.284  19.898  20.090  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   1488  HZ1 LYS A  96      77.122  30.928  36.597  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   1489  HZ2 LYS A  96      78.044  29.856  37.099  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   1490  HZ3 LYS A  96      78.122  30.303  35.670  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   1819  HB2 TRP A 117      88.014  23.413  13.919  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   1820  HB3 TRP A 117      86.777  24.060  13.072  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   1998  HB2 TRP A 128      86.118  24.464   3.205  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   1999  HB3 TRP A 128      86.945  25.039   4.490  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   2330  HB2 TYR A 152      88.916  12.089  25.590  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   2331  HB3 TYR A 152      88.354  12.234  24.064  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   2356  HZ1 LYS A 153      94.503  19.382  20.701  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   2357  HZ2 LYS A 153      93.532  20.526  20.681  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   2358  HZ3 LYS A 153      94.166  20.102  21.973  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   2563  HB2 TYR A 168      81.178  13.388   6.468  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   2564  HB3 TYR A 168      80.498  12.615   7.736  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   2601  HZ1 LYS A 170      91.669   9.975   5.209  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   2602  HZ2 LYS A 170      91.432   9.397   3.845  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   2603  HZ3 LYS A 170      90.988  10.796   4.155  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   2816  HZ1 LYS A 184      88.277   2.440  28.863  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   2817  HZ2 LYS A 184      87.390   2.277  27.665  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   2818  HZ3 LYS A 184      87.195   3.442  28.589  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   2927  HZ1 LYS A 192      97.028  10.091  33.428  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   2928  HZ2 LYS A 192      96.286   8.819  33.713  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   2929  HZ3 LYS A 192      96.239   9.423  32.341  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   3096  HB2 TYR A 203      85.143  31.513  13.980  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   3097  HB3 TYR A 203      84.197  30.403  14.714  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   3147  HZ1 LYS A 206      72.399  30.430   9.322  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   3148  HZ2 LYS A 206      72.272  31.334   8.132  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   3149  HZ3 LYS A 206      72.367  29.850   7.939  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   3199  HZ1 LYS A 209      71.382  24.802  -4.799  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   3200  HZ2 LYS A 209      70.715  23.770  -3.939  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   3201  HZ3 LYS A 209      70.092  25.124  -4.104  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   3313  HB2 TRP A 216      86.025  34.457 -11.456  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   3314  HB3 TRP A 216      87.222  33.434 -11.887  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   3585  HB2 TRP A 233      74.676  19.534   1.425  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   3586  HB3 TRP A 233      75.605  20.340   2.499  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   3651  HB2 TRP A 237      75.953  25.904  -9.034  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   3652  HB3 TRP A 237      76.184  24.926  -7.746  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   3800  HZ1 LYS A 246      74.442  23.318  -6.206  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   3801  HZ2 LYS A 246      73.097  23.514  -5.572  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   3802  HZ3 LYS A 246      74.123  22.650  -4.901  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   3835  HB2 TRP A 248      81.121  16.624  -9.981  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   3836  HB3 TRP A 248      81.371  16.004  -8.492  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   3862  HZ1 LYS A 249      88.428  11.883  -9.240  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   3863  HZ2 LYS A 249      88.887  12.123 -10.648  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   3864  HZ3 LYS A 249      89.877  12.150  -9.521  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   4136  HZ1 LYS A 269      89.593   9.456 -24.854  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   4137  HZ2 LYS A 269      88.539   8.664 -24.138  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   4138  HZ3 LYS A 269      88.179   9.464 -25.355  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   4452  HZ1 LYS A 291      69.247  13.674 -19.525  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   4453  HZ2 LYS A 291      67.881  14.052 -19.035  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   4454  HZ3 LYS A 291      68.353  14.523 -20.378  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   4474  HZ1 LYS A 292      72.386   7.655 -10.827  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   4475  HZ2 LYS A 292      70.895   7.517 -10.740  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   4476  HZ3 LYS A 292      71.571   7.517 -12.079  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   4696  HB2 TRP A 306      78.052  24.778 -22.055  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   4697  HB3 TRP A 306      77.984  25.898 -20.868  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   9696  H41   C C   1      48.344  19.022  -7.754  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   9697  H42   C C   1      47.456  20.505  -7.634  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   9733  H21   G C   2      60.708  25.086  -4.751  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   9734  H22   G C   2      59.286  26.028  -4.445  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   9762  H41   C C   3      60.789  20.283  -6.492  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   9763  H42   C C   3      59.233  19.584  -6.193  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   9798  H21   G C   4      64.269  17.968 -11.383  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   9799  H22   G C   4      64.296  19.523 -12.144  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   9832  H21   G C   5      64.957  13.894 -13.616  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   9833  H22   G C   5      65.762  15.080 -14.589  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   9866  H21   G C   6      63.206   9.032 -14.418  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   9867  H22   G C   6      64.560   9.664 -15.294  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   9900  H21   G C   7      60.452   5.415 -14.951  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   9901  H22   G C   7      62.009   5.050 -15.614  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   9934  H21   G C   9      70.501   0.037 -35.460  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   9935  H22   G C   9      70.514  -0.618 -33.857  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   9968  H21   G C  10      80.059   7.645 -26.757  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM   9969  H22   G C  10      80.234   6.731 -25.296  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10000  H61   A C  11      75.977   9.367 -29.724  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10001  H62   A C  11      75.624   7.853 -28.962  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10035  H21   G C  12      74.582  14.893 -29.520  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10036  H22   G C  12      75.273  15.789 -28.208  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10064  H41   C C  13      69.754  10.222 -28.804  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10065  H42   C C  13      69.622   9.765 -27.139  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10098  H61   A C  14      66.183  10.183 -32.449  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10099  H62   A C  14      66.696  10.521 -30.829  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10133  H21   G C  15      62.520   8.503 -31.874  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10134  H22   G C  15      62.475   9.585 -33.226  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10162  H41   C C  16      61.716  15.280 -25.400  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10163  H42   C C  16      61.953  16.865 -26.055  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10193  H41   C C  17      59.390  21.404 -29.908  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10194  H42   C C  17      59.227  19.979 -30.880  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10259  H21   G C  18      49.875   5.520 -35.567  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10260  H22   G C  18      51.377   6.369 -35.725  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10293  H21   G C  19      49.470   5.064 -42.240  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10294  H22   G C  19      51.048   4.520 -41.777  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10325  H61   A C  21      63.649   2.253 -32.012  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10326  H62   A C  21      63.493   2.085 -33.729  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10360  H21   G C  22      70.902  15.318 -30.721  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10361  H22   G C  22      70.812  16.009 -32.307  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10389  H41   C C  23      73.146  10.550 -30.275  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10390  H42   C C  23      72.842   9.817 -31.815  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10450  H41   C C  25      77.877   6.865 -31.443  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10451  H42   C C  25      77.852   7.925 -32.812  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10486  H21   G C  26      79.716   1.282 -30.043  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10487  H22   G C  26      80.502   1.541 -28.522  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10545  H41   C C  28      84.921   3.732 -35.899  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10546  H42   C C  28      86.007   4.092 -34.597  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10581  H21   G C  29      86.442   2.930 -42.507  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10582  H22   G C  29      86.399   1.230 -42.833  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10615  H21   G C  30      89.031   6.510 -43.818  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10616  H22   G C  30      88.857   5.107 -44.819  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10649  H21   G C  31      92.203  10.739 -42.706  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10650  H22   G C  31      91.978  10.124 -44.309  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10708  H41   C C  34     104.057  15.783 -37.913  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10709  H42   C C  34     104.067  15.974 -39.635  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10742  H61   A C  35     100.238  16.253 -38.029  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10743  H62   A C  35     100.859  15.087 -39.149  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10805  H61   A C  37     101.153  14.452 -26.180  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10806  H62   A C  37     100.546  14.962 -27.720  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10838  H61   A C  38      96.288   9.141 -37.757  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10839  H62   A C  38      96.386   9.452 -36.056  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10868  H41   C C  39      92.783   8.365 -38.653  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10869  H42   C C  39      92.419   8.927 -37.056  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10899  H41   C C  40      89.645   7.222 -38.864  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10900  H42   C C  40      89.567   8.698 -37.962  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10930  H41   C C  41      86.838   5.490 -39.192  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10931  H42   C C  41      86.748   7.215 -39.067  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10966  H21   G C  42      84.707  -0.508 -38.044  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10967  H22   G C  42      84.325  -1.092 -39.629  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10998  H61   A C  43      81.507   4.094 -35.039  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  10999  H62   A C  43      81.019   4.468 -36.658  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11031  H61   A C  44      78.739   3.764 -33.843  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11032  H62   A C  44      77.992   3.239 -35.314  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11066  H21   G C  45      76.681   4.706 -32.164  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11067  H22   G C  45      76.631   3.496 -30.926  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11098  H61   A C  46      68.903   5.411 -35.385  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11099  H62   A C  46      68.436   3.758 -35.610  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11158  H41   C C  48      62.394   7.338 -33.244  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11159  H42   C C  48      62.011   5.703 -33.671  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11194  H21   G C  49      56.545   3.358 -15.487  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11195  H22   G C  49      57.846   2.240 -15.725  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11253  H41   C C  51      52.295   4.054 -21.558  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11254  H42   C C  51      53.775   3.359 -22.127  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11289  H21   G C  52      46.634   5.267 -22.713  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11290  H22   G C  52      45.758   4.076 -21.812  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11323  H21   G C  53      46.191   8.126 -26.859  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11324  H22   G C  53      44.702   7.550 -26.188  1.00 12.00           H  
+
+WARNING: Unrecognized atom name  C7  from residue   T 
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11353  H71   T C  54      47.448   1.699 -29.462  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11354  H72   T C  54      46.185   1.801 -28.226  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11355  H73   T C  54      45.792   1.200 -29.849  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11384  H41   C C  56      46.934   7.472 -41.903  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11385  H42   C C  56      45.513   7.491 -40.913  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11418  H61   A C  57      47.183   9.407 -38.558  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11419  H62   A C  57      46.320   7.951 -38.192  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11451  H61   A C  58      47.261   9.636 -31.247  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11452  H62   A C  58      47.288   7.919 -31.019  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11484  H61   A C  59      59.656  12.567 -35.175  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11485  H62   A C  59      59.611  10.852 -35.414  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11544  H41   C C  61      50.306   6.264 -28.292  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11545  H42   C C  61      51.784   6.892 -28.943  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11575  H41   C C  62      50.114   6.007 -24.834  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11576  H42   C C  62      50.840   7.433 -25.497  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11611  H21   G C  63      48.856   1.822 -19.293  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11612  H22   G C  63      47.348   2.240 -18.551  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11645  H21   G C  64      53.090   0.762 -16.447  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11646  H22   G C  64      51.810   0.499 -15.311  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11674  H41   C C  65      55.308   6.863 -16.649  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11675  H42   C C  65      54.015   7.890 -16.127  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11705  H41   C C  66      57.632   7.697 -14.682  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11706  H42   C C  66      56.300   7.914 -13.597  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11736  H41   C C  67      59.175  10.229 -12.803  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11737  H42   C C  67      58.272   9.511 -11.512  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11767  H41   C C  68      61.080  12.925 -11.066  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11768  H42   C C  68      60.606  11.370 -10.469  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11798  H41   C C  69      61.595  15.056  -9.515  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11799  H42   C C  69      62.075  13.542  -8.824  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11834  H21   G C  70      61.595  23.511  -8.428  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11835  H22   G C  70      62.971  24.169  -9.248  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11863  H41   C C  71      61.986  20.724  -3.594  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11864  H42   C C  71      63.317  19.752  -4.125  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11897  H61   A C  72      65.412  18.779  -1.176  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11898  H62   A C  72      66.438  20.011  -1.832  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11930  H61   A C  73      69.186  20.326   0.886  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11931  H62   A C  73      68.869  21.998   0.565  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11960  H41   C C  74      70.533  23.998   3.310  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11961  H42   C C  74      69.479  25.342   3.597  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11991  H41   C C  75      72.815  23.771   5.190  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  11992  H42   C C  75      71.426  24.647   5.741  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  12025  H61   A C  76      74.615  26.423   6.246  1.00 12.00           H  
+
+WARNING: Heavy atom for pdb file Hydrogen not found.
+ATOM  12026  H62   A C  76      73.207  25.800   7.039  1.00 12.00           H  
+
+4037 atoms selected from 470 residues.
+
+Found 1 elements of secondary structure and 3 chains.
+0 CONRECS used.
+Checking for disulphide bridges . . . 
+0 disulphide bonds found.
+
+
+Adding Polar Hydrogens.
+Opened output file "AC.hb2".
+Checking for hydrogen bonds . . . 
+414 hydrogen bonds found.
