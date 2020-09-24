@@ -75,7 +75,7 @@ sub write{
     foreach my $m(@models){
 	$pdb->setModel($m);
 	#print FH $self->model($m) if $args{'models'}>1;
-	foreach my $ch ( @{$args{'chains'}} ){
+	foreach my $ch ( sort @{$args{'chains'}} ){
 	    foreach my $res ($pdb->chainResidues($ch)){
 		foreach my $ref (sort { $a <=> $b } $pdb->atomsR($res)){
 		    print FH $self->line($pdb->atom($ref), $ch) if $pdb->atom($ref);
