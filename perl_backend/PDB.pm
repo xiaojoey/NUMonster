@@ -31,6 +31,7 @@ sub new {
 	$self->{'currentModel'} = '';
 	$self->{'all'} = {};
 	$self->{'contacts'} = {};
+	$self->{'chains'}=();
 	$self->{'chainPairs'}=();
 	$self->{'locs'}=();
 	$self->{'trueTerminals'}={};
@@ -45,6 +46,7 @@ sub getModel{my $self=shift;return $self->{'currentModel'};}
 sub getModels{my $self=shift;return keys %{$self->{'models'}};}
 
 sub chainPairs{my $self=shift;return keys %{$self->{'chainPairs'}};}
+sub chains{my $self=shift;return keys %{$self->{'chains'}};}
 sub residues{my($self)=@_;return keys %{$self->{'residues'}{$self->{'currentModel'}}};}
 sub chainResidues{my $self=shift;
 		  return sort {substr($a,1) <=> substr($b,1)} grep {substr($_,0,1) eq $_[0]} $self->residues;
@@ -197,16 +199,12 @@ sub wiWrite{
     }
 }
 
-sub haadWrite{
-    my $self = shift;
-    my $file = shift;
-}
-
 sub parse{
     my $self=shift;
     my $file=shift;
     my $xml=shift;
     my $bonds = shift;
+    my $logging = shift || 0;
 
     my %tChs;
     my $modelCount=0;
@@ -217,6 +215,9 @@ sub parse{
 	}
     }
 
+    if($logging){
+	print("File: ",$file,"\n");
+    }
     my $stream=getFileHandle($file);
 
     my $i=0;
@@ -245,9 +246,10 @@ sub parse{
 	    }
 
 	    if($current_chain ne "" && $temp->chainId eq ""){
-#		$temp->setChainId($current_chain);
+		$temp->setChainId($current_chain);
 	    }
-
+	    
+	    $self->{'chains'}{$temp->chainId}++;
 	    $first = new PDB::Atom('-line' => $_) unless $first;
 
 	    if($current_chain ne "" && $first->chainId eq ""){
@@ -357,12 +359,17 @@ sub parse{
 
 	    $temp->setModel($modelCount);
 	    $self->{'trueTerminals'}{$temp->naturalChain()}{$temp->resNumber()}=1 unless $modelCount >1;
+
 	    ###################### restrict and clear-up #############################
 	    ########################################################################
 	    #
             #NB: Whatif handles new terminal protons incorrectly for nucleic residues 
             # 
 	    next if $temp->proton && $temp->atomName =~ /^H[123]$/ && $temp->isNA && notTerminalProtons($self,$temp,$bonds);
+
+	    if($logging && $temp->chainId eq "A" && $temp->resNumber == 1){
+		print($i,"\t",$_,"\t",$temp->atomNumber,"\t",$temp->atomName,"\t",$temp->naturalChain,"\n");
+	    }
 
 	    if($xml){
 		$temp->clearChainIds;
@@ -467,7 +474,6 @@ sub parse{
 		next if !$xml && $temp->naturalChain eq $ch; #contacts contain natural chains if not xml
 		#if $temp has 1 chain and thats the same as $ch, then next.
 		next if $xml && $temp->onlyEq($ch);
-		#print $temp->chainId.$ch."\n";
 		
 		foreach my $r (sort {$a <=> $b} keys %{$self->{'contacts'}{$modelCount}{$ch}}){
 		    next if $temp->resNumber eq $r && 
@@ -501,6 +507,7 @@ sub parse{
 	}elsif($_ =~ /^HETATM/){
 	    $i++;
 	    $temp = new PDB::Hetatm('-line' => $_);
+	    $self->{'chains'}{$temp->chainId}++;
 	    $temp->setModel($modelCount);
 
 	    $self->{'all'}{$i}=$temp;
@@ -514,6 +521,27 @@ sub parse{
 	    $temp = new PDB::Line('-line' => $_, 
 				  '-model' => $modelCount);
 	    $self->{'other'}{$i}=$temp;
+	}
+    }
+}
+
+sub stripProtons{
+    my ($self) = @_;
+
+    foreach my $proton_number (keys %{$self->{'protons'}}){
+	my $resNumber = $self->{'all'}{$proton_number}->resNumber();
+
+	del($self->{'all'}{$proton_number});
+	del($self->{'protons'}{$proton_number});
+	if(exists($self->{'atoms'}{$proton_number})){
+	    del($self->{'atoms'}{$proton_number});
+	}
+    
+	foreach my $ch (@{$self->chains()}){
+	    foreach my $md (@{$self->models()}){
+		del($self->{'residues'}{$md}{$ch.$resNumber}{$proton_number});
+		del($self->{'models'}{$md}{$ch}{$proton_number});
+	    }
 	}
     }
 }
