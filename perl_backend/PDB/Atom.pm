@@ -347,7 +347,14 @@ sub setAtomRemote{my $self=shift; $self->{'AR'}=$_[0];}
 sub setAtomBranch{my $self=shift; $self->{'AB'}=$_[0];}
 sub setAltLoc{my $self=shift; $self->{'AL'}=$_[0];}
 sub setResName{my $self=shift; $self->{'R'}=$_[0];}
-sub setChainId{my $self=shift; $self->{'CI'}[0]=$_[0];}
+sub setChainId{
+    my $self=shift;
+    $self->{'CI'}[0]=$_[0];
+    # if natural chain is empty, should set it
+    if($self->{'chain'} eq ""){
+	$self->{'chain'} = $self->{'CI'}[0];
+    }
+}
 sub addChainIds{my $self=shift; push @{$self->{'CI'}}, @_;}
 sub setResNumber{my $self=shift; $self->{'RN'}=$_[0];}
 sub setInsCode{my $self=shift; $self->{'IC'}=$_[0];}
