@@ -97,6 +97,8 @@ export default {
     display_label: '',
     display_graph: false,
     url_3D: false,
+    res_labels: [],
+    draw_labels: true,
     selected_edges: [],
     selected_info: '',
     chain1: '',
@@ -157,8 +159,10 @@ export default {
         this.$el.querySelector('#container-01').style.display = 'block';
         this.makeModel(pdb_url, chain1, chain2, graph, color_chart, amino_acid, viewer);
       }, 200)
+      document.addEventListener('keydown', this.keyPressed, false);
     },
     makeModel: function (pdb_url, chain1, chain2, graph, color_chart, amino_acid, _viewer) {
+      let res_labels = [];
       $(function () {
         let viewer = _viewer;
         viewer.clear();
@@ -173,7 +177,8 @@ export default {
               let atom = graph.nodes[i].id;
               let atom_chain = atom.substring(0, 1);
               let atom_id = atom.substring(1, atom.length);
-              v.addResLabels({resi: atom_id, chain: atom_chain}, {backgroundOpacity: 0.3});
+              let label = v.addResLabels({resi: atom_id, chain: atom_chain}, {backgroundOpacity: 0.3});
+              res_labels.push(([label[0], [atom_id, atom_chain]]));
               if (atom_chain === chain1) {
                 v.setStyle({resi: atom_id, chain: atom_chain}, {cartoon: {color: 'cyan', opacity: 0.7}, stick: {color: 'cyan'}});
                 // v.addSphere({center: {resi: atom_id, chain: atom_chain}, radius: 0.5, color: 'green'});
@@ -215,6 +220,8 @@ export default {
         });
         // console.log(viewer);
       });
+      this.res_labels = res_labels;
+      this.draw_labels = true;
     },
     parsepdb: function (pdb) {
       let residues = [];
@@ -449,6 +456,40 @@ export default {
       this.s.refresh();
       // console.log(this.display_graph);
       this.open3D(this.pdbFile, this.chain1, this.chain2, this.open_xml, graph);
+    },
+    keyPressed: function (e) {
+      if (e.key === 's') {
+        this.savePic();
+      } else if (e.key === 'h') {
+        console.log(this.res_labels);
+        if (this.draw_labels) {
+          for (const label of this.res_labels) {
+            this.viewer.removeLabel(label[0]);
+          }
+          this.draw_labels = false;
+        } else {
+          let new_res_labels = [];
+          for (const label of this.res_labels) {
+            let new_label = this.viewer.addResLabels({resi: label[1][0], chain: label[1][1]}, {backgroundOpacity: 0.3});
+            new_res_labels.push(([new_label[0], label[1]]));
+          }
+          this.draw_labels = true;
+          this.res_labels = new_res_labels;
+        }
+      }
+    },
+    savePic: function () {
+      if (confirm('Save image of 3D model?')) {
+        var filename = '3dmol.png';
+        var text = this.viewer.pngURI();
+        var ImgData = text;
+        var link = document.createElement('a');
+        link.href = ImgData;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
     },
   }
 }
