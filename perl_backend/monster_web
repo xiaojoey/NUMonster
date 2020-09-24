@@ -116,12 +116,7 @@ my $job_pdb_file = (split('/',$original_pdb_file))[-1];
 # Start actual job
 ##################################################################
 
-##################################################################
-# Run HAAD to replace/correct protons
-##################################################################
-
 print("$job: starting ".$job_pdb_file." at: ".scalar(localtime)."\n");
-#HAAD->run($jobDir.$job_pdb_file, $jobDir."/haad.log");
 
 ##################################################################
 # Iterate through conformations (not actually used)
@@ -139,7 +134,44 @@ foreach my $file (get_files($jobDir,"\.pdb")){
     my $Bonds = new PDB::Bonds();
     my $PDB = new PDB;
     $PDB->parse($jobDir.$file, $xml_obj, $Bonds);
-    print("$job: parsed ".$file." at: ".scalar(localtime)."\n");
+    print("$job: parsed ".$jobDir.$file." at: ".scalar(localtime)."\n");
+
+##################################################################
+# Run HAAD to replace/correct protons
+##################################################################
+
+    my $haadDir = $jobDir.'haad/';
+    if(-d $haadDir){
+	unlink $haadDir;
+    }
+    mkdir $haadDir;
+
+    # strip all protons
+    $PDB->stripProtons();
+
+    #start new PDB file
+    if(-f $haadDir."new_protons.pdb"){
+	unlink($haadDir."new_protons.pdb");
+    }
+
+    # Print out all separate parts of PDB file to run HAAD on
+    foreach my $chain (sort $PDB->chains()){
+	PDB::Writer->write('models'=>$PDB->getModels,
+			   'path'=>$haadDir.$chain.".pdb",
+			   'chains'=>[$chain],'pdb'=>$PDB);
+	HAAD->run($haadDir.$chain.".pdb", $haadDir.$chain.".log");
+	if(-f $haadDir.$chain.".pdb.h"){
+	    system("cat ".$haadDir.$chain.".pdb.h >> ".$haadDir."new_protons.pdb");
+	}
+    }
+
+    $PDB = new PDB;
+    $Bonds = new PDB::Bonds();
+    $PDB->parse($haadDir."new_protons.pdb", $xml_obj, $Bonds);
+
+#    PDB::Writer->write('models'=>$PDB->getModels,
+#		       'path'=>$haadDir."new_protons_redux.pdb",
+#		       'chains'=>[$PDB->chains],'pdb'=>$PDB);
 
 ##################################################################
 # Iterate through models
