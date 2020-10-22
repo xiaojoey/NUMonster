@@ -550,7 +550,7 @@ export default {
   }
   .col-2{
     min-width: 250px;
-    max-height: 80vh;
+    max-height: 100%;
     display: flex;
     flex-direction: column;
   }
