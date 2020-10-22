@@ -4,7 +4,7 @@
              dismissible
              :show="showSuccessAlert"
              @dismissed="showSuccessAlert=false">
-      Job submission succeeded. Check your email for details. The Job ID is  {{ new_job_id}}
+      Job submission succeeded. The Job ID is  {{ new_job_id}}. Job submissions typically take up to 10 minutes, we will email you once the job is done.
     </b-alert>
     <b-alert variant="danger"
              dismissible
@@ -86,7 +86,7 @@
             </div>
             <div>
               <div class='card-body'>
-                <div class='alert alert-warning' role='alert' v-if='selected_chains.length < 2'>
+                <div class='alert alert-warning' role='alert' v-if='showSuccessAlert === false && selected_chains.length < 2'>
                   Select at least 2 protein chains to continue
                 </div>
                 <button class='btn btn-sm btn-secondary' v-on:click='selectAllPairs'
