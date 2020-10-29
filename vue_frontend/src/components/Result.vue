@@ -50,15 +50,18 @@
                 <b-form-select v-model="selected_chain" :options="options">Select A Chain</b-form-select>
                 <div class="mt-2">Selected: <strong>{{ selected_chain }}</strong></div>
                 <b-button type='button' :disabled='selected_chain === null' class='btn btn-secondary btn-block' v-on:click='addChainSurface'> Add Surface </b-button>
+                <b-button type='button' class='btn btn-secondary btn-block' v-on:click='addNewCard'> Add Card </b-button>
               </div>
             </div>
             <h5 style="padding-top: 10px;">More Options</h5>
             <div id="added-surfaces">
               <attribute-card
-                v-for="item in options"
+                v-for="item in added_cards"
                 v-bind:chains="options"
+                v-bind:synced_data.sync="item"
                 v-bind:key="item.id"
               ></attribute-card>
+              <p>Parent data is : {{ added_cards }}</p>
             </div>
           </div>
         </div>
@@ -136,7 +139,7 @@ export default {
     pdbFile: '',
     options: '',
     selected_chain: null,
-    added_surface: [],
+    added_cards: [],
     dist_filter: [
       0,
       15
@@ -523,8 +526,22 @@ export default {
         this.viewer.addSurface($3Dmol.SurfaceType.VDW, {opacity: 0.8, colorscheme: 'greenCarbon'}, {chain: this.selected_chain}, this.addSurfaceTag()); // eslint-disable-line
       }
     },
+    addChainSurface2: function (chain, opacity, color) {
+      if (chain != null) {
+        return this.viewer.addSurface($3Dmol.SurfaceType.VDW, {opacity: opacity, colorscheme: color}, {chain: chain}, this.addSurfaceTag()); // eslint-disable-line
+      }
+      console.log('callsed');
+    },
     addSurfaceTag: function () {
-      alert('hi');
+      // alert('hi');
+    },
+    addNewCard: function () {
+      this.added_cards.push({chain: null, color: 'greenCarbon', opacity: '.5', render: false, removed: false});
+      // this.addChainSurface2('A', '.6', 'greenCarbon');
+      // this.added_cards = this.added_cards.filter(word => word['removed'] === false);
+    },
+    removeSurface: function (surface) {
+      this.viewer.removeSurface(surface);
     }
   }
 }
@@ -532,7 +549,7 @@ export default {
 
 <style scoped>
   .display-container {
-    height: 70vh;
+    height: 80vh;
     width: 100%;
     margin: auto;
   }
@@ -547,10 +564,11 @@ export default {
   .col-10{
     max-width: calc(100% - 250px);
     padding: 0px;
+    height: 80vh;
   }
   .col-2{
     min-width: 250px;
-    max-height: 100%;
+    height: 80vh;
     display: flex;
     flex-direction: column;
   }
