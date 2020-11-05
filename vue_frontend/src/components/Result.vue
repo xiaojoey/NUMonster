@@ -44,24 +44,22 @@
               <h5>Options</h5>
               <b-button type='button' class='btn btn-secondary btn-block' v-on:click='hideResLabels'> {{draw_labels ? 'Hide Residue Labels' : 'Show Residue Labels'}} </b-button>
               <b-button type='button' class='btn btn-secondary btn-block' v-on:click='savePic'> Save Picture </b-button>
-              <br/>
-              <h5>Add Surface</h5>
+              <h5 style="padding-top: 10px;">More Options</h5>
               <div>
-                <b-form-select v-model="selected_chain" :options="options">Select A Chain</b-form-select>
-                <div class="mt-2">Selected: <strong>{{ selected_chain }}</strong></div>
-                <b-button type='button' :disabled='selected_chain === null' class='btn btn-secondary btn-block' v-on:click='addChainSurface'> Add Surface </b-button>
-                <b-button type='button' class='btn btn-secondary btn-block' v-on:click='addNewCard'> Add Card </b-button>
+                <b-button type='button' class='btn btn-secondary btn-block' v-on:click='addSurfaceCard'> Add Surface </b-button>
+                <b-button type='button' class='btn btn-secondary btn-block' v-on:click='addStyleCard'> Add Model </b-button>
               </div>
             </div>
-            <h5 style="padding-top: 10px;">More Options</h5>
+            <br/>
             <div id="added-surfaces">
               <attribute-card
                 v-for="item in added_cards"
                 v-bind:chains="options"
                 v-bind:synced_data.sync="item"
                 v-bind:key="item.id"
+                v-on:update:synced_data="renderStyles(item, false)"
               ></attribute-card>
-              <p>Parent data is : {{ added_cards }}</p>
+              <!-- <p>Parent data is : {{ added_cards }}</p> -->
             </div>
           </div>
         </div>
@@ -135,7 +133,9 @@ export default {
     selected_info: '',
     chain1: '',
     chain2: '',
+    default_colors: null,
     viewer: false,
+    graph: null,
     pdbFile: '',
     options: '',
     selected_chain: null,
@@ -183,6 +183,7 @@ export default {
       let graph = _graph || this.extractParsedXML(this.open_xml, this.selected_edges);
       let color_chart = this.all_edges;
       let amino_acid = this.amino_acid;
+      this.default_colors = {[chain1]: 'cyan', [chain2]: 'pink'};
       let element = $('#container-01');
       let config = {backgroundColor: 'white'};
       this.$el.querySelector('#container-01').style.display = 'block';
@@ -190,9 +191,12 @@ export default {
         this.viewer = $3Dmol.createViewer(element, config); // eslint-disable-line
       }
       let viewer = this.viewer;
-      this.makeModel(pdb_url, chain1, chain2, graph, color_chart, amino_acid, viewer);
+      this.makeModel(pdb_url, chain1, chain2, graph, color_chart, amino_acid, viewer, this.default_colors);
+      setTimeout(() => {
+        this.renderStyles({render: true, removed: false}, true);
+      }, 500);
     },
-    makeModel: function (pdb_url, chain1, chain2, graph, color_chart, amino_acid, _viewer) {
+    makeModel: function (pdb_url, chain1, chain2, graph, color_chart, amino_acid, _viewer, default_colors) {
       let res_labels = [];
       $(function () {
         let viewer = _viewer;
@@ -202,21 +206,16 @@ export default {
           success: function (data) {
             let v = viewer;
             v.addModel( data, 'pdb');                        /* load data */ // eslint-disable-line
-            v.setStyle({chain: chain1}, {cartoon: {color: 'cyan', opacity: 1}});  /* style all atoms */// eslint-disable-line
-            v.setStyle({chain: chain2}, {cartoon: {color: 'pink', opacity: 1}}); // eslint-disable-line
+            v.setStyle({chain: chain1}, {cartoon: {color: default_colors[chain1], opacity: 1}});  /* style all atoms */// eslint-disable-line
+            v.setStyle({chain: chain2}, {cartoon: {color: default_colors[chain2], opacity: 1}}); // eslint-disable-line
             for (let i = 0; i < graph.nodes.length; i++) {
               let atom = graph.nodes[i].id;
               let atom_chain = atom.substring(0, 1);
               let atom_id = atom.substring(1, atom.length);
               let label = v.addResLabels({resi: atom_id, chain: atom_chain}, {backgroundOpacity: 0.3});
               res_labels.push(([label[0], [atom_id, atom_chain]]));
-              if (atom_chain === chain1) {
-                v.setStyle({resi: atom_id, chain: atom_chain}, {cartoon: {color: 'cyan', opacity: 1}, stick: {color: 'cyan'}});
-                // v.addSphere({center: {resi: atom_id, chain: atom_chain}, radius: 0.5, color: 'green'});
-              } else {
-                v.setStyle({resi: atom_id, chain: atom_chain}, {cartoon: {color: 'pink', opacity: 1}, stick: {color: 'pink'}});
-                // v.addSphere({center: {resi: atom_id, chain: atom_chain}, radius: 0.5, color: 'yellow'});
-              }
+              v.setStyle({resi: atom_id, chain: atom_chain}, {cartoon: {color: default_colors[atom_chain], opacity: 1}, stick: {color: default_colors[atom_chain]}});
+              // v.addSphere({center: {resi: atom_id, chain: atom_chain}, radius: 0.5, color: 'green'});
             }
             for (let i = 0; i < graph.edges.length; i++) {
               let bond = graph.edges[i];
@@ -489,7 +488,7 @@ export default {
       this.s.graph.clear();
       this.s.graph.read(graph);
       this.s.refresh();
-      // console.log(this.display_graph);
+      this.graph = graph;
       this.open3D(this.pdbFile, this.chain1, this.chain2, this.open_xml, graph);
     },
     savePic: function () {
@@ -521,28 +520,73 @@ export default {
         this.res_labels = new_res_labels;
       }
     },
-    addChainSurface: function () {
-      if (this.selected_chain != null) {
-        this.viewer.addSurface($3Dmol.SurfaceType.VDW, {opacity: 0.8, colorscheme: 'greenCarbon'}, {chain: this.selected_chain}, this.addSurfaceTag()); // eslint-disable-line
+    addChainSurface: function (chain, opacity, color_scheme, color) {
+      if (chain != null && opacity != null) {
+        if (color_scheme !== 'None') {
+          return this.viewer.addSurface($3Dmol.SurfaceType.VDW, {opacity: opacity, colorscheme: color_scheme, color: color}, {chain: chain}, this.addSurfaceTag()); // eslint-disable-line
+        } else {
+          return this.viewer.addSurface($3Dmol.SurfaceType.VDW, {opacity: opacity, color: color}, {chain: chain}, this.addSurfaceTag()); // eslint-disable-line
+        }
       }
     },
-    addChainSurface2: function (chain, opacity, color) {
-      if (chain != null) {
-        return this.viewer.addSurface($3Dmol.SurfaceType.VDW, {opacity: opacity, colorscheme: color}, {chain: chain}, this.addSurfaceTag()); // eslint-disable-line
+    addModelStyle: function (model_type, chain, opacity, color, hidden) {
+      if (chain != null && model_type != null) {
+        let style_options = [];
+        switch (model_type) {
+          case 'cartoon':
+            style_options = {cartoon: {color: color, opacity: opacity, hidden: hidden}}
+            break;
+          case 'stick':
+            style_options = {stick: {color: color, hidden: hidden}}
+            break;
+          case 'line':
+            style_options = {line: {color: color, opacity: opacity, hidden: hidden}}
+            break;
+        }
+        this.viewer.setStyle({chain: chain}, style_options);
+        style_options['stick'] = {color: this.default_colors[chain]};
+        for (let i = 0; i < this.graph.nodes.length; i++) {
+          let atom = this.graph.nodes[i].id;
+          let atom_chain = atom.substring(0, 1);
+          let atom_id = atom.substring(1, atom.length);
+          if (atom_chain === chain) {
+            this.viewer.setStyle({resi: atom_id, chain: atom_chain}, style_options);
+          }
+        }
       }
-      console.log('callsed');
     },
     addSurfaceTag: function () {
       // alert('hi');
     },
-    addNewCard: function () {
-      this.added_cards.push({chain: null, color: 'greenCarbon', opacity: '.5', render: false, removed: false});
-      // this.addChainSurface2('A', '.6', 'greenCarbon');
+    addSurfaceCard: function () {
+      this.added_cards.push({chain: null, color: null, opacity: null, color_scheme: 'default', type: 'surface', render: false, removed: false});
+      // this.added_cards = this.added_cards.filter(word => word['removed'] === false);
+    },
+    addStyleCard: function () {
+      this.added_cards.push({chain: null, color: 'magenta', opacity: null, type: 'model', model_type: null, render: false, removed: false});
       // this.added_cards = this.added_cards.filter(word => word['removed'] === false);
     },
     removeSurface: function (surface) {
       this.viewer.removeSurface(surface);
+    },
+    renderStyles: function (card, render_surfaces) {
+      if (card['render'] || card['removed']) {
+        this.addModelStyle('cartoon', this.chain1, 1, this.default_colors[this.chain1], false);
+        this.addModelStyle('cartoon', this.chain2, 1, this.default_colors[this.chain2], false);
+        this.added_cards.forEach((card, index) => {
+          if (!card['removed'] && card['render']) {
+            if (card['type'] === 'model') {
+              this.addModelStyle(card['model_type'], card['chain'], card['opacity'], card['color'], card['hidden']);
+            }
+            if (render_surfaces && card['type'] === 'surface') {
+              this.addChainSurface(card['chain'], card['opacity'], card['color_scheme'], card['color']);
+            }
+          }
+        })
+        this.viewer.render();
+      }
     }
+
   }
 }
 </script>
