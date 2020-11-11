@@ -65,7 +65,7 @@ sub get_buried_surface {
 
       FORK: {
 	  if ($child = fork) {
-	      PDB::Writer->write('models'=>$pdb->getModel,'path'=>"$cf1.pdb",'chains'=>[$c1],'pdb'=>$pdb,'xml'=>$xml);
+	      PDB::Writer->write('model'=>$pdb->getModel,'path'=>"$cf1.pdb",'chains'=>[$c1],'pdb'=>$pdb,'xml'=>$xml);
 
 	      convert_to_xyzr($cf1);
 
@@ -86,7 +86,7 @@ sub get_buried_surface {
 	      waitpid( $child, 0);
 
 	  }elsif (defined $child) {
-	      PDB::Writer->write('models'=>$pdb->getModel,'path'=>"$cf2.pdb",'chains'=>[$c2],'pdb'=>$pdb,'xml'=>$xml);
+	      PDB::Writer->write('model'=>$pdb->getModel,'path'=>"$cf2.pdb",'chains'=>[$c2],'pdb'=>$pdb,'xml'=>$xml);
 
 	      convert_to_xyzr($cf2);
 
