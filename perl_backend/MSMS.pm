@@ -163,7 +163,7 @@ sub run_msms {
 
 	my $outbase = $job.substr($cf1,-1)."ct".substr($cf2,-1)."_19";
 	qx "cat $outbase.log >> $mslog";
-	$rm=1;
+	$rm=0;
 	unlink( "$outbase.vert", "$outbase.face", "$outbase.log" ) if $rm;
 	$rm=0;
 	return "$outbase.anal" if -e "$outbase.anal";
