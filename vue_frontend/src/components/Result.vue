@@ -193,6 +193,8 @@ export default {
       }
       let viewer = this.viewer;
       let renderStyles = this.renderStyles;
+      this.added_cards.push({chain: chain1, color: 'cyan', opacity: null, type: 'model', model_type: 'cartoon', render: false, removed: false});
+      this.added_cards.push({chain: chain2, color: 'pink', opacity: null, type: 'model', model_type: 'cartoon', render: false, removed: false});
       this.makeModel(pdb_url, chain1, chain2, graph,
         color_chart, amino_acid, viewer, this.default_colors,
         function () {
@@ -209,15 +211,15 @@ export default {
           success: function (data) {
             let v = viewer;
             v.addModel( data, 'pdb');                        /* load data */ // eslint-disable-line
-            v.setStyle({chain: chain1}, {cartoon: {color: default_colors[chain1], opacity: 1}});  /* style all atoms */// eslint-disable-line
-            v.setStyle({chain: chain2}, {cartoon: {color: default_colors[chain2], opacity: 1}}); // eslint-disable-line
+            // v.setStyle({chain: chain1}, {cartoon: {color: default_colors[chain1], opacity: 1}});  /* style all atoms */// eslint-disable-line
+            // v.setStyle({chain: chain2}, {cartoon: {color: default_colors[chain2], opacity: 1}}); // eslint-disable-line
             for (let i = 0; i < graph.nodes.length; i++) {
               let atom = graph.nodes[i].id;
               let atom_chain = atom.substring(0, 1);
               let atom_id = atom.substring(1, atom.length);
               let label = v.addResLabels({resi: atom_id, chain: atom_chain}, {backgroundOpacity: 0.3});
               res_labels.push(([label[0], [atom_id, atom_chain]]));
-              v.setStyle({resi: atom_id, chain: atom_chain}, {cartoon: {color: default_colors[atom_chain], opacity: 1}, stick: {color: default_colors[atom_chain]}});
+              // v.setStyle({resi: atom_id, chain: atom_chain}, {cartoon: {color: default_colors[atom_chain], opacity: 1}, stick: {color: default_colors[atom_chain]}});
               // v.addSphere({center: {resi: atom_id, chain: atom_chain}, radius: 0.5, color: 'green'});
             }
             for (let i = 0; i < graph.edges.length; i++) {

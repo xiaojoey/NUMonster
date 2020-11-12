@@ -69,6 +69,7 @@ export default {
     let color_schemes = ['None'].concat(Object.keys($3Dmol.builtinColorSchemes).concat(['greenCarbon', 'cyanCarbon', // eslint-disable-line
       'yellowCarbon', 'whiteCarbon', 'magentaCarbon']));
     color_schemes.forEach((el, index) => this.color_scheme_options.push({id: index, value: el, text: el}));
+    this.$emit('update:synced_data', this.update());
   },
   methods: {
     removeItem: function () {
