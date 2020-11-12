@@ -248,10 +248,14 @@ foreach my $file (get_files($jobDir,"\.pdb")){
 	    my $result = $jobDir.$cp.$c.'consensus.txt';
 	    push(@jobfiles,$result);
 	}
-	Email->resultEmail($job, $xml_obj->getEmail, $original_pdb_file, @jobfiles) if !$debug;
+	Email->resultEmail($job, $xml_obj->getEmail, $file, @jobfiles) if !$debug;
 	Sheet->generate_sheet(@jobfiles);
     }else{
-	Email->resultEmail($job, $xml_obj->getEmail, $original_pdb_file, get_files($jobDir.'/1',"\.txt")) if !$debug;
+	my @jobfiles=();
+	foreach my $file (get_files($jobDir.'1',"\.txt")){
+	    push(@jobfiles,$jobDir.'1/'.$file);
+	}
+	Email->resultEmail($job, $xml_obj->getEmail, $file, @jobfiles) if !$debug;
     }
 } #end of get_files loop
 print("$job: finishing ".$original_pdb_file." at: ".scalar(localtime)."\n");
