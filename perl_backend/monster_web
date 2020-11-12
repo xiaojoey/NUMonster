@@ -245,7 +245,7 @@ foreach my $file (get_files($jobDir,"\.pdb")){
 	foreach my $cp (sort $PDB->chainPairs){
 	    $Bonds->printModelCount($PDB, $jobDir.$cp.$c.'consensus.txt', ($models/2), unpack('AA', $cp));
 	    $Bonds->printXMLModelCount($PDB, $jobDir.$cp.$c.'consensus.xml', ($models/2), unpack('AA', $cp));
-	    my $result = $jobsDir.$cp.$c.'consensus.txt';
+	    my $result = $jobDir.$cp.$c.'consensus.txt';
 	    push(@jobfiles,$result);
 	}
 	Email->resultEmail($job, $xml_obj->getEmail, $original_pdb_file, @jobfiles) if !$debug;
