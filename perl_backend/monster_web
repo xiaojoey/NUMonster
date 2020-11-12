@@ -64,7 +64,7 @@ if(!-d $jobsDir){
     die "$jobsDir doesn't exist\n";
 }
 
-my $logsDir = '/home/monster_uploads/jobs/';
+my $logsDir = '/home/monster_uploads/logs/';
 if(exists($ENV{'LOGS_DIR'})){
     $logsDir = $ENV{"LOGS_DIR"};
 }
