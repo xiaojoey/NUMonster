@@ -85,7 +85,7 @@ if(!$debug){
 }
 
 # Testing for output of web server
-my $jobDir .= $jobsDir.$job.'/';
+my $jobDir = $jobsDir.$job.'/';
 if(!-d $jobDir){
     die "$job: $jobDir doesn't exist\n";
 }
@@ -135,6 +135,10 @@ foreach my $file (get_files($jobDir,"\.pdb")){
     my $PDB = new PDB;
     $PDB->parse($jobDir.$file, $xml_obj, $Bonds);
     print("$job: parsed ".$jobDir.$file." at: ".scalar(localtime)."\n");
+    print("PDB contains chains: \n");
+    foreach my $chain (sort keys %{$PDB->{'chains'}}){
+	print("\t",$chain,"\t",$PDB->{'chains'}{$chain},"\n");
+    }
 
 ##################################################################
 # Run HAAD to replace/correct protons
@@ -154,14 +158,19 @@ foreach my $file (get_files($jobDir,"\.pdb")){
 	unlink($haadDir."new_protons.pdb");
     }
 
+    print("$job: running HAAD for ".$jobDir.$file." at: ".scalar(localtime)."\n");
+
     # Print out all separate parts of PDB file to run HAAD on
-    foreach my $chain (sort $PDB->chains()){
-	PDB::Writer->write('models'=>$PDB->getModels,
-			   'path'=>$haadDir.$chain.".pdb",
-			   'chains'=>[$chain],'pdb'=>$PDB);
-	HAAD->run($haadDir.$chain.".pdb", $haadDir.$chain.".log");
-	if(-f $haadDir.$chain.".pdb.h"){
-	    system("cat ".$haadDir.$chain.".pdb.h >> ".$haadDir."new_protons.pdb");
+    foreach my $model (sort {$a<=>$b} $PDB->getModels()){
+	foreach my $chain (sort $xml_obj->chains()){
+	    print "Writing $model$chain for HAAD\n";
+	    PDB::Writer->write('model'=>$model,
+			       'path'=>$haadDir.$model.$chain.".pdb",
+			       'chains'=>[$chain],'pdb'=>$PDB,'xml'=>$xml_obj);
+	    HAAD->run($haadDir.$model.$chain.".pdb", $haadDir.$model.$chain.".log");
+	    if(-f $haadDir.$model.$chain.".pdb.h"){
+		system("cat ".$haadDir.$model.$chain.".pdb.h >> ".$haadDir."new_protons.pdb");
+	    }
 	}
     }
 
@@ -169,15 +178,18 @@ foreach my $file (get_files($jobDir,"\.pdb")){
     $Bonds = new PDB::Bonds();
     $PDB->parse($haadDir."new_protons.pdb", $xml_obj, $Bonds);
 
-#    PDB::Writer->write('models'=>$PDB->getModels,
-#		       'path'=>$haadDir."new_protons_redux.pdb",
-#		       'chains'=>[$PDB->chains],'pdb'=>$PDB);
+    print("New PDB contains chains: \n");
+    foreach my $chain (sort keys %{$PDB->{'chains'}}){
+	print("\t",$chain,"\t",$PDB->{'chains'}{$chain},"\n");
+    }
+    print("Models: ",join("|",sort {$a <=> $b} $PDB->getModels()),"\n");
 
 ##################################################################
 # Iterate through models
 ##################################################################
 
     my $models = $PDB->getModels;
+
     for(my $i=1;$i<=$models;$i++){
 
 ##################################################################
@@ -195,18 +207,21 @@ foreach my $file (get_files($jobDir,"\.pdb")){
 ##################################################################
 
 	$PDB->setModel($i);
-	foreach my $cp (sort $PDB->chainPairs){
-	    print("$job: analyzing $cp in ".$file." at: ".scalar(localtime)."\n");
+	foreach my $cp (sort $xml_obj->chainpairs){
 
 ##################################################################
 # Run MSMS (xml_obj needed to find user-defined end of chains)
 ##################################################################
+
+	    print("$job: running MSMS for ".$i.$cp." at: ".scalar(localtime)."\n");
 
 	    MSMS->doMSMS($PDB,$tempDir,unpack('AA', $cp),$xml_obj);
 
 ##################################################################
 # Run HBPlus
 ##################################################################
+	    
+	    print("$job: running HBplus for ".$i.$cp." at: ".scalar(localtime)."\n");
 
 	    HBplus->doHBplus($PDB,$tempDir,unpack('AA', $cp),$xml_obj,$Bonds);
 
@@ -228,9 +243,9 @@ foreach my $file (get_files($jobDir,"\.pdb")){
     if($models > 1){
 	my @jobfiles=();
 	foreach my $cp (sort $PDB->chainPairs){
-	    $Bonds->printModelCount($PDB, $jobsDir.$cp.$c.'consensus.txt', ($models/2), unpack('AA', $cp));
-	    $Bonds->printXMLModelCount($PDB, $jobsDir.$cp.$c.'consensus.xml', ($models/2), unpack('AA', $cp));
-	    my $result = $jobsDir.$cp.$c.'consensus.txt';
+	    $Bonds->printModelCount($PDB, $jobDir.$cp.$c.'consensus.txt', ($models/2), unpack('AA', $cp));
+	    $Bonds->printXMLModelCount($PDB, $jobDir.$cp.$c.'consensus.xml', ($models/2), unpack('AA', $cp));
+	    my $result = $jobDir.$cp.$c.'consensus.txt';
 	    push(@jobfiles,$result);
 	}
 	Email->resultEmail($job, $xml_obj->getEmail, $original_pdb_file, @jobfiles) if !$debug;

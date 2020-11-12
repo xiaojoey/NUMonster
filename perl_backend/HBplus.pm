@@ -37,7 +37,7 @@ sub get_hbonds{
     my $pdb = shift;
     
     my $hbpdb = $c1.$c2.'.pdb';
-    PDB::Writer->write('models'=>$pdb->getModel,'path'=>$job_dir.$hbpdb,'chains'=>[$c1,$c2],'pdb'=>$pdb,'xml'=>$xml, 'water'=>1, 'protons'=>'hbplus');
+    PDB::Writer->write('model'=>$pdb->getModel,'path'=>$job_dir.$hbpdb,'chains'=>[$c1,$c2],'pdb'=>$pdb,'xml'=>$xml, 'water'=>1, 'protons'=>'hbplus');
     my $hbout = $c1.$c2.'.hb2';
     my $hblog = $c1.$c2.'hb.log';
     
@@ -54,7 +54,7 @@ sub get_hbonds{
     
     read_hbonds($job_dir.$hbout,$pdb);
     report_errors($job_dir.$hblog, $xml);
-    PDB::Writer->write('models'=>$pdb->getModel,'path'=>$job_dir.$hbpdb,'chains'=>[$c1,$c2],'pdb'=>$pdb,'xml'=>$xml, 'water'=>1, 'protons'=>'webmol');
+    PDB::Writer->write('model'=>$pdb->getModel,'path'=>$job_dir.$hbpdb,'chains'=>[$c1,$c2],'pdb'=>$pdb,'xml'=>$xml, 'water'=>1, 'protons'=>'webmol');
 }
 
 sub read_hbonds{
@@ -132,10 +132,11 @@ sub report_errors{
     while(<HL>) {
 	if($_ =~ /^ATOM/){
 	    $line = new PDB::Atom('-line' => $_);
-	    WebDBI->naming_error($xml,$line,'hbplus');
+	    print STDERR "Atom naming error: ".$line->chainId."\t".$line->resName."\t".$line->resNumber."\t".$line->atomName."\n";
+	    #WebDBI->naming_error($xml,$line,'hbplus');
 	}
     }
-	close(HL);
+    close(HL);
 }
 
 #quick fix for errors
