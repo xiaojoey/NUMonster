@@ -111,6 +111,12 @@ sub checkBond{
 sub notClose{
     my $self=shift;
     my ($a1,$a2,$r)=@_;
+
+    if(!$lengths{$r}){
+	print STDERR "Warning missing radii for ".$r."\n";
+	return 1;
+    }
+
     my %hash = %$a2;
     my $cutoff = 7 + $lengths{$r};
     my $dist = dist($a1->x,$hash{'x'},$a1->y,$hash{'y'},$a1->z,$hash{'z'});
