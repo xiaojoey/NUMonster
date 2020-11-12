@@ -59,15 +59,12 @@ sub resultEmail{
     $msg.=$pdb."\n\n";
     $msg.="Under this job id:\n\n";
     $msg.=$job."\n\n";
-	
+
     if($_[0] && -e $_[0]){
 	$msg.="You may now go to the Monster website and retrieve your results\n";
-	$msg.="by entering the job id in the 'Job Retriever' field\n\n";
-	$msg.="Alternatively, you may use this link:\n\n";
-	$msg.="http://numonster.northwestern.edu/monster.jsp?pji=".$job."\n\n";
-	$msg.="and pressing 'Submit'\n\n";
-	$msg.="If no results for a particular chain pair are listed below, this means Monster did not find any interactions.\n\n";
-	$msg.="Jobs will reside on the server for 14 days before they are removed.\n\n";
+	$msg.="by entering the job id in the 'Job ID' field\n";
+	$msg.="and pressing 'Get Result'\n\n";
+	$msg.="If no results for a particular chain pair are listed, this means Monster did not find any interactions between those chains.\n\n";
 	$msg.="Results have been appended and found below:\n";
 
 	foreach my $result (@_){
