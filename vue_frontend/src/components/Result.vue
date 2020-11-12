@@ -131,6 +131,7 @@ export default {
     draw_labels: true,
     selected_edges: [],
     selected_info: '',
+    interacting_res: false,
     chain1: '',
     chain2: '',
     default_colors: null,
@@ -191,12 +192,14 @@ export default {
         this.viewer = $3Dmol.createViewer(element, config); // eslint-disable-line
       }
       let viewer = this.viewer;
-      this.makeModel(pdb_url, chain1, chain2, graph, color_chart, amino_acid, viewer, this.default_colors);
-      setTimeout(() => {
-        this.renderStyles({render: true, removed: false}, true);
-      }, 500);
+      let renderStyles = this.renderStyles;
+      this.makeModel(pdb_url, chain1, chain2, graph,
+        color_chart, amino_acid, viewer, this.default_colors,
+        function () {
+          renderStyles({render: true, removed: false}, true);
+        });
     },
-    makeModel: function (pdb_url, chain1, chain2, graph, color_chart, amino_acid, _viewer, default_colors) {
+    makeModel: function (pdb_url, chain1, chain2, graph, color_chart, amino_acid, _viewer, default_colors, _callback) {
       let res_labels = [];
       $(function () {
         let viewer = _viewer;
@@ -243,6 +246,7 @@ export default {
             v.zoomTo();                              /* set camera */  // eslint-disable-line
             v.render();                                      /* render scene */ // eslint-disable-line
             v.zoom(1.5, 1000);                               /* slight zoom */ // eslint-disable-line
+            _callback();
           },
           error: function (hdr, status, err) {
             console.error('Failed to load PDB ' + pdbUri + ': ' + err);
