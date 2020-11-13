@@ -18,6 +18,7 @@ use XML::In;
 # these libraries interact with external programs
 use MSMS;
 use HAAD;
+use REDUCE;
 use HBplus;
 use Email;
 use Sheet;
@@ -141,42 +142,42 @@ foreach my $file (get_files($jobDir,"\.pdb")){
     }
 
 ##################################################################
-# Run HAAD to replace/correct protons
+# Replace/correct protons
 ##################################################################
 
-    my $haadDir = $jobDir.'haad/';
-    if(-d $haadDir){
-	unlink $haadDir;
+    my $protonDir = $jobDir.'protons/';
+    if(-d $protonDir){
+	unlink $protonDir;
     }
-    mkdir $haadDir;
+    mkdir $protonDir;
 
     # strip all protons
     $PDB->stripProtons();
 
     #start new PDB file
-    if(-f $haadDir."new_protons.pdb"){
-	unlink($haadDir."new_protons.pdb");
+    if(-f $protonDir."new_protons.pdb"){
+	unlink($protonDir."new_protons.pdb");
     }
 
-    print("$job: running HAAD for ".$jobDir.$file." at: ".scalar(localtime)."\n");
+    print("$job: replacing protons for ".$jobDir.$file." at: ".scalar(localtime)."\n");
 
-    # Print out all separate parts of PDB file to run HAAD on
+    # Print out all separate parts of PDB file to replace protons in
     foreach my $model (sort {$a<=>$b} $PDB->getModels()){
 	foreach my $chain (sort $xml_obj->chains()){
-	    print "Writing $model$chain for HAAD\n";
+	    print "Writing $model$chain for replacing protons\n";
 	    PDB::Writer->write('model'=>$model,
-			       'path'=>$haadDir.$model.$chain.".pdb",
+			       'path'=>$protonDir.$model.$chain.".pdb",
 			       'chains'=>[$chain],'pdb'=>$PDB,'xml'=>$xml_obj);
-	    HAAD->run($haadDir.$model.$chain.".pdb", $haadDir.$model.$chain.".log");
-	    if(-f $haadDir.$model.$chain.".pdb.h"){
-		system("cat ".$haadDir.$model.$chain.".pdb.h >> ".$haadDir."new_protons.pdb");
+	    REDUCE->run($protonDir.$model.$chain.".pdb", $protonDir.$model.$chain.".log");
+	    if(-f $protonDir.$model.$chain.".pdb.new"){
+		system("cat ".$protonDir.$model.$chain.".pdb.new >> ".$protonDir."all_new_protons.pdb");
 	    }
 	}
     }
 
     $PDB = new PDB;
     $Bonds = new PDB::Bonds();
-    $PDB->parse($haadDir."new_protons.pdb", $xml_obj, $Bonds);
+    $PDB->parse($protonDir."all_new_protons.pdb", $xml_obj, $Bonds);
 
     print("New PDB contains chains: \n");
     foreach my $chain (sort keys %{$PDB->{'chains'}}){
