@@ -306,7 +306,8 @@ export default {
       let new_nodes = [];
       let new_edges = [];
       let node_ids = new Set();
-      let node_indices = [];
+      let source_indices = [];
+      let target_indices = [];
       JSON.parse(xml_json).BONDS.BOND.forEach((bond, index) => {
         if (!bond_types.includes(bond.type._text)) { return }
         var target = 0;
@@ -338,8 +339,8 @@ export default {
           target_residue = bond.RESIDUE[0].name._text;
         }
         if (!node_ids.has(source)) {
-          if (!node_indices.includes(source_index)) {
-            node_indices.push(source_index);
+          if (!source_indices.includes(source_index)) {
+            source_indices.push(source_index);
           }
           new_nodes.push({
             id: source,
@@ -355,8 +356,8 @@ export default {
           node_ids.add(source)
         }
         if (!node_ids.has(target)) {
-          if (!node_indices.includes(target_index)) {
-            node_indices.push(target_index);
+          if (!target_indices.includes(target_index)) {
+            target_indices.push(target_index);
           }
           new_nodes.push({
             id: target,
@@ -390,9 +391,21 @@ export default {
           added: [],
         })
       });
-      node_indices.sort((a, b) => a - b);
+      source_indices.sort((a, b) => a - b);
+      target_indices.sort((a, b) => a - b);
+      let source_multiplier = 5;
+      let target_multiplier = 5;
+      if (source_indices.length >= target_indices.length) {
+        target_multiplier = 5 * (source_indices.length / target_indices.length);
+      } else {
+        source_multiplier = 5 * (source_indices.length / target_indices.length);
+      }
       for (const node of new_nodes) {
-        node.x = 5 * node_indices.indexOf(node.index);
+        if (node.y === 0) {
+          node.x = source_multiplier * source_indices.indexOf(node.index);
+        } else {
+          node.x = target_multiplier * target_indices.indexOf(node.index);
+        }
       }
       return {'nodes': new_nodes, 'edges': new_edges}
     },
@@ -652,8 +665,5 @@ export default {
   .more-info::-webkit-scrollbar, #more-options::-webkit-scrollbar, #related-info::-webkit-scrollbar, #added-surfaces::-webkit-scrollbar{ /* WebKit */
     width: 0;
     height: 0;
-  }
-  #related-info {
-    max-height: 45%;
   }
 </style>
