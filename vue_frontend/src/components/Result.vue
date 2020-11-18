@@ -398,7 +398,7 @@ export default {
       if (source_indices.length >= target_indices.length) {
         target_multiplier = 5 * (source_indices.length / target_indices.length);
       } else {
-        source_multiplier = 5 * (source_indices.length / target_indices.length);
+        source_multiplier = 5 * (target_indices.length / source_indices.length);
       }
       for (const node of new_nodes) {
         if (node.y === 0) {
