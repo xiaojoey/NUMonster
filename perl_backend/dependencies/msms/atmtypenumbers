@@ -273,27 +273,27 @@ VAL  CG2      9
 #
 #Nucleic acids
 #'+' used for modified residues
-+?[AGCUT] C[123]['\*]	11
-+?[AGCUT] C4'		10
-+?[AGCUT] C5'		9
-+?[AGCUT] O[2345]['\*]	2
-+?[AGCUT] N[479]	4
-+?G       N1		5
-+?G       N2		6
-+?[UT]    N3		5
-+?A       N6		6
-+?[CAUT]  N[12]		4
-+?[CAG]   N3		4
-+?[CAGT]  N6		4
-+?[AGCUT] N[1234679]	4
-+?[GCUT]  O[246]	1
-+?[GCUT]  C[24]		10
-+?[AG]    C[456]	10
-+?[AG]    C8		11
-+?[CUT]   C6		11
-+?[CU]    C5		11
-+?T       C5		10
-+?T	  C7		9
+[+D]?[AGCUT] C[123]['\*]	11
+[+D]?[AGCUT] C4'		10
+[+D]?[AGCUT] C5'		9
+[+D]?[AGCUT] O[2345]['\*]	2
+[+D]?[AGCUT] N[479]	4
+[+D]?G       N1		5
+[+D]?G       N2		6
+[+D]?[UT]    N3		5
+[+D]?A       N6		6
+[+D]?[CAUT]  N[12]		4
+[+D]?[CAG]   N3		4
+[+D]?[CAGT]  N6		4
+[+D]?[AGCUT] N[1234679]	4
+[+D]?[GCUT]  O[246]	1
+[+D]?[GCUT]  C[24]		10
+[+D]?[AG]    C[456]	10
+[+D]?[AG]    C8		11
+[+D]?[CUT]   C6		11
+[+D]?[CU]    C5		11
+[+D]?T       C5		10
+[+D]?T	  C7		9
 
 #
 # check these next two with JAT & EDG mp

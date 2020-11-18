@@ -461,7 +461,8 @@ sub parse{
 		    }
 		}
 		unless($temp->{'heavy'}){
-		    WebDBI->naming_error($xml,$temp,'heavy');
+		    print STDERR "Atom naming error: ".$temp->chainId."\t".$temp->resName."\t".$temp->resNumber."\t".$temp->atomName."\n";
+		    #WebDBI->naming_error($xml,$temp,'heavy');
 		}else{
 		    #print "PASSED: ".$self->{'all'}{$temp->heavy}->atomName."\n" if $temp->NAproton;
 		}
@@ -531,16 +532,16 @@ sub stripProtons{
     foreach my $proton_number (keys %{$self->{'protons'}}){
 	my $resNumber = $self->{'all'}{$proton_number}->resNumber();
 
-	del($self->{'all'}{$proton_number});
-	del($self->{'protons'}{$proton_number});
+	delete($self->{'all'}{$proton_number});
+	delete($self->{'protons'}{$proton_number});
 	if(exists($self->{'atoms'}{$proton_number})){
-	    del($self->{'atoms'}{$proton_number});
+	    delete($self->{'atoms'}{$proton_number});
 	}
     
-	foreach my $ch (@{$self->chains()}){
-	    foreach my $md (@{$self->models()}){
-		del($self->{'residues'}{$md}{$ch.$resNumber}{$proton_number});
-		del($self->{'models'}{$md}{$ch}{$proton_number});
+	foreach my $ch ($self->chains()){
+	    foreach my $md ($self->getModels()){
+		delete($self->{'residues'}{$md}{$ch.$resNumber}{$proton_number});
+		delete($self->{'models'}{$md}{$ch}{$proton_number});
 	    }
 	}
     }

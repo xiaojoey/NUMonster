@@ -25,16 +25,13 @@ sub write{
     my %args = @_;
 
     my $pdb = $args{'pdb'};
+    my $model = $args{'model'};
+    $pdb->setModel($model);
 
-    my @models = $args{'models'};
     $protons = $args{'protons'};
 
-    #print "Writing to ".$args{'path'}."\n";
     open(FH, "> ".$args{'path'}); 
     #print "Writing to ".$args{'path'}."\n";
-#Find last residues for termination 
-#hetatms excluded by not being added to $pdb->residues
-#
 
     my($first,@terRes);
     if($args{'xml'}){
@@ -43,6 +40,7 @@ sub write{
 	    $terRes[$i]=$chs[$i].$args{'xml'}->end($chs[$i]);
 	}
     }else{
+	print STDERR "Warning: finding last residue is broken, use 'xml' option\n";
 	foreach my $ref (sort{substr($a,0,1) cmp substr($b,0,1) 
 				  || 
 				  substr($a,1) <=> substr($b,1) 
@@ -71,29 +69,25 @@ sub write{
     }
 
     #iterate for printing
-
-    foreach my $m(@models){
-	$pdb->setModel($m);
-	#print FH $self->model($m) if $args{'models'}>1;
-	foreach my $ch ( sort @{$args{'chains'}} ){
-	    foreach my $res ($pdb->chainResidues($ch)){
-		foreach my $ref (sort { $a <=> $b } $pdb->atomsR($res)){
-		    print FH $self->line($pdb->atom($ref), $ch) if $pdb->atom($ref);
-		    print FH $self->line($pdb->proton($ref), $ch) if $pdb->proton($ref);
-		    print FH ter($pdb->atom($ref), $ch) if $pdb->atom($ref) && $terAtoms{$ch}{$pdb->atom($ref)->atomNumber};
-		    print FH ter($pdb->proton($ref), $ch) if $pdb->proton($ref) && $terAtoms{$ch}{$pdb->proton($ref)->atomNumber};
-		    print FH $self->line($pdb->hetatm($ref), $ch) if $pdb->hetatm($ref);
-		}
+    print FH $self->model($model);
+    foreach my $ch ( sort @{$args{'chains'}} ){
+	foreach my $res ($pdb->chainResidues($ch)){
+	    foreach my $ref (sort { $a <=> $b } $pdb->atomsR($res)){
+		print FH $self->line($pdb->atom($ref), $ch) if $pdb->atom($ref);
+		print FH $self->line($pdb->proton($ref), $ch) if $pdb->proton($ref);
+		print FH ter($pdb->atom($ref), $ch) if $pdb->atom($ref) && $terAtoms{$ch}{$pdb->atom($ref)->atomNumber};
+		print FH ter($pdb->proton($ref), $ch) if $pdb->proton($ref) && $terAtoms{$ch}{$pdb->proton($ref)->atomNumber};
+		print FH $self->line($pdb->hetatm($ref), $ch) if $pdb->hetatm($ref);
 	    }
 	}
-	
-	if($args{'water'}){
-	    foreach my $ref ($pdb->water){
-		print FH $self->line($pdb->water($ref));
-	    }
-	}
-	#print FH "ENDMDL\n" if $args{'models'}>1;
     }
+	
+    if($args{'water'}){
+	foreach my $ref ($pdb->water){
+	    print FH $self->line($pdb->water($ref));
+	}
+    }
+    print FH "ENDMDL\n";
     close(FH);
 }
 

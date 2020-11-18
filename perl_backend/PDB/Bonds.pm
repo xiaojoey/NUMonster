@@ -15,7 +15,9 @@ my %lengths = ('GLY'=>4,'ALA'=>4,'VAL'=>4,'CYS'=>4,'SER'=>4,'THR'=>4,'ASN'=>6,
 	       'PRO'=>6,'ASP'=>6,'ILE'=>6,'LEU'=>6,'MET'=>7,'GLN'=>7,'GLU'=>7,
 	       'HIS'=>7,'LYS'=>9,'PHE'=>9,'TRP'=>10,'TYR'=>10,'ARG'=>12,
 	       'A'=>18,'G'=>18,'C'=>18,'T'=>18,'U'=>17,'I'=>18,
-	       '+A'=>18,'+C'=>18,'+U'=>17,'+T'=>18,'+G'=>18,'+I'=>18);
+	       'DA'=>18,'DC'=>18,'DU'=>17,'DT'=>18,'DG'=>18,'DI'=>18,
+	       '+A'=>18,'+C'=>18,'+U'=>17,'+T'=>18,'+G'=>18,'+I'=>18,
+	       'UNK'=>0); #unknown
 
 sub new{
     my $class = shift;
@@ -110,6 +112,12 @@ sub checkBond{
 sub notClose{
     my $self=shift;
     my ($a1,$a2,$r)=@_;
+
+    if(!$lengths{$r}){
+	print STDERR "Warning missing radii for ".$r."\n";
+	return 1;
+    }
+
     my %hash = %$a2;
     my $cutoff = 7 + $lengths{$r};
     my $dist = dist($a1->x,$hash{'x'},$a1->y,$hash{'y'},$a1->z,$hash{'z'});
