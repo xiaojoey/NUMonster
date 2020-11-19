@@ -404,7 +404,7 @@ export default {
         if (node.y === 0) {
           node.x = source_multiplier * source_indices.indexOf(node.index);
         } else {
-          node.x = target_multiplier * target_indices.indexOf(node.index);
+          node.x = target_multiplier * target_indices.indexOf(node.index) + 1; // If you make two nodes perfectly aligned such that an edge between the two is a perpendicular line then sigma.js overEdge doesn't work on the edge
         }
       }
       return {'nodes': new_nodes, 'edges': new_edges}
@@ -538,6 +538,8 @@ export default {
         this.draw_labels = true;
         this.res_labels = new_res_labels;
       }
+      console.log(this.viewer);
+      console.log(this.res_labels);
     },
     addChainSurface: function (chain, opacity, color_scheme, color) {
       if (chain != null && opacity != null) {
@@ -632,6 +634,7 @@ export default {
   .col-2{
     min-width: 250px;
     height: 80vh;
+    padding: 5px;
     display: flex;
     flex-direction: column;
   }
