@@ -1,7 +1,7 @@
 <template>
     <div class="card border-info">
         <div class="card-header">
-          <span>You selected chain {{selected_chain}}</span>
+          <span>{{type}} for chain {{selected_chain}}</span>
           <b-button-close v-on:click="removeItem()" class="btn"></b-button-close>
         </div>
         <div class="level">
@@ -16,7 +16,7 @@
                     v-model="model_type" :options="styles" @change="update_model_type();" >Pick Style
                 </b-form-select>
             </b-row>
-            <b-row>
+            <b-row v-if="type === 'surface'">
                 <b-col class="p-0">
                     <b-form-input
                         placeholder="Opacity" v-model.number="opacity" type='number' min="0" max="1" step="0.1" @change="$emit('update:synced_data', update());">
@@ -38,12 +38,12 @@
                 v-bind:key="item.id">
                 <b-col class="p-0">
                     <b-form-select
-                        v-model="item.selected_attribute" :options="valid_attributes_options" @change="updateAttributes(item);" >
+                        v-model="item.selected_attribute" :options="valid_attributes_options" @change="recalcAttributes(item);" >
                     </b-form-select>
                 </b-col>
                 <b-col v-if="!item.discrete" class="p-0">
                     <b-form-input
-                        placeholder="Value" v-model="item.value" @change="$emit('update:synced_data', update());">
+                        placeholder="Value" v-model.number="item.value" @change="$emit('update:synced_data', update());">
                     </b-form-input>
                 </b-col>
                 <b-col v-if="item.discrete" class="p-0">
@@ -54,7 +54,7 @@
                 <b-button-close v-on:click="removeAttribute(item.id)" class="btn" style="width: 25px"></b-button-close>
             </b-row>
             </b-container>
-            <b-button type='button' variant='outline' class='btn-primary btn-block' v-on:click='addAttribute'> Add Attribute </b-button>
+            <b-button v-if="type ==='model'" type='button' variant='outline' class='btn-primary btn-block' v-on:click='addAttribute'> Add Attribute </b-button>
         </div>
     </div>
 </template>
@@ -72,6 +72,8 @@ export default {
       type: this.synced_data['type'],
       model_type: this.synced_data['model_type'],
       return_data: this.synced_data,
+      added_attributes: this.synced_data['added_attributes'],
+      default: this.synced_data['default'],
       render: true,
       removed: false,
       surface: null,
@@ -82,15 +84,12 @@ export default {
         {id: 3, value: 'line', text: 'line'}
       ],
       color_scheme_options: [],
-      added_attributes: [],
       valid_attributes_options: [],
       valid_attributes: [],
       count: 0
     }
   },
   mounted: function () {
-    // this.return_data['render'] = true;
-    // this.$emit('update:synced_data', this.update());
     let color_schemes = ['None'].concat(Object.keys($3Dmol.builtinColorSchemes).concat(['greenCarbon', 'cyanCarbon', // eslint-disable-line
       'yellowCarbon', 'whiteCarbon', 'magentaCarbon']));
     color_schemes.forEach((el, index) => this.color_scheme_options.push({id: index, value: el, text: el}));
@@ -114,6 +113,15 @@ export default {
       this.return_data['render'] = this.render;
       this.return_data['model_type'] = this.model_type;
       this.return_data['removed'] = this.removed;
+      this.return_data['added_attributes'] = this.added_attributes
+      if (this.default) {
+        // console.log(this.model_type);
+        let item = this.addAttribute();
+        item.selected_attribute = 'color';
+        this.updateAttributes(item);
+        item.value = this.color;
+        this.default = false;
+      }
       if (this.surface != null) {
         this.$parent.removeSurface(this.surface.surfid);
       }
@@ -131,7 +139,8 @@ export default {
       this.added_attributes = [];
       this.$emit('update:synced_data', this.update());
     },
-    addAttribute: function () {
+    calculate_valid_attributes: function () {
+      // console.log(this.type);
       let validAttributes = this.type === 'model' ? $3Dmol.GLModel.validAtomStyleSpecs[this.model_type].validItems // eslint-disable-line
         : this.type === 'surface' ? $3Dmol.GLModel.validSurfaceSpecs // eslint-disable-line
           : $3Dmol.GLModel.validLabelResSpecs; // eslint-disable-line
@@ -143,12 +152,19 @@ export default {
       });
       this.valid_attributes = validAttributes;
       this.valid_attributes_options = options;
-      this.added_attributes.push({id: this.count++,
-        value: null,
-        valid_values: null,
-        selected_attribute: null,
-        discrete: false});
-      // console.log(validAttributes);
+    },
+    addAttribute: function () {
+      // console.log(this.model_type);
+      if (this.model_type !== null) {
+        this.calculate_valid_attributes();
+        let new_attribute = {id: this.count++,
+          value: null,
+          valid_values: null,
+          selected_attribute: null,
+          discrete: false};
+        this.added_attributes.push(new_attribute);
+        return new_attribute;
+      }
     },
     removeAttribute: function (id) {
       for (let i = 0; i < this.added_attributes.length; i++) {
@@ -166,16 +182,22 @@ export default {
         let discrete_types = ['color', 'colorscheme', 'boolean'];
         item.discrete = (discrete_types.includes(attribute_type) || this.valid_attributes[key].validItems !== undefined);
         if (item.discrete) {
-          item.valid_values = attribute_type === 'boolean' ? ['false', 'true']
+          item.valid_values = attribute_type === 'boolean' ? [false, true]
             : attribute_type === 'color' ? Object.keys($3Dmol.htmlColors) // eslint-disable-line
-              : attribute_type === 'color_scheme' ? this.color_scheme
+              : attribute_type === 'colorscheme' ? this.color_scheme_options
                 : this.valid_attributes[key].validItems;
           item.value = item.valid_values[0];
+        } else {
+          item.value = null;
         }
       } else {
         item.valid_values = null;
         item.value = null;
       }
+    },
+    recalcAttributes: function (item) {
+      this.updateAttributes(item);
+      this.$emit('update:synced_data', this.update());
     }
   }
 }

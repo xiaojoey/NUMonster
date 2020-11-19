@@ -193,8 +193,24 @@ export default {
       }
       let viewer = this.viewer;
       let renderStyles = this.renderStyles;
-      this.added_cards.push({chain: chain1, color: 'cyan', opacity: null, type: 'model', model_type: 'cartoon', render: false, removed: false});
-      this.added_cards.push({chain: chain2, color: 'pink', opacity: null, type: 'model', model_type: 'cartoon', render: false, removed: false});
+      this.added_cards.push({chain: chain1,
+        color: 'cyan',
+        opacity: null,
+        type: 'model',
+        model_type: 'cartoon',
+        render: false,
+        removed: false,
+        default: true,
+        added_attributes: []});
+      this.added_cards.push({chain: chain2,
+        color: 'pink',
+        opacity: null,
+        type: 'model',
+        model_type: 'cartoon',
+        render: false,
+        default: true,
+        removed: false,
+        added_attributes: []});
       this.makeModel(pdb_url, chain1, chain2, graph,
         color_chart, amino_acid, viewer, this.default_colors,
         function () {
@@ -538,8 +554,8 @@ export default {
         this.draw_labels = true;
         this.res_labels = new_res_labels;
       }
-      console.log(this.viewer);
-      console.log(this.res_labels);
+      // console.log(this.viewer);
+      // console.log(this.res_labels);
     },
     addChainSurface: function (chain, opacity, color_scheme, color) {
       if (chain != null && opacity != null) {
@@ -550,19 +566,14 @@ export default {
         }
       }
     },
-    addModelStyle: function (model_type, chain, opacity, color, hidden) {
+    addModelStyle: function (model_type, chain, style_dict = null, def = false) {
       if (chain != null && model_type != null) {
-        let style_options = [];
-        switch (model_type) {
-          case 'cartoon':
-            style_options = {cartoon: {color: color, opacity: opacity, hidden: hidden}}
-            break;
-          case 'stick':
-            style_options = {stick: {color: color, hidden: hidden}}
-            break;
-          case 'line':
-            style_options = {line: {color: color, opacity: opacity, hidden: hidden}}
-            break;
+        let style_options = {};
+        if (style_dict !== null) {
+          style_options[model_type] = style_dict;
+        }
+        if (def) {
+          style_options = {cartoon: {color: this.default_colors[chain], opacity: 1}};
         }
         this.viewer.setStyle({chain: chain}, style_options);
         style_options['stick'] = {color: this.default_colors[chain]};
@@ -580,11 +591,25 @@ export default {
       // alert('hi');
     },
     addSurfaceCard: function () {
-      this.added_cards.push({chain: null, color: null, opacity: null, color_scheme: 'default', type: 'surface', render: false, removed: false});
+      this.added_cards.push({chain: null,
+        color: null,
+        opacity: null,
+        color_scheme: 'default',
+        type: 'surface',
+        render: false,
+        removed: false,
+        added_attributes: []});
       // this.added_cards = this.added_cards.filter(word => word['removed'] === false);
     },
     addStyleCard: function () {
-      this.added_cards.push({chain: null, color: 'magenta', opacity: null, type: 'model', model_type: null, render: false, removed: false});
+      this.added_cards.push({chain: null,
+        color: 'magenta',
+        opacity: null,
+        type: 'model',
+        model_type: null,
+        render: false,
+        removed: false,
+        added_attributes: []});
       // this.added_cards = this.added_cards.filter(word => word['removed'] === false);
     },
     removeSurface: function (surface) {
@@ -592,12 +617,15 @@ export default {
     },
     renderStyles: function (card, render_surfaces) {
       if (card['render'] || card['removed']) {
-        this.addModelStyle('cartoon', this.chain1, 1, this.default_colors[this.chain1], false);
-        this.addModelStyle('cartoon', this.chain2, 1, this.default_colors[this.chain2], false);
+        this.addModelStyle('cartoon', this.chain1, null, true);
+        this.addModelStyle('cartoon', this.chain2, null, true);
         this.added_cards.forEach((card, index) => {
           if (!card['removed'] && card['render']) {
             if (card['type'] === 'model') {
-              this.addModelStyle(card['model_type'], card['chain'], card['opacity'], card['color'], card['hidden']);
+              let style_dict = this.convertToDict(card['added_attributes']);
+              // console.log('final style dict');
+              // console.log(style_dict);
+              this.addModelStyle(card['model_type'], card['chain'], style_dict);
             }
             if (render_surfaces && card['type'] === 'surface') {
               this.addChainSurface(card['chain'], card['opacity'], card['color_scheme'], card['color']);
@@ -606,6 +634,20 @@ export default {
         })
         this.viewer.render();
       }
+    },
+    convertToDict: function (added_attributes) {
+      // console.log('added_attributes');
+      // console.log(added_attributes);
+      let style_dict = {};
+      added_attributes.forEach((data, index) => {
+        // console.log(data.value, data.valid_values, data.selected_attribute, data.discrete);
+        if (data.value !== null && data.selected_attribute !== null) {
+          style_dict[data.selected_attribute] = data.value;
+        }
+        // console.log('da style dict');
+        // console.log(style_dict)
+      });
+      return style_dict;
     }
 
   }
