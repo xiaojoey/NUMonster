@@ -24,7 +24,9 @@
           </div>
           <br/>
           <h5>Info</h5>
-          {{selected_info}}
+          <div class="more-info">
+            {{selected_info}}
+          </div>
           <div id="related-info">
             <h6>Related</h6>
           </div>
@@ -32,8 +34,34 @@
       </div>
     </div>
     <div v-if="url_3D" class="card" id="target-box">
-        <div v-if="url_3D" class="card-body">
-          <div v-if="url_3D" id="container-01" class="mol-container"></div>
+        <div v-if="display_graph" class="row card-body">
+          <div  class="col-10">
+            <div v-if="url_3D" id="container-01" class="mol-container"></div>
+          </div>
+          <div class="col-2">
+            <br/>
+            <div id="more-options">
+              <h5>Options</h5>
+              <b-button type='button' class='btn btn-secondary btn-block' v-on:click='hideResLabels'> {{draw_labels ? 'Hide Residue Labels' : 'Show Residue Labels'}} </b-button>
+              <b-button type='button' class='btn btn-secondary btn-block' v-on:click='savePic'> Save Picture </b-button>
+              <h5 style="padding-top: 10px;">More Options</h5>
+              <div>
+                <b-button type='button' class='btn btn-secondary btn-block' v-on:click='addSurfaceCard'> Add Surface </b-button>
+                <b-button type='button' class='btn btn-secondary btn-block' v-on:click='addStyleCard'> Add Model </b-button>
+              </div>
+            </div>
+            <br/>
+            <div id="added-surfaces">
+              <attribute-card
+                v-for="item in added_cards"
+                v-bind:chains="options"
+                v-bind:synced_data.sync="item"
+                v-bind:key="item.id"
+                v-on:update:synced_data="renderStyles(item, false)"
+              ></attribute-card>
+              <!-- <p>Parent data is : {{ added_cards }}</p> -->
+            </div>
+          </div>
         </div>
     </div>
     <br/>
@@ -86,23 +114,33 @@
 <script>
 import vueSlider from 'vue-slider-component';
 import ButtonClose from 'bootstrap-vue';
+import attributeCard from './card.vue';
 export default {
   name: 'Result',
   components: {
     ButtonClose,
     vueSlider,
+    attributeCard
   },
   data: () => ({
     result: '',
     display_label: '',
     display_graph: false,
     url_3D: false,
+    res_labels: [],
+    draw_labels: true,
     selected_edges: [],
     selected_info: '',
+    interacting_res: false,
     chain1: '',
     chain2: '',
+    default_colors: null,
     viewer: false,
+    graph: null,
     pdbFile: '',
+    options: '',
+    selected_chain: null,
+    added_cards: [],
     dist_filter: [
       0,
       15
@@ -146,19 +184,41 @@ export default {
       let graph = _graph || this.extractParsedXML(this.open_xml, this.selected_edges);
       let color_chart = this.all_edges;
       let amino_acid = this.amino_acid;
+      this.default_colors = {[chain1]: 'cyan', [chain2]: 'pink'};
       let element = $('#container-01');
       let config = {backgroundColor: 'white'};
+      this.$el.querySelector('#container-01').style.display = 'block';
       if (!this.viewer) {
         this.viewer = $3Dmol.createViewer(element, config); // eslint-disable-line
       }
       let viewer = this.viewer;
-      // console.log(viewer)
-      setTimeout(() => {
-        this.$el.querySelector('#container-01').style.display = 'block';
-        this.makeModel(pdb_url, chain1, chain2, graph, color_chart, amino_acid, viewer);
-      }, 200)
+      let renderStyles = this.renderStyles;
+      this.added_cards.push({chain: chain1,
+        color: 'cyan',
+        opacity: null,
+        type: 'model',
+        model_type: 'cartoon',
+        render: false,
+        removed: false,
+        default: true,
+        added_attributes: []});
+      this.added_cards.push({chain: chain2,
+        color: 'pink',
+        opacity: null,
+        type: 'model',
+        model_type: 'cartoon',
+        render: false,
+        default: true,
+        removed: false,
+        added_attributes: []});
+      this.makeModel(pdb_url, chain1, chain2, graph,
+        color_chart, amino_acid, viewer, this.default_colors,
+        function () {
+          renderStyles({render: true, removed: false}, true);
+        });
     },
-    makeModel: function (pdb_url, chain1, chain2, graph, color_chart, amino_acid, _viewer) {
+    makeModel: function (pdb_url, chain1, chain2, graph, color_chart, amino_acid, _viewer, default_colors, _callback) {
+      let res_labels = [];
       $(function () {
         let viewer = _viewer;
         viewer.clear();
@@ -167,27 +227,23 @@ export default {
           success: function (data) {
             let v = viewer;
             v.addModel( data, 'pdb');                        /* load data */ // eslint-disable-line
-            v.setStyle({chain: chain1}, {cartoon: {color: 'cyan', opacity: 0.7}});  /* style all atoms */// eslint-disable-line
-            v.setStyle({chain: chain2}, {cartoon: {color: 'pink', opacity: 0.7}}); // eslint-disable-line
+            // v.setStyle({chain: chain1}, {cartoon: {color: default_colors[chain1], opacity: 1}});  /* style all atoms */// eslint-disable-line
+            // v.setStyle({chain: chain2}, {cartoon: {color: default_colors[chain2], opacity: 1}}); // eslint-disable-line
             for (let i = 0; i < graph.nodes.length; i++) {
               let atom = graph.nodes[i].id;
               let atom_chain = atom.substring(0, 1);
               let atom_id = atom.substring(1, atom.length);
-              v.addResLabels({resi: atom_id, chain: atom_chain}, {backgroundOpacity: 0.3});
-              if (atom_chain === chain1) {
-                v.setStyle({resi: atom_id, chain: atom_chain}, {cartoon: {color: 'cyan', opacity: 0.7}, stick: {color: 'cyan'}});
-                // v.addSphere({center: {resi: atom_id, chain: atom_chain}, radius: 0.5, color: 'green'});
-              } else {
-                v.setStyle({resi: atom_id, chain: atom_chain}, {cartoon: {color: 'pink', opacity: 0.7}, stick: {color: 'pink'}});
-                // v.addSphere({center: {resi: atom_id, chain: atom_chain}, radius: 0.5, color: 'yellow'});
-              }
+              let label = v.addResLabels({resi: atom_id, chain: atom_chain}, {backgroundOpacity: 0.3});
+              res_labels.push(([label[0], [atom_id, atom_chain]]));
+              // v.setStyle({resi: atom_id, chain: atom_chain}, {cartoon: {color: default_colors[atom_chain], opacity: 1}, stick: {color: default_colors[atom_chain]}});
+              // v.addSphere({center: {resi: atom_id, chain: atom_chain}, radius: 0.5, color: 'green'});
             }
             for (let i = 0; i < graph.edges.length; i++) {
               let bond = graph.edges[i];
               let source = bond.source;
               let target = bond.target;
               let bond_color = color_chart[bond.type].color;
-              v.addCylinder({start: {resi: source.substring(1, source.length), chain: source.substring(0, 1), atom: bond.source_atom}, end: {resi: target.substring(1, target.length), chain: target.substring(0, 1), atom: bond.target_atom}, radius: 0.1, fromCap: 2, toCap: 2, dashed: false, color: bond_color, opacity: 0.9});
+              v.addCylinder({start: {resi: source.substring(1, source.length), chain: source.substring(0, 1), atom: bond.source_atom}, end: {resi: target.substring(1, target.length), chain: target.substring(0, 1), atom: bond.target_atom}, radius: 0.1, fromCap: 2, toCap: 2, dashed: false, color: bond_color, opacity: 1});
               v.setClickable({resi: source.substring(1, source.length), chain: source.substring(0, 1), atom: bond.source_atom}, true, function (atom, viewer, event, container) {
                 if (!atom.label) {
                   atom.label = viewer.addLabel(amino_acid[atom.resn] + ':' + atom.atom, {position: atom, backgroundColor: atom.style.stick.color, backgroundOpacity: 0.5, fontColor: 'black'});
@@ -208,6 +264,7 @@ export default {
             v.zoomTo();                              /* set camera */  // eslint-disable-line
             v.render();                                      /* render scene */ // eslint-disable-line
             v.zoom(1.5, 1000);                               /* slight zoom */ // eslint-disable-line
+            _callback();
           },
           error: function (hdr, status, err) {
             console.error('Failed to load PDB ' + pdbUri + ': ' + err);
@@ -215,6 +272,8 @@ export default {
         });
         // console.log(viewer);
       });
+      this.res_labels = res_labels;
+      this.draw_labels = true;
     },
     parsepdb: function (pdb) {
       let residues = [];
@@ -263,7 +322,8 @@ export default {
       let new_nodes = [];
       let new_edges = [];
       let node_ids = new Set();
-      let node_indices = [];
+      let source_indices = [];
+      let target_indices = [];
       JSON.parse(xml_json).BONDS.BOND.forEach((bond, index) => {
         if (!bond_types.includes(bond.type._text)) { return }
         var target = 0;
@@ -295,8 +355,8 @@ export default {
           target_residue = bond.RESIDUE[0].name._text;
         }
         if (!node_ids.has(source)) {
-          if (!node_indices.includes(source_index)) {
-            node_indices.push(source_index);
+          if (!source_indices.includes(source_index)) {
+            source_indices.push(source_index);
           }
           new_nodes.push({
             id: source,
@@ -312,8 +372,8 @@ export default {
           node_ids.add(source)
         }
         if (!node_ids.has(target)) {
-          if (!node_indices.includes(target_index)) {
-            node_indices.push(target_index);
+          if (!target_indices.includes(target_index)) {
+            target_indices.push(target_index);
           }
           new_nodes.push({
             id: target,
@@ -347,9 +407,21 @@ export default {
           added: [],
         })
       });
-      node_indices.sort((a, b) => a - b);
+      source_indices.sort((a, b) => a - b);
+      target_indices.sort((a, b) => a - b);
+      let source_multiplier = 5;
+      let target_multiplier = 5;
+      if (source_indices.length >= target_indices.length) {
+        target_multiplier = 5 * (source_indices.length / target_indices.length);
+      } else {
+        source_multiplier = 5 * (target_indices.length / source_indices.length);
+      }
       for (const node of new_nodes) {
-        node.x = 5 * node_indices.indexOf(node.index);
+        if (node.y === 0) {
+          node.x = source_multiplier * source_indices.indexOf(node.index);
+        } else {
+          node.x = target_multiplier * target_indices.indexOf(node.index) + 1; // If you make two nodes perfectly aligned such that an edge between the two is a perpendicular line then sigma.js overEdge doesn't work on the edge
+        }
       }
       return {'nodes': new_nodes, 'edges': new_edges}
     },
@@ -362,6 +434,10 @@ export default {
     open2D: function (pdbFile, parsed_xml, label, chain1, chain2) {
       this.chain1 = chain1;
       this.chain2 = chain2;
+      this.options = [
+        { id: 0, value: null, text: 'Select a chain' },
+        { id: 1, value: chain1, text: 'Chain ' + chain1 },
+        { id: 2, value: chain2, text: 'Chain ' + chain2 }];
       this.display_label = label;
       this.display_graph = true;
       this.open_xml = parsed_xml;
@@ -447,22 +523,146 @@ export default {
       this.s.graph.clear();
       this.s.graph.read(graph);
       this.s.refresh();
-      // console.log(this.display_graph);
+      this.graph = graph;
       this.open3D(this.pdbFile, this.chain1, this.chain2, this.open_xml, graph);
     },
+    savePic: function () {
+      if (confirm('Save image of 3D model?')) {
+        var filename = '3dmol.png';
+        var text = this.viewer.pngURI();
+        var ImgData = text;
+        var link = document.createElement('a');
+        link.href = ImgData;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    },
+    hideResLabels: function () {
+      if (this.draw_labels) {
+        for (const label of this.res_labels) {
+          this.viewer.removeLabel(label[0]);
+        }
+        this.draw_labels = false;
+      } else {
+        let new_res_labels = [];
+        for (const label of this.res_labels) {
+          let new_label = this.viewer.addResLabels({resi: label[1][0], chain: label[1][1]}, {backgroundOpacity: 0.3});
+          new_res_labels.push(([new_label[0], label[1]]));
+        }
+        this.draw_labels = true;
+        this.res_labels = new_res_labels;
+      }
+      // console.log(this.viewer);
+      // console.log(this.res_labels);
+    },
+    addChainSurface: function (chain, opacity, color_scheme, color) {
+      if (chain != null && opacity != null) {
+        if (color_scheme !== 'None') {
+          return this.viewer.addSurface($3Dmol.SurfaceType.VDW, {opacity: opacity, colorscheme: color_scheme, color: color}, {chain: chain}, this.addSurfaceTag()); // eslint-disable-line
+        } else {
+          return this.viewer.addSurface($3Dmol.SurfaceType.VDW, {opacity: opacity, color: color}, {chain: chain}, this.addSurfaceTag()); // eslint-disable-line
+        }
+      }
+    },
+    addModelStyle: function (model_type, chain, style_dict = null, def = false) {
+      if (chain != null && model_type != null) {
+        let style_options = {};
+        if (style_dict !== null) {
+          style_options[model_type] = style_dict;
+        }
+        if (def) {
+          style_options = {cartoon: {color: this.default_colors[chain], opacity: 1}};
+        }
+        this.viewer.setStyle({chain: chain}, style_options);
+        style_options['stick'] = {color: this.default_colors[chain]};
+        for (let i = 0; i < this.graph.nodes.length; i++) {
+          let atom = this.graph.nodes[i].id;
+          let atom_chain = atom.substring(0, 1);
+          let atom_id = atom.substring(1, atom.length);
+          if (atom_chain === chain) {
+            this.viewer.setStyle({resi: atom_id, chain: atom_chain}, style_options);
+          }
+        }
+      }
+    },
+    addSurfaceTag: function () {
+      // alert('hi');
+    },
+    addSurfaceCard: function () {
+      this.added_cards.push({chain: null,
+        color: null,
+        opacity: null,
+        color_scheme: 'default',
+        type: 'surface',
+        render: false,
+        removed: false,
+        added_attributes: []});
+      // this.added_cards = this.added_cards.filter(word => word['removed'] === false);
+    },
+    addStyleCard: function () {
+      this.added_cards.push({chain: null,
+        color: 'magenta',
+        opacity: null,
+        type: 'model',
+        model_type: null,
+        render: false,
+        removed: false,
+        added_attributes: []});
+      // this.added_cards = this.added_cards.filter(word => word['removed'] === false);
+    },
+    removeSurface: function (surface) {
+      this.viewer.removeSurface(surface);
+    },
+    renderStyles: function (card, render_surfaces) {
+      if (card['render'] || card['removed']) {
+        this.addModelStyle('cartoon', this.chain1, null, true);
+        this.addModelStyle('cartoon', this.chain2, null, true);
+        this.added_cards.forEach((card, index) => {
+          if (!card['removed'] && card['render']) {
+            if (card['type'] === 'model') {
+              let style_dict = this.convertToDict(card['added_attributes']);
+              // console.log('final style dict');
+              // console.log(style_dict);
+              this.addModelStyle(card['model_type'], card['chain'], style_dict);
+            }
+            if (render_surfaces && card['type'] === 'surface') {
+              this.addChainSurface(card['chain'], card['opacity'], card['color_scheme'], card['color']);
+            }
+          }
+        })
+        this.viewer.render();
+      }
+    },
+    convertToDict: function (added_attributes) {
+      // console.log('added_attributes');
+      // console.log(added_attributes);
+      let style_dict = {};
+      added_attributes.forEach((data, index) => {
+        // console.log(data.value, data.valid_values, data.selected_attribute, data.discrete);
+        if (data.value !== null && data.selected_attribute !== null) {
+          style_dict[data.selected_attribute] = data.value;
+        }
+        // console.log('da style dict');
+        // console.log(style_dict)
+      });
+      return style_dict;
+    }
+
   }
 }
 </script>
 
 <style scoped>
   .display-container {
-    height: 70vh;
+    height: 80vh;
     width: 100%;
     margin: auto;
   }
   #color-table {
     float: none;
-    display: table-cell;
+    /* display: block; */
     vertical-align: bottom;
   }
   .container{
@@ -470,13 +670,19 @@ export default {
   }
   .col-10{
     max-width: calc(100% - 250px);
+    padding: 0px;
+    height: 80vh;
   }
   .col-2{
     min-width: 250px;
+    height: 80vh;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
   }
   .mol-container {
     width: 100%;
-    height: 75vh;
+    height: 100%;
     position: relative;
   }
   #target-box{
@@ -484,8 +690,25 @@ export default {
   }
   .card-body {
     padding: 5px;
+    margin: 0px;
+  }
+  .card {
+    display: block;
   }
   #undefined {
     max-width: 100%;
+  }
+  .more-info, #related-info, #added-surfaces {
+    overflow-y: scroll;
+    min-width: 100%;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .more-info {
+    max-height: 15%;
+  }
+  .more-info::-webkit-scrollbar, #more-options::-webkit-scrollbar, #related-info::-webkit-scrollbar, #added-surfaces::-webkit-scrollbar{ /* WebKit */
+    width: 0;
+    height: 0;
   }
 </style>
