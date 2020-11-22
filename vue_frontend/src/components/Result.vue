@@ -193,24 +193,26 @@ export default {
       }
       let viewer = this.viewer;
       let renderStyles = this.renderStyles;
-      this.added_cards.push({chain: chain1,
-        color: 'cyan',
-        opacity: null,
-        type: 'model',
-        model_type: 'cartoon',
-        render: false,
-        removed: false,
-        default: true,
-        added_attributes: []});
-      this.added_cards.push({chain: chain2,
-        color: 'pink',
-        opacity: null,
-        type: 'model',
-        model_type: 'cartoon',
-        render: false,
-        default: true,
-        removed: false,
-        added_attributes: []});
+      if (this.added_cards.length === 0) {
+        this.added_cards.push({chain: chain1,
+          color: 'cyan',
+          opacity: null,
+          type: 'model',
+          model_type: 'cartoon',
+          render: false,
+          removed: false,
+          default: true,
+          added_attributes: []});
+        this.added_cards.push({chain: chain2,
+          color: 'pink',
+          opacity: null,
+          type: 'model',
+          model_type: 'cartoon',
+          render: false,
+          default: true,
+          removed: false,
+          added_attributes: []});
+      }
       this.makeModel(pdb_url, chain1, chain2, graph,
         color_chart, amino_acid, viewer, this.default_colors,
         function () {
