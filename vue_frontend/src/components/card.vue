@@ -81,7 +81,9 @@ export default {
         {id: 0, value: null, text: 'Select a style'},
         {id: 1, value: 'stick', text: 'stick'},
         {id: 2, value: 'cartoon', text: 'cartoon'},
-        {id: 3, value: 'line', text: 'line'}
+        {id: 3, value: 'line', text: 'line'},
+        {id: 4, value: 'sphere', text: 'sphere'},
+        {id: 5, value: 'cross', text: 'cross'}
       ],
       color_scheme_options: [],
       valid_attributes_options: [],
