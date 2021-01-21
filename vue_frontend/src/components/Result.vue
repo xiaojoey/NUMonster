@@ -159,6 +159,7 @@ export default {
     },
     open_xml: {},
     s: undefined,
+    hover_sphere: null,
   }),
   mounted: function () {
     let mol_js = document.createElement('script');
@@ -244,7 +245,14 @@ export default {
               let source = bond.source;
               let target = bond.target;
               let bond_color = color_chart[bond.type].color;
-              v.addCylinder({start: {resi: source.substring(1, source.length), chain: source.substring(0, 1), atom: bond.source_atom}, end: {resi: target.substring(1, target.length), chain: target.substring(0, 1), atom: bond.target_atom}, radius: 0.1, fromCap: 2, toCap: 2, dashed: false, color: bond_color, opacity: 1});
+              v.addCylinder({start: {resi: source.substring(1, source.length), chain: source.substring(0, 1), atom: bond.source_atom},
+                end: {resi: target.substring(1, target.length), chain: target.substring(0, 1), atom: bond.target_atom},
+                radius: 0.1,
+                fromCap: 2,
+                toCap: 2,
+                dashed: false,
+                color: bond_color,
+                opacity: 1});
               v.setClickable({resi: source.substring(1, source.length), chain: source.substring(0, 1), atom: bond.source_atom}, true, function (atom, viewer, event, container) {
                 if (!atom.label) {
                   let res_name = atom.resn in amino_acid ? amino_acid[atom.resn] : atom.resn;
@@ -270,17 +278,28 @@ export default {
               }
               // let style_options = {cartoon: {color: this.hover_color, opacity: 1}};
               // viewer.setStyle({resi: atom.resi, chain: atom.chain}, {cartoon: {color: this.hover_color, opacity: 1}});
-              // v.render();
+              let sphere = viewer.addSphere({center: {x: atom.x, y: atom.y, z: atom.z}, radius: 1, color: atom.color, wireframe: true});
+              // console.log(sphere);
+              this.hover_sphere = sphere;
+              v.render();
             },
             function (atom) {
               if (atom.label) {
+                // console.log(atom.label);
                 // console.log(atom);
-                viewer.removeLabel(atom.label);
-                delete atom.label;
+                if (atom.label.stylespec.backgroundColor === 'mintcream') {
+                  viewer.removeLabel(atom.label);
+                  delete atom.label;
+                }
+              }
+              if (this.hover_sphere != null) {
+                viewer.removeShape(this.hover_sphere);
+                v.render();
+                // console.log(this.hover_sphere);
               }
             }
             );
-            v.setHoverDuration(140);
+            v.setHoverDuration(80);
             v.zoomTo();                              /* set camera */  // eslint-disable-line
             v.render();                                      /* render scene */ // eslint-disable-line
             v.zoom(1.5, 1000);                               /* slight zoom */ // eslint-disable-line
@@ -456,7 +475,6 @@ export default {
     open2D: function (pdbFile, parsed_xml, label, chain1, chain2) {
       this.chain1 = chain1;
       this.chain2 = chain2;
-      this.added_cards = [];
       this.options = [
         { id: 0, value: null, text: 'Select a chain' },
         { id: 1, value: chain1, text: 'Chain ' + chain1 },
