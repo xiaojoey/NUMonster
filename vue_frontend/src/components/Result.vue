@@ -228,7 +228,7 @@ export default {
         jQuery.ajax(pdb_url, {
           success: function (data) {
             let v = viewer;
-            v.addModel( data, 'pdb');                        /* load data */ // eslint-disable-line
+            v.addModel( data, 'pdb', {keepH: true});                        /* load data */ // eslint-disable-line
             // v.setStyle({chain: chain1}, {cartoon: {color: default_colors[chain1], opacity: 1}});  /* style all atoms */// eslint-disable-line
             // v.setStyle({chain: chain2}, {cartoon: {color: default_colors[chain2], opacity: 1}}); // eslint-disable-line
             for (let i = 0; i < graph.nodes.length; i++) {
