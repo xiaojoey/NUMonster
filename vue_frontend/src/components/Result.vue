@@ -224,8 +224,7 @@ export default {
       $(function () {
         let viewer = _viewer;
         viewer.clear();
-        let pdbUri = pdb_url;
-        jQuery.ajax(pdbUri, {
+        jQuery.ajax(pdb_url, {
           success: function (data) {
             let v = viewer;
             v.addModel( data, 'pdb');                        /* load data */ // eslint-disable-line
@@ -248,7 +247,8 @@ export default {
               v.addCylinder({start: {resi: source.substring(1, source.length), chain: source.substring(0, 1), atom: bond.source_atom}, end: {resi: target.substring(1, target.length), chain: target.substring(0, 1), atom: bond.target_atom}, radius: 0.1, fromCap: 2, toCap: 2, dashed: false, color: bond_color, opacity: 1});
               v.setClickable({resi: source.substring(1, source.length), chain: source.substring(0, 1), atom: bond.source_atom}, true, function (atom, viewer, event, container) {
                 if (!atom.label) {
-                  atom.label = viewer.addLabel(amino_acid[atom.resn] + ':' + atom.atom, {position: atom, backgroundColor: atom.style.stick.color, backgroundOpacity: 0.5, fontColor: 'black'});
+                  let res_name = atom.resn in amino_acid ? amino_acid[atom.resn] : atom.resn;
+                  atom.label = viewer.addLabel(res_name + ':' + atom.atom, {position: atom, backgroundColor: atom.style.stick.color, backgroundOpacity: 0.5, fontColor: 'black'});
                 } else {
                   viewer.removeLabel(atom.label);
                   delete atom.label;
@@ -256,20 +256,38 @@ export default {
               });
               v.setClickable({resi: target.substring(1, target.length), chain: target.substring(0, 1), atom: bond.target_atom}, true, function (atom, viewer, event, container) {
                 if (!atom.label) {
-                  atom.label = viewer.addLabel(amino_acid[atom.resn] + ':' + atom.atom, {position: atom, backgroundColor: atom.style.stick.color, backgroundOpacity: 0.5, fontColor: 'black'});
+                  let res_name = atom.resn in amino_acid ? amino_acid[atom.resn] : atom.resn;
+                  atom.label = viewer.addLabel(res_name + ':' + atom.atom, {position: atom, backgroundColor: atom.style.stick.color, backgroundOpacity: 0.5, fontColor: 'black'});
                 } else {
                   viewer.removeLabel(atom.label);
                   delete atom.label;
                 }
               });
             }
+            v.setHoverable({}, true, function (atom, viewer, event, container) {
+              if (!atom.label) {
+                atom.label = viewer.addLabel(atom.resn + atom.rescode + ':' + atom.atom, {position: atom, backgroundColor: 'mintcream', fontColor: 'black'});
+              }
+              // let style_options = {cartoon: {color: this.hover_color, opacity: 1}};
+              // viewer.setStyle({resi: atom.resi, chain: atom.chain}, {cartoon: {color: this.hover_color, opacity: 1}});
+              // v.render();
+            },
+            function (atom) {
+              if (atom.label) {
+                // console.log(atom);
+                viewer.removeLabel(atom.label);
+                delete atom.label;
+              }
+            }
+            );
+            v.setHoverDuration(140);
             v.zoomTo();                              /* set camera */  // eslint-disable-line
             v.render();                                      /* render scene */ // eslint-disable-line
             v.zoom(1.5, 1000);                               /* slight zoom */ // eslint-disable-line
             _callback();
           },
           error: function (hdr, status, err) {
-            console.error('Failed to load PDB ' + pdbUri + ': ' + err);
+            console.error('Failed to load PDB ' + pdb_url + ': ' + err);
           },
         });
         // console.log(viewer);
@@ -356,6 +374,8 @@ export default {
           source_residue = bond.RESIDUE[1].name._text;
           target_residue = bond.RESIDUE[0].name._text;
         }
+        let s_res_name = source_residue in this.amino_acid ? this.amino_acid[source_residue] : source_residue;
+        let t_res_name = target_residue in this.amino_acid ? this.amino_acid[target_residue] : target_residue;
         if (!node_ids.has(source)) {
           if (!source_indices.includes(source_index)) {
             source_indices.push(source_index);
@@ -369,7 +389,7 @@ export default {
             color: 'cyan',
             index: source_index,
             direction: 'up',
-            sigma_label: `${this.amino_acid[source_residue]}${source.substr(1)} ${source.charAt(0)}`,
+            sigma_label: `${s_res_name}${source.substr(1)} ${source.charAt(0)}`,
           });
           node_ids.add(source)
         }
@@ -386,7 +406,7 @@ export default {
             color: 'pink',
             index: target_index,
             direction: 'down',
-            sigma_label: `${this.amino_acid[target_residue]}${target.substr(1)} ${target.charAt(0)}`,
+            sigma_label: `${t_res_name}${target.substr(1)} ${target.charAt(0)}`,
           });
           node_ids.add(target)
         }
@@ -399,9 +419,9 @@ export default {
           size: 1 / parseFloat(bond.dist._text),
           source: source,
           source_atom: source_atom,
-          source_label: `${this.amino_acid[source_residue]}${source.substr(1)}.${source.charAt(0)}`,
+          source_label: `${s_res_name}${source.substr(1)}.${source.charAt(0)}`,
           target: target,
-          target_label: `${this.amino_acid[target_residue]}${target.substr(1)}.${target.charAt(0)}`,
+          target_label: `${t_res_name}${target.substr(1)}.${target.charAt(0)}`,
           target_atom: target_atom,
           color: this.all_edges[bond.type._text].color,
           type: bond.type._text,
@@ -436,6 +456,7 @@ export default {
     open2D: function (pdbFile, parsed_xml, label, chain1, chain2) {
       this.chain1 = chain1;
       this.chain2 = chain2;
+      this.added_cards = [];
       this.options = [
         { id: 0, value: null, text: 'Select a chain' },
         { id: 1, value: chain1, text: 'Chain ' + chain1 },
