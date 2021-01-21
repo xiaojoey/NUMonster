@@ -224,8 +224,7 @@ export default {
       $(function () {
         let viewer = _viewer;
         viewer.clear();
-        let pdbUri = pdb_url;
-        jQuery.ajax(pdbUri, {
+        jQuery.ajax(pdb_url, {
           success: function (data) {
             let v = viewer;
             v.addModel( data, 'pdb');                        /* load data */ // eslint-disable-line
@@ -265,13 +264,30 @@ export default {
                 }
               });
             }
+            v.setHoverable({}, true, function (atom, viewer, event, container) {
+              if (!atom.label) {
+                atom.label = viewer.addLabel(atom.resn + atom.rescode + ':' + atom.atom, {position: atom, backgroundColor: 'mintcream', fontColor: 'black'});
+              }
+              // let style_options = {cartoon: {color: this.hover_color, opacity: 1}};
+              // viewer.setStyle({resi: atom.resi, chain: atom.chain}, {cartoon: {color: this.hover_color, opacity: 1}});
+              // v.render();
+            },
+            function (atom) {
+              if (atom.label) {
+                // console.log(atom);
+                viewer.removeLabel(atom.label);
+                delete atom.label;
+              }
+            }
+            );
+            v.setHoverDuration(140);
             v.zoomTo();                              /* set camera */  // eslint-disable-line
             v.render();                                      /* render scene */ // eslint-disable-line
             v.zoom(1.5, 1000);                               /* slight zoom */ // eslint-disable-line
             _callback();
           },
           error: function (hdr, status, err) {
-            console.error('Failed to load PDB ' + pdbUri + ': ' + err);
+            console.error('Failed to load PDB ' + pdb_url + ': ' + err);
           },
         });
         // console.log(viewer);
@@ -440,6 +456,7 @@ export default {
     open2D: function (pdbFile, parsed_xml, label, chain1, chain2) {
       this.chain1 = chain1;
       this.chain2 = chain2;
+      this.added_cards = [];
       this.options = [
         { id: 0, value: null, text: 'Select a chain' },
         { id: 1, value: chain1, text: 'Chain ' + chain1 },
