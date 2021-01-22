@@ -159,6 +159,8 @@ export default {
     },
     open_xml: {},
     s: undefined,
+    hover_sphere: null,
+    hover_style: null,
   }),
   mounted: function () {
     let mol_js = document.createElement('script');
@@ -166,7 +168,7 @@ export default {
     document.head.appendChild(mol_js);
     this.selected_edges = Object.keys(this.all_edges);
     this.$http.get(this.$server_url + '/results/' + this.$route.params.job_id).then(function (response) {
-      console.log(response);
+      // console.log(response);
       // console.log(response.body.models);
       if (jQuery.isEmptyObject(response.body.models)) {
         console.error('Response models are empty objects');
@@ -227,7 +229,7 @@ export default {
         jQuery.ajax(pdb_url, {
           success: function (data) {
             let v = viewer;
-            v.addModel( data, 'pdb');                        /* load data */ // eslint-disable-line
+            v.addModel( data, 'pdb', {keepH: true});                        /* load data */ // eslint-disable-line
             // v.setStyle({chain: chain1}, {cartoon: {color: default_colors[chain1], opacity: 1}});  /* style all atoms */// eslint-disable-line
             // v.setStyle({chain: chain2}, {cartoon: {color: default_colors[chain2], opacity: 1}}); // eslint-disable-line
             for (let i = 0; i < graph.nodes.length; i++) {
@@ -244,7 +246,14 @@ export default {
               let source = bond.source;
               let target = bond.target;
               let bond_color = color_chart[bond.type].color;
-              v.addCylinder({start: {resi: source.substring(1, source.length), chain: source.substring(0, 1), atom: bond.source_atom}, end: {resi: target.substring(1, target.length), chain: target.substring(0, 1), atom: bond.target_atom}, radius: 0.1, fromCap: 2, toCap: 2, dashed: false, color: bond_color, opacity: 1});
+              v.addCylinder({start: {resi: source.substring(1, source.length), chain: source.substring(0, 1), atom: bond.source_atom},
+                end: {resi: target.substring(1, target.length), chain: target.substring(0, 1), atom: bond.target_atom},
+                radius: 0.1,
+                fromCap: 2,
+                toCap: 2,
+                dashed: false,
+                color: bond_color,
+                opacity: 1});
               v.setClickable({resi: source.substring(1, source.length), chain: source.substring(0, 1), atom: bond.source_atom}, true, function (atom, viewer, event, container) {
                 if (!atom.label) {
                   let res_name = atom.resn in amino_acid ? amino_acid[atom.resn] : atom.resn;
@@ -266,21 +275,38 @@ export default {
             }
             v.setHoverable({}, true, function (atom, viewer, event, container) {
               if (!atom.label) {
-                atom.label = viewer.addLabel(atom.resn + atom.rescode + ':' + atom.atom, {position: atom, backgroundColor: 'mintcream', fontColor: 'black'});
+                atom.label = viewer.addLabel(atom.resn + atom.rescode + ':' + atom.atom, {position: atom, backgroundColor: 'mintcream', backgroundOpacity: 0.75, fontColor: 'black'});
               }
               // let style_options = {cartoon: {color: this.hover_color, opacity: 1}};
-              // viewer.setStyle({resi: atom.resi, chain: atom.chain}, {cartoon: {color: this.hover_color, opacity: 1}});
-              // v.render();
+              this.hover_style = atom.style;
+              viewer.setStyle({resi: atom.resi, chain: atom.chain}, //  sets the style for the residue whose's atom is selected by hover
+                {cartoon: {color: 'purple', opacity: 0.85},
+                  stick: {colorscheme: 'default'}});
+              viewer.setStyle({resi: atom.resi, chain: atom.chain, elem: 'H'}, {stick: {color: 'black', hidden: true}}); //  hides hydrogen
+              let sphere = viewer.addSphere({center: {x: atom.x, y: atom.y, z: atom.z}, radius: 1, color: atom.color, wireframe: true}); //  adds a sphere to indicate selected atom
+              // console.log(sphere);
+              this.hover_sphere = sphere;
+              v.render();
             },
             function (atom) {
               if (atom.label) {
+                // console.log(atom.label);
                 // console.log(atom);
-                viewer.removeLabel(atom.label);
-                delete atom.label;
+                if (atom.label.stylespec.backgroundColor === 'mintcream') {
+                  viewer.removeLabel(atom.label);
+                  delete atom.label;
+                }
+              }
+              if (this.hover_sphere != null) {
+                viewer.removeShape(this.hover_sphere);
+                viewer.setStyle({resi: atom.resi, chain: atom.chain}, this.hover_style);
+                viewer.setStyle({resi: atom.resi, chain: atom.chain, elem: 'H'}, {stick: {color: 'black', hidden: true}}); //  hides hydrogen
+                v.render();
+                // console.log(this.hover_sphere);
               }
             }
             );
-            v.setHoverDuration(140);
+            v.setHoverDuration(50);
             v.zoomTo();                              /* set camera */  // eslint-disable-line
             v.render();                                      /* render scene */ // eslint-disable-line
             v.zoom(1.5, 1000);                               /* slight zoom */ // eslint-disable-line
@@ -456,7 +482,6 @@ export default {
     open2D: function (pdbFile, parsed_xml, label, chain1, chain2) {
       this.chain1 = chain1;
       this.chain2 = chain2;
-      this.added_cards = [];
       this.options = [
         { id: 0, value: null, text: 'Select a chain' },
         { id: 1, value: chain1, text: 'Chain ' + chain1 },
@@ -608,6 +633,7 @@ export default {
             this.viewer.setStyle({resi: atom_id, chain: atom_chain}, style_options);
           }
         }
+        this.viewer.setStyle({elem: 'H'}, {stick: {color: 'black', hidden: true}}); //  hides hydrogen
       }
     },
     addSurfaceTag: function () {
