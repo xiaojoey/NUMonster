@@ -275,7 +275,7 @@ export default {
             }
             v.setHoverable({}, true, function (atom, viewer, event, container) {
               if (!atom.label) {
-                atom.label = viewer.addLabel(atom.resn + atom.rescode + ':' + atom.atom, {position: atom, backgroundColor: 'mintcream', backgroundOpacity: 0.5, fontColor: 'black'});
+                atom.label = viewer.addLabel(atom.resn + atom.rescode + ':' + atom.atom, {position: atom, backgroundColor: 'mintcream', backgroundOpacity: 0.75, fontColor: 'black'});
               }
               // let style_options = {cartoon: {color: this.hover_color, opacity: 1}};
               this.hover_style = atom.style;
