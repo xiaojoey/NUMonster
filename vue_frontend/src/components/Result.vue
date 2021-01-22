@@ -160,6 +160,7 @@ export default {
     open_xml: {},
     s: undefined,
     hover_sphere: null,
+    hover_style: null,
   }),
   mounted: function () {
     let mol_js = document.createElement('script');
@@ -167,7 +168,7 @@ export default {
     document.head.appendChild(mol_js);
     this.selected_edges = Object.keys(this.all_edges);
     this.$http.get(this.$server_url + '/results/' + this.$route.params.job_id).then(function (response) {
-      console.log(response);
+      // console.log(response);
       // console.log(response.body.models);
       if (jQuery.isEmptyObject(response.body.models)) {
         console.error('Response models are empty objects');
@@ -274,11 +275,15 @@ export default {
             }
             v.setHoverable({}, true, function (atom, viewer, event, container) {
               if (!atom.label) {
-                atom.label = viewer.addLabel(atom.resn + atom.rescode + ':' + atom.atom, {position: atom, backgroundColor: 'mintcream', fontColor: 'black'});
+                atom.label = viewer.addLabel(atom.resn + atom.rescode + ':' + atom.atom, {position: atom, backgroundColor: 'mintcream', backgroundOpacity: 0.5, fontColor: 'black'});
               }
               // let style_options = {cartoon: {color: this.hover_color, opacity: 1}};
-              // viewer.setStyle({resi: atom.resi, chain: atom.chain}, {cartoon: {color: this.hover_color, opacity: 1}});
-              let sphere = viewer.addSphere({center: {x: atom.x, y: atom.y, z: atom.z}, radius: 1, color: atom.color, wireframe: true});
+              this.hover_style = atom.style;
+              viewer.setStyle({resi: atom.resi, chain: atom.chain}, //  sets the style for the residue whose's atom is selected by hover
+                {cartoon: {color: 'purple', opacity: 0.85},
+                  stick: {colorscheme: 'default'}});
+              viewer.setStyle({resi: atom.resi, chain: atom.chain, elem: 'H'}, {stick: {color: 'black', hidden: true}}); //  hides hydrogen
+              let sphere = viewer.addSphere({center: {x: atom.x, y: atom.y, z: atom.z}, radius: 1, color: atom.color, wireframe: true}); //  adds a sphere to indicate selected atom
               // console.log(sphere);
               this.hover_sphere = sphere;
               v.render();
@@ -294,12 +299,14 @@ export default {
               }
               if (this.hover_sphere != null) {
                 viewer.removeShape(this.hover_sphere);
+                viewer.setStyle({resi: atom.resi, chain: atom.chain}, this.hover_style);
+                viewer.setStyle({resi: atom.resi, chain: atom.chain, elem: 'H'}, {stick: {color: 'black', hidden: true}}); //  hides hydrogen
                 v.render();
                 // console.log(this.hover_sphere);
               }
             }
             );
-            v.setHoverDuration(80);
+            v.setHoverDuration(50);
             v.zoomTo();                              /* set camera */  // eslint-disable-line
             v.render();                                      /* render scene */ // eslint-disable-line
             v.zoom(1.5, 1000);                               /* slight zoom */ // eslint-disable-line
@@ -626,6 +633,7 @@ export default {
             this.viewer.setStyle({resi: atom_id, chain: atom_chain}, style_options);
           }
         }
+        this.viewer.setStyle({elem: 'H'}, {stick: {color: 'black', hidden: true}}); //  hides hydrogen
       }
     },
     addSurfaceTag: function () {
