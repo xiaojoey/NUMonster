@@ -24,8 +24,8 @@
           </div>
           <br/>
           <h5>Info</h5>
-          <div class="more-info">
-            {{selected_info}}
+          <div id="more-info">
+            <!-- {{selected_info}} -->
           </div>
           <div id="related-info">
             <h6>Related</h6>
@@ -279,8 +279,9 @@ export default {
               }
               // let style_options = {cartoon: {color: this.hover_color, opacity: 1}};
               this.hover_style = atom.style;
+              // console.log(atom)
               viewer.setStyle({resi: atom.resi, chain: atom.chain}, //  sets the style for the residue whose's atom is selected by hover
-                {cartoon: {color: 'purple', opacity: 0.85},
+                {cartoon: {hidden: true},
                   stick: {colorscheme: 'default'}});
               viewer.setStyle({resi: atom.resi, chain: atom.chain, elem: 'H'}, {stick: {color: 'black', hidden: true}}); //  hides hydrogen
               let sphere = viewer.addSphere({center: {x: atom.x, y: atom.y, z: atom.z}, radius: 1, color: atom.color, wireframe: true}); //  adds a sphere to indicate selected atom
@@ -370,15 +371,20 @@ export default {
       let node_ids = new Set();
       let source_indices = [];
       let target_indices = [];
+      // let interacting_residues = [];
       JSON.parse(xml_json).BONDS.BOND.forEach((bond, index) => {
         if (!bond_types.includes(bond.type._text)) { return }
         var target = 0;
         var target_atom = 0;
         var source_residue = 0;
         var target_residue = 0;
+        var target_pct = 0;
+        var target_area = 0;
         var source = 0;
         var source_atom = 0;
         var source_index = 0;
+        var source_pct = 0;
+        var source_area = 0;
 
         var target_index = 0;
         if (bond.RESIDUE[0].chain._text === this.chain1) {
@@ -390,6 +396,10 @@ export default {
           target_atom = bond.RESIDUE[1].atom._text;
           source_residue = bond.RESIDUE[0].name._text;
           target_residue = bond.RESIDUE[1].name._text;
+          source_area = bond.RESIDUE[0]._attributes.area;
+          target_area = bond.RESIDUE[1]._attributes.area;
+          source_pct = bond.RESIDUE[0]._attributes.pct;
+          target_pct = bond.RESIDUE[1]._attributes.pct;
         } else {
           source_index = bond.RESIDUE[1]._attributes.index;
           target_index = bond.RESIDUE[0]._attributes.index;
@@ -399,7 +409,12 @@ export default {
           target_atom = bond.RESIDUE[0].atom._text;
           source_residue = bond.RESIDUE[1].name._text;
           target_residue = bond.RESIDUE[0].name._text;
+          source_area = bond.RESIDUE[1]._attributes.area;
+          target_area = bond.RESIDUE[0]._attributes.area;
+          source_pct = bond.RESIDUE[1]._attributes.pct;
+          target_pct = bond.RESIDUE[0]._attributes.pct;
         }
+        // console.log(bond.RESIDUE[0])
         let s_res_name = source_residue in this.amino_acid ? this.amino_acid[source_residue] : source_residue;
         let t_res_name = target_residue in this.amino_acid ? this.amino_acid[target_residue] : target_residue;
         if (!node_ids.has(source)) {
@@ -416,8 +431,14 @@ export default {
             index: source_index,
             direction: 'up',
             sigma_label: `${s_res_name}${source.substr(1)} ${source.charAt(0)}`,
+            area: source_area,
+            pct: source_pct
           });
           node_ids.add(source)
+          // interacting_residues.push({
+          //   id: target,
+          //   atoms: []
+          // });
         }
         if (!node_ids.has(target)) {
           if (!target_indices.includes(target_index)) {
@@ -433,10 +454,16 @@ export default {
             index: target_index,
             direction: 'down',
             sigma_label: `${t_res_name}${target.substr(1)} ${target.charAt(0)}`,
+            area: target_area,
+            pct: target_pct
           });
           node_ids.add(target)
+          // interacting_residues.push({
+          //   id: target,
+          //   atoms: []
+          // });
+          // console.log(JSON.parse(JSON.stringify(interacting_residues)))
         }
-
         if (parseFloat(bond.dist._text) < this.dist_filter[0]) { return }
         if (parseFloat(bond.dist._text) > this.dist_filter[1]) { return }
         new_edges.push({
@@ -446,14 +473,38 @@ export default {
           source: source,
           source_atom: source_atom,
           source_label: `${s_res_name}${source.substr(1)}.${source.charAt(0)}`,
+          source_area: source_area,
+          source_pct: source_pct,
           target: target,
           target_label: `${t_res_name}${target.substr(1)}.${target.charAt(0)}`,
           target_atom: target_atom,
+          target_area: target_area,
+          target_pct: target_pct,
           color: this.all_edges[bond.type._text].color,
           type: bond.type._text,
           dist: bond.dist._text,
           added: [],
         })
+        // for (let i = 0; i < interacting_residues.length; i++) {
+        //   let res = interacting_residues[i]
+        //   if (res.id === source) {
+        //     if (!(source_atom in res.atoms.map(({id}) => id))) {
+        //       res.atoms.push({
+        //         id: source_atom,
+        //         area: source_area,
+        //         pct: source_pct
+        //       })
+        //     }
+        //   } else if (res.id === target) {
+        //     if (!(source_atom in res.atoms.map(({id}) => id))) {
+        //       res.atoms.push({
+        //         id: target_atom,
+        //         area: target_area,
+        //         pct: target_pct
+        //       })
+        //     }
+        //   }
+        // }
       });
       source_indices.sort((a, b) => a - b);
       target_indices.sort((a, b) => a - b);
@@ -471,6 +522,8 @@ export default {
           node.x = target_multiplier * target_indices.indexOf(node.index) + 1; // If you make two nodes perfectly aligned such that an edge between the two is a perpendicular line then sigma.js overEdge doesn't work on the edge
         }
       }
+      // this.interacting_res = interacting_residues
+      // console.log(interacting_residues)
       return {'nodes': new_nodes, 'edges': new_edges}
     },
     closeDisplay: function () {
@@ -520,20 +573,24 @@ export default {
             }
           });
           this.s.bind('overNode', e => {
-            this.selected_info = `${e.data.node.label}`;
+            this.$el.querySelector('#more-info').innerHTML = `<span> Residue: ${e.data.node.label}, Area: ${e.data.node.area}, Percent: ${e.data.node.pct}</span>`;
             this.$el.querySelector('#related-info').innerHTML = '';
           });
           this.s.bind('overEdge', e => {
             const edge = e.data.edge;
+            // console.log(e)
             this.$el.querySelector('#related-info').innerHTML = '<h5>Interactions</h5>';
-            let currentBond = `<span style="color:${edge.color}">${edge.source_label}:${edge.source_atom}<>${edge.target_label}:${edge.target_atom}</span>`;
+            let currentBond = `<span style="color:${edge.color}">${edge.source_label}:${edge.source_atom}<-${edge.dist}->${edge.target_label}:${edge.target_atom}</span>`;
             this.$el.querySelector('#related-info').innerHTML += currentBond + '<br>';
             for (const id of edge.added) {
               let related_edge = this.s.renderers[0].edgesOnScreen.find(x => x.id === id);
-              let related_info = `<span style="color:${related_edge.color}">${related_edge.source_label}:${related_edge.source_atom}<>${related_edge.target_label}:${related_edge.target_atom}</span>`;
+              let related_info = `<span style="color:${related_edge.color}">${related_edge.source_label}:${related_edge.source_atom}<-${related_edge.dist}->${related_edge.target_label}:${related_edge.target_atom}</span>`;
               this.$el.querySelector('#related-info').innerHTML += related_info + '<br>';
             }
-            this.selected_info = `ID: ${edge.id} Type: ${edge.label} Distance: ${edge.dist}`;
+            // this.selected_info = `ID: ${edge.id} Type: ${edge.label} Distance: ${edge.dist}`;
+            this.$el.querySelector('#more-info').innerHTML = `<span> Residue: ${e.data.edge.source_label}, Area: ${e.data.edge.source_area}, Percent: ${e.data.edge.source_pct}</span>`;
+            this.$el.querySelector('#more-info').innerHTML += '<br>';
+            this.$el.querySelector('#more-info').innerHTML += `<span> Residue: ${e.data.edge.target_label}, Area: ${e.data.edge.target_area}, Percent: ${e.data.edge.target_pct}</span>`;
           });
           this.s.settings({
             drawLabels: true,
@@ -747,16 +804,16 @@ export default {
   #undefined {
     max-width: 100%;
   }
-  .more-info, #related-info, #added-surfaces {
+  #more-info, #related-info, #added-surfaces {
     overflow-y: scroll;
     min-width: 100%;
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
-  .more-info {
+  #more-info {
     max-height: 15%;
   }
-  .more-info::-webkit-scrollbar, #more-options::-webkit-scrollbar, #related-info::-webkit-scrollbar, #added-surfaces::-webkit-scrollbar{ /* WebKit */
+  #more-info::-webkit-scrollbar, #more-options::-webkit-scrollbar, #related-info::-webkit-scrollbar, #added-surfaces::-webkit-scrollbar{ /* WebKit */
     width: 0;
     height: 0;
   }
