@@ -178,6 +178,7 @@ char rnames[MAXNAA][4] =
  "LOV", "STA", "PVL", "CAL", "PHA", "DCI", "AHS", "CHS", "MSE", "ETA",
  "PCA", "ASX", "GLX", "UNK", "CYH", "CSS",
  "  C", "  A", "  U", "  G", "  T", "  I",
+ " DC", " DA", " DU", " DG", " DT", " DI",
  "ATP", "COA", "FMN", "HEM", "MTX", "NAD",
  "ACE", "FOR"
 };
