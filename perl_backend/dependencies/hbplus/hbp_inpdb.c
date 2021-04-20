@@ -295,6 +295,12 @@ char necatm[MAXNAA][TOTNATM*4] =
       " ??? O3P P   O1P O2P O5* C5* C4* O4* C3* O3* C2* O2* C1* N9  C8  N7  C5  C6  O6  N1  C2  N2  N3  C4  OXT",/*  G*/
       " ??? O3P P   O1P O2P O5* C5* C4* O4* C3* O3* C2* O2* C1* N1  C2  O2  N3  C4  O4  C5  C5M C6  OXT",  /*  T*/
       " ??? O3P P   O1P O2P O5* C5* C4* O4* C3* O3* C2* O2* C1* N9  C8  N7  C5  C6  O6  N1  C2  N3  C4  OXT",/*  I*/
+      " ??? O3P P   O1P O2P O5* C5* C4* O4* C3* O3* C2* C1* N1  C2  O2  N3  C4  N4  C5  C6  OXT",  /*  DC*/
+      " ??? O3P P   O1P O2P O5* C5* C4* O4* C3* O3* C2* C1* N9  C8  N7  C5  C6  N6  N1  C2  N3  C4  OXT",/*  DA*/
+      " ??? O3P P   O1P O2P O5* C5* C4* O4* C3* O3* C2* C1* N1  C2  O2  N3  C4  O4  C5  C6  OXT",  /*  DU*/
+      " ??? O3P P   O1P O2P O5* C5* C4* O4* C3* O3* C2* C1* N9  C8  N7  C5  C6  O6  N1  C2  N2  N3  C4  OXT",/*  DG*/
+      " ??? O3P P   O1P O2P O5* C5* C4* O4* C3* O3* C2* C1* N1  C2  O2  N3  C4  O4  C5  C5M C6  OXT",  /*  DT*/
+      " ??? O3P P   O1P O2P O5* C5* C4* O4* C3* O3* C2* C1* N9  C8  N7  C5  C6  O6  N1  C2  N3  C4  OXT",/*  DI*/
 /*       00  01  02  03  04  05  06  07  08  09  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30  31  32  33  34  35  36  37  38  39  40  41  42  43  44  45  46  47  48  49  50  51*/
 
       " ??? PG  O1G O2G O3G PB  O1B O2B O3B PA  O1A O2A O3A O5* C5* C4* O4* C3* O3* C2* O2* C1* N9  C8  N7  C5  C6  N6  N1  C2  N3  C4  OXT",/*ATP*/
