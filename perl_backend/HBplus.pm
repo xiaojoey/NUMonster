@@ -132,7 +132,7 @@ sub report_errors{
     while(<HL>) {
 	if($_ =~ /^ATOM/){
 	    $line = new PDB::Atom('-line' => $_);
-	    print STDERR "Atom naming error: ".$line->chainId."\t".$line->resName."\t".$line->resNumber."\t".$line->atomName."\n";
+	    print STDERR "HBPlus Atom naming error: ".$line->chainId."\t".$line->resName."\t".$line->resNumber."\t".$line->atomName."\n";
 	    #WebDBI->naming_error($xml,$line,'hbplus');
 	}
     }
