@@ -387,6 +387,7 @@ enum RESCODE
     Lov, Sta, Pvl, Cal, Pha, Dci, Ahs, Chs, Mse, Eta,
     Pca, Asx, Glx, Unk, Cyh, Css,
     __C, __A, __U, __G, __T, __I,
+    _DC, _DA, _DU, _DG, _DT, _DI,
     ATP, CoA, FMN, Hem, Mtx, NAD,
     Ace, For
 };
