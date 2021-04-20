@@ -134,7 +134,7 @@ short TOTNAA = 69 ; /* total no of amino acids recognized by neighbour   */
 #define MAXCNCOLS    5  /* max no of columns of data in a CONECT record      */
 #define IGNLB        0  /* ignore bonds between ligands and proteins?       */
 
-#define ARKAA       12  /* number of residues with ARKIVED donors & acceptors*/
+#define ARKAA       18  /* number of residues with ARKIVED donors & acceptors*/
 /*MOVE*/
 
 /* Bug-fix. RAL 1 May 1997 --> */		
@@ -178,6 +178,7 @@ char rnames[MAXNAA][4] =
  "LOV", "STA", "PVL", "CAL", "PHA", "DCI", "AHS", "CHS", "MSE", "ETA",
  "PCA", "ASX", "GLX", "UNK", "CYH", "CSS",
  "  C", "  A", "  U", "  G", "  T", "  I",
+ " DC", " DA", " DU", " DG", " DT", " DI",
  "ATP", "COA", "FMN", "HEM", "MTX", "NAD",
  "ACE", "FOR"
 };
@@ -294,6 +295,12 @@ char necatm[MAXNAA][TOTNATM*4] =
       " ??? O3P P   O1P O2P O5* C5* C4* O4* C3* O3* C2* O2* C1* N9  C8  N7  C5  C6  O6  N1  C2  N2  N3  C4  OXT",/*  G*/
       " ??? O3P P   O1P O2P O5* C5* C4* O4* C3* O3* C2* O2* C1* N1  C2  O2  N3  C4  O4  C5  C5M C6  OXT",  /*  T*/
       " ??? O3P P   O1P O2P O5* C5* C4* O4* C3* O3* C2* O2* C1* N9  C8  N7  C5  C6  O6  N1  C2  N3  C4  OXT",/*  I*/
+      " ??? O3P P   O1P O2P O5* C5* C4* O4* C3* O3* C2* C1* N1  C2  O2  N3  C4  N4  C5  C6  OXT",  /*  DC*/
+      " ??? O3P P   O1P O2P O5* C5* C4* O4* C3* O3* C2* C1* N9  C8  N7  C5  C6  N6  N1  C2  N3  C4  OXT",/*  DA*/
+      " ??? O3P P   O1P O2P O5* C5* C4* O4* C3* O3* C2* C1* N1  C2  O2  N3  C4  O4  C5  C6  OXT",  /*  DU*/
+      " ??? O3P P   O1P O2P O5* C5* C4* O4* C3* O3* C2* C1* N9  C8  N7  C5  C6  O6  N1  C2  N2  N3  C4  OXT",/*  DG*/
+      " ??? O3P P   O1P O2P O5* C5* C4* O4* C3* O3* C2* C1* N1  C2  O2  N3  C4  O4  C5  C5M C6  OXT",  /*  DT*/
+      " ??? O3P P   O1P O2P O5* C5* C4* O4* C3* O3* C2* C1* N9  C8  N7  C5  C6  O6  N1  C2  N3  C4  OXT",/*  DI*/
 /*       00  01  02  03  04  05  06  07  08  09  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30  31  32  33  34  35  36  37  38  39  40  41  42  43  44  45  46  47  48  49  50  51*/
 
       " ??? PG  O1G O2G O3G PB  O1B O2B O3B PA  O1A O2A O3A O5* C5* C4* O4* C3* O3* C2* O2* C1* N9  C8  N7  C5  C6  N6  N1  C2  N3  C4  OXT",/*ATP*/
@@ -404,6 +411,12 @@ struct index accepts_archive[ARKAA] =
     {__G," O1P O2P O5* O4* O3* O2* N3  O6  N7  OXT"},
     {__T," O1P O2P O5* O4* O3* O2* O2  O4  OXT"},
     {__I," O1P O2P O5* O4* O3* O2* N3  O6  N7  OXT"},
+    {_DC," O1P O2P O5* O4* O3* O2  N3  OXT"},
+    {_DA," O1P O2P O5* O4* O3* N1  N3  N7  OXT"},
+    {_DU," O1P O2P O5* O4* O3* O2  O4  OXT"},
+    {_DG," O1P O2P O5* O4* O3* N3  O6  N7  OXT"},
+    {_DT," O1P O2P O5* O4* O3* O2  O4  OXT"},
+    {_DI," O1P O2P O5* O4* O3* N3  O6  N7  OXT"},
 
     {ATP," O1G O2G O3G O1B O2B O3B O1A O2A O3A O5* O4* O3* O2* N1  N3  N7  OXT"},
     {CoA,"AO6 AO4 AO5 AO3 AO1 AO2 AO5*AO4*AO3*AO7 AO8 AO9 AO2*AN7 AN1 AN3 PS1 PO5 PO9 PO10"},
@@ -506,6 +519,12 @@ struct index donors_archive[ARKAA] =
   {__G," O2* O3* N1  N2  N2 "},
   {__T," O2* O3* N3 "},
   {__I," O2* O3* N1 "},
+  {_DC," O3* N4  N4 "},
+  {_DA," O3* N6  N6 "},
+  {_DU," O3* N3 "},
+  {_DG," O3* N1  N2  N2 "},
+  {_DT," O3* N3 "},
+  {_DI," O3* N1 "},
 
   {ATP," O2* O3* N6  N6 "},
   {CoA,"AO2*AN6 AN6 PS1 PN4 PN8 PO10"},
@@ -1290,7 +1309,7 @@ void load_resbonds(int restyp,int ires)
     case __U:
     case __G:
     case __T:
-    case __I:
+    case __I:    
 	strcat(bondlist, " P   O1P: P   O2P: P   O3P: P   O5*: O5* C5*: C5* C4*: C4* O4*: C4* C3*: C3* O3*: C3* C2*: C2* O2*: C2* C1*: C1* O4*:"); /*phosphoribose nucleotide backbone*/
 	break;
     default:

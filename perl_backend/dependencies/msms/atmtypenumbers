@@ -273,23 +273,23 @@ VAL  CG2      9
 #
 #Nucleic acids
 #'+' used for modified residues
-[+D]?[AGCUT] C[123]['\*]	11
-[+D]?[AGCUT] C4'		10
-[+D]?[AGCUT] C5'		9
-[+D]?[AGCUT] O[2345]['\*]	2
-[+D]?[AGCUT] N[479]	4
-[+D]?G       N1		5
+[+D]?[AGCUTI] C[123]['\*]	11
+[+D]?[AGCUTI] C4'		10
+[+D]?[AGCUTI] C5'		9
+[+D]?[AGCUTI] O[2345]['\*]	2
+[+D]?[AGCUTI] N[479]	4
+[+D]?[GI]       N1		5
 [+D]?G       N2		6
 [+D]?[UT]    N3		5
 [+D]?A       N6		6
 [+D]?[CAUT]  N[12]		4
-[+D]?[CAG]   N3		4
-[+D]?[CAGT]  N6		4
-[+D]?[AGCUT] N[1234679]	4
-[+D]?[GCUT]  O[246]	1
-[+D]?[GCUT]  C[24]		10
-[+D]?[AG]    C[456]	10
-[+D]?[AG]    C8		11
+[+D]?[CAGI]   N3		4
+[+D]?[CAGTI]  N6		4
+[+D]?[AGCUTI] N[1234679]	4
+[+D]?[GCUTI]  O[246]	1
+[+D]?[GCUTI]  C[24]		10
+[+D]?[AGI]    C[456]	10
+[+D]?[AGI]    C8		11
 [+D]?[CUT]   C6		11
 [+D]?[CU]    C5		11
 [+D]?T       C5		10
