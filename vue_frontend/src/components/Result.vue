@@ -64,6 +64,10 @@
           </div>
         </div>
     </div>
+    <div v-if="url_3D" class="card" id="target-box2">
+      <div class="row card-body">
+      </div>
+    </div>
     <br/>
     <h3>
       Results for {{$route.params.job_id}}
@@ -115,6 +119,9 @@
 import vueSlider from 'vue-slider-component';
 import ButtonClose from 'bootstrap-vue';
 import attributeCard from './card.vue';
+import { Viewer } from 'molstar/build/viewer/molstar';
+import 'molstar/build/viewer/molstar.css';
+
 export default {
   name: 'Result',
   components: {
@@ -161,6 +168,7 @@ export default {
     s: undefined,
     hover_sphere: null,
     hover_style: null,
+    molstar_viewer: null,
   }),
   mounted: function () {
     let mol_js = document.createElement('script');
@@ -182,6 +190,21 @@ export default {
     });
   },
   methods: {
+    initViewer: function (target) {
+      this.molstar_viewer = new Viewer(target, {
+        layoutIsExpanded: false,
+        layoutShowControls: true,
+        layoutShowRemoteState: false,
+        layoutShowSequence: true,
+        layoutShowLog: false,
+        layoutShowLeftPanel: false,
+        viewportShowExpand: true,
+        viewportShowSelectionMode: false,
+        viewportShowAnimation: false,
+      });
+      this.molstar_viewer.loadStructureFromUrl(this.pdbFile, 'pdb');
+      console.log(this.molstar_viewer);
+    },
     open3D: function (pdb_url, chain1, chain2, parsed_xml, _graph) {
       let graph = _graph || this.extractParsedXML(this.open_xml, this.selected_edges);
       let color_chart = this.all_edges;
@@ -220,6 +243,7 @@ export default {
         function () {
           renderStyles({render: true, removed: false}, true);
         });
+      this.initViewer('target-box2');
     },
     makeModel: function (pdb_url, chain1, chain2, graph, color_chart, amino_acid, _viewer, default_colors, _callback) {
       let res_labels = [];
@@ -579,7 +603,8 @@ export default {
           this.s.bind('overEdge', e => {
             const edge = e.data.edge;
             // console.log(e)
-            this.$el.querySelector('#related-info').innerHTML = '<h5>Interactions</h5>';
+            this.$el.querySelector('#related-info').innerHTML = '<h5>Interactions</h5><br>' +
+              `<span style="color:${edge.color}">res:atom<-dist->res:atom</span><br>`;
             let currentBond = `<span style="color:${edge.color}">${edge.source_label}:${edge.source_atom}<-${edge.dist}->${edge.target_label}:${edge.target_atom}</span>`;
             this.$el.querySelector('#related-info').innerHTML += currentBond + '<br>';
             for (const id of edge.added) {
@@ -800,6 +825,10 @@ export default {
   }
   .card {
     display: block;
+  }
+  #target-box2{
+    margin-top: 30px;
+    min-height: 80vh;
   }
   #undefined {
     max-width: 100%;
