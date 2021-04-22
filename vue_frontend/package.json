@@ -1,16 +1,16 @@
 {
   "name": "NUMonster-Client",
   "version": "1.0.0",
+  "private": true,
   "description": "A VueJS front end for MONSTER webserver",
   "author": "JamesJeffryes <jamesgjeffryes@gmail.com>",
-  "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-    "start": "npm run dev",
-    "lint": "eslint --ext .js,.vue src",
     "build": "node build/build.js",
+    "lint": "eslint --ext .js,.vue src",
     "deploy": "rsync -rv ./dist/ jjeffryes@numonster-dev.biochem.northwestern.edu:/var/www/html/",
-    "deploy-prod": "rsync -ravz ./dist/ jjeffryes@numonster.northwestern.edu:/var/www/html/"
+    "deploy-prod": "rsync -ravz ./dist/ jjeffryes@numonster.northwestern.edu:/var/www/html/",
+    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "start": "npm run dev"
   },
   "dependencies": {
     "3dmol": "^1.6.1",
@@ -25,6 +25,8 @@
     "vue-slider-component": "^2.8.16"
   },
   "devDependencies": {
+    "@vue/cli-plugin-typescript": "^4.5.12",
+    "@vue/cli-service": "^4.5.12",
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",
     "babel-eslint": "^8.2.1",
@@ -61,6 +63,7 @@
     "rimraf": "^2.7.1",
     "semver": "^5.7.1",
     "shelljs": "^0.7.6",
+    "typescript": "~4.1.5",
     "url-loader": "^2.3.0",
     "vue": "^2.6.12",
     "vue-loader": "^14.2.4",
@@ -72,13 +75,13 @@
     "webpack-dev-server": "^3.11.2",
     "webpack-merge": "^4.2.2"
   },
-  "engines": {
-    "node": ">= 6.0.0",
-    "npm": ">= 3.0.0"
-  },
   "browserslist": [
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "engines": {
+    "node": ">= 6.0.0",
+    "npm": ">= 3.0.0"
+  }
 }
