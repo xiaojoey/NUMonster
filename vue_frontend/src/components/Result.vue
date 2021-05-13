@@ -64,6 +64,8 @@
           </div>
         </div>
     </div>
+    <div v-if="url_3D" class="card" id="target-box2">
+    </div>
     <br/>
     <h3>
       Results for {{$route.params.job_id}}
@@ -115,6 +117,9 @@
 import vueSlider from 'vue-slider-component';
 import ButtonClose from 'bootstrap-vue';
 import attributeCard from './card.vue';
+import { Viewer } from 'molstar/build/viewer/molstar';
+import 'molstar/build/viewer/molstar.css';
+
 export default {
   name: 'Result',
   components: {
@@ -182,6 +187,21 @@ export default {
     });
   },
   methods: {
+    initViewer: function (target) {
+      this.molstar_viewer = new Viewer(target, {
+        layoutIsExpanded: false,
+        layoutShowControls: true,
+        layoutShowRemoteState: false,
+        layoutShowSequence: true,
+        layoutShowLog: false,
+        layoutShowLeftPanel: false,
+        viewportShowExpand: true,
+        viewportShowSelectionMode: false,
+        viewportShowAnimation: false,
+      });
+      this.molstar_viewer.loadStructureFromUrl(this.pdbFile, 'pdb');
+      console.log(this.molstar_viewer);
+    },
     open3D: function (pdb_url, chain1, chain2, parsed_xml, _graph) {
       let graph = _graph || this.extractParsedXML(this.open_xml, this.selected_edges);
       let color_chart = this.all_edges;
@@ -220,6 +240,7 @@ export default {
         function () {
           renderStyles({render: true, removed: false}, true);
         });
+      this.initViewer('target-box2');
     },
     makeModel: function (pdb_url, chain1, chain2, graph, color_chart, amino_acid, _viewer, default_colors, _callback) {
       let res_labels = [];
@@ -803,6 +824,10 @@ export default {
   }
   #undefined {
     max-width: 100%;
+  }
+  #target-box2{
+    margin-top: 30px;
+    min-height: 80vh;
   }
   #more-info, #related-info, #added-surfaces {
     overflow-y: scroll;
