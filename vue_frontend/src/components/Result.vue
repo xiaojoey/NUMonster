@@ -64,8 +64,9 @@
           </div>
         </div>
     </div>
-    <div v-if="url_3D" class="card" id="target-box2">
-    </div>
+<!--    <div v-if="url_3D" class="card" id="target-box2">-->
+<!--    </div>-->
+    <molviewer v-if="url_3D" class="card" id="target-box3"> </molviewer>
     <br/>
     <h3>
       Results for {{$route.params.job_id}}
@@ -119,13 +120,15 @@ import ButtonClose from 'bootstrap-vue';
 import attributeCard from './card.vue';
 import { Viewer } from 'molstar/build/viewer/molstar';
 import 'molstar/build/viewer/molstar.css';
+import molviewer from './molstar-viewer';
 
 export default {
   name: 'Result',
   components: {
     ButtonClose,
     vueSlider,
-    attributeCard
+    attributeCard,
+    molviewer,
   },
   data: () => ({
     result: '',
@@ -240,7 +243,7 @@ export default {
         function () {
           renderStyles({render: true, removed: false}, true);
         });
-      this.initViewer('target-box2');
+      // this.initViewer('target-box2');
     },
     makeModel: function (pdb_url, chain1, chain2, graph, color_chart, amino_acid, _viewer, default_colors, _callback) {
       let res_labels = [];
@@ -825,7 +828,7 @@ export default {
   #undefined {
     max-width: 100%;
   }
-  #target-box2{
+  #target-box2, #target-box3{
     margin-top: 30px;
     min-height: 80vh;
   }

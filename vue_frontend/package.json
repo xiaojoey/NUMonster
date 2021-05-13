@@ -21,6 +21,7 @@
     "molstar": "^2.0.5",
     "sigma": "github:xiaojoey/sigma.js",
     "vee-validate": "^2.2.15",
+    "vue-hooks": "^0.3.2",
     "vue-resource": "^1.5.1",
     "vue-router": "^3.4.9",
     "vue-slider-component": "^2.8.16"
