@@ -1,8 +1,8 @@
 <template>
-  <div className="App" id="bruh">
+  <div className="App" id="outer">
     <div id="viewer3d-controls">
     </div>
-    <div id="bruhhh">
+    <div id="inner">
       <div id="viewer3d">
       </div>
     </div>
@@ -25,6 +25,16 @@ export default {
   }),
   mounted: function () {
     let viewer = new MolstarDemoViewer(this.$el.querySelector('#viewer3d'));
+    this.viewer = viewer;
+    viewer.loadStructureFromData(this.pdbFile, 'pdb',
+      {type: this.structure3dRepresentation,
+        coloring: this.structure3dColoring,
+        uniformColor: this.uniformColor});
+    fetch(this.pdbFile)
+      .then(function (res) {console.log(res)})
+      .catch(function (e) {
+        console.error(e);
+      })
   },
   methods: {
     getStructure: function() {
@@ -50,10 +60,7 @@ export default {
 </script>
 
 <style scoped>
-#bruh{
-  min-height: 50vh;
-}
-#bruhhh{
+#outer, #inner {
   min-height: 50vh;
 }
 

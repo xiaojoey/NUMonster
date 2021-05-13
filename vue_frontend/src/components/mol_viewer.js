@@ -29,39 +29,36 @@ export class MolstarDemoViewer {
       ...DefaultPluginUISpec(),
       layout: {
         initial: {
-          layoutIsExpanded: false,
-          layoutShowControls: true,
-          layoutShowRemoteState: false,
-          layoutShowSequence: true,
-          layoutShowLog: false,
-          layoutShowLeftPanel: false,
-          viewportShowExpand: true,
-          viewportShowSelectionMode: false,
-          viewportShowAnimation: false,
           isExpanded: false,
           showControls: true,
-          controlsDisplay: 'reactive'
+          controlsDisplay: 'reactive',
+          regionState: {
+            bottom: 'full',
+            left: 'collapsed',
+            right: 'full',
+            top: 'full',
+          },
         },
       },
       components: {
         remoteState: 'none'
       },
       config: [
-        [PluginConfig.Viewport.ShowExpand, false],
         [PluginConfig.Viewport.ShowAnimation, false],
-        [PluginConfig.Viewport.ShowSelectionMode, false]
+        [PluginConfig.Viewport.ShowSelectionMode, false],
       ]
     }
     this.plugin = createPlugin(element, spec);
   }
 
-  async loadStructureFromData (data, format, reprParams) {
+  async loadStructureFromData (url, format, reprParams) {
     await this.plugin.clear();
     console.log('Loading...');
     this.plugin.behaviors.layout.leftPanelTabName.next('data');
 
-    const _data = await this.plugin.builders.data.rawData({data});
-    const trajectory = await this.plugin.builders.structure.parseTrajectory(_data, format);
+    const data = await this.plugin.builders.data.download({url}, { state: { isGhost: true } });
+    console.log(data);
+    const trajectory = await this.plugin.builders.structure.parseTrajectory(data, format);
 
     const model = await this.plugin.builders.structure.createModel(trajectory);
     if (!model) return;

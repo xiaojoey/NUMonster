@@ -66,7 +66,7 @@
     </div>
 <!--    <div v-if="url_3D" class="card" id="target-box2">-->
 <!--    </div>-->
-    <molviewer v-if="url_3D" class="card" id="target-box3"> </molviewer>
+    <molviewer v-if="url_3D" class="card" id="target-box3" v-bind:pdb-file="pdbFile"> </molviewer>
     <br/>
     <h3>
       Results for {{$route.params.job_id}}
