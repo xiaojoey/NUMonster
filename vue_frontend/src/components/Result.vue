@@ -66,7 +66,14 @@
     </div>
 <!--    <div v-if="url_3D" class="card" id="target-box2">-->
 <!--    </div>-->
-    <molviewer v-if="url_3D" class="card" id="target-box3" v-bind:pdb-file="pdbFile"> </molviewer>
+    <div v-if="url_3D" class="card" id="target-box3">
+      <div v-if="display_graph">
+          <molviewer v-if="url_3D" class="card"
+                     v-bind:pdb-file="pdbFile"
+                     v-bind:cards="added_cards"
+          > </molviewer>
+      </div>
+    </div>
     <br/>
     <h3>
       Results for {{$route.params.job_id}}
@@ -118,6 +125,7 @@
 import vueSlider from 'vue-slider-component';
 import ButtonClose from 'bootstrap-vue';
 import attributeCard from './card.vue';
+import attributeCard2 from './card2';
 import { Viewer } from 'molstar/build/viewer/molstar';
 import 'molstar/build/viewer/molstar.css';
 import molviewer from './molstar-viewer';
@@ -128,6 +136,7 @@ export default {
     ButtonClose,
     vueSlider,
     attributeCard,
+    attributeCard2,
     molviewer,
   },
   data: () => ({
@@ -832,7 +841,7 @@ export default {
     margin-top: 30px;
     min-height: 80vh;
   }
-  #more-info, #related-info, #added-surfaces {
+  #more-info, #related-info, #added-surfaces, #added-surfaces2 {
     overflow-y: scroll;
     min-width: 100%;
     scrollbar-width: none;
@@ -841,7 +850,7 @@ export default {
   #more-info {
     max-height: 15%;
   }
-  #more-info::-webkit-scrollbar, #more-options::-webkit-scrollbar, #related-info::-webkit-scrollbar, #added-surfaces::-webkit-scrollbar{ /* WebKit */
+  #more-info::-webkit-scrollbar, #more-options::-webkit-scrollbar, #related-info::-webkit-scrollbar, #added-surfaces::-webkit-scrollbar, #added-surfaces2::-webkit-scrollbar{ /* WebKit */
     width: 0;
     height: 0;
   }

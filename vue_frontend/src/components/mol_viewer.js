@@ -1,11 +1,12 @@
 import 'molstar/lib/mol-util/polyfill';
-import {PluginConfig} from 'molstar/lib/mol-plugin/config';
+// import {PluginConfig} from 'molstar/lib/mol-plugin/config';
 // import {BuiltInTrajectoryFormat} from 'molstar/lib/mol-plugin-state/formats/trajectory';
 import {
   createStructureRepresentationParams,
   // StructureRepresentationBuiltInProps
 } from 'molstar/lib/mol-plugin-state/helpers/structure-representation-params';
 import {StateTransforms} from 'molstar/lib/mol-plugin-state/transforms';
+import {PluginCommands} from 'molstar/lib/mol-plugin/commands';
 // import {PluginUIContext} from 'molstar/lib/mol-plugin-ui/context';
 import {
   DefaultPluginUISpec,
@@ -29,23 +30,28 @@ export class MolstarDemoViewer {
       ...DefaultPluginUISpec(),
       layout: {
         initial: {
-          isExpanded: false,
-          showControls: true,
           controlsDisplay: 'reactive',
+          layoutIsExpanded: false,
+          layoutShowControls: false,
+          layoutShowRemoteState: false,
+          layoutShowSequence: true,
+          layoutShowLog: false,
+          layoutShowLeftPanel: true,
           regionState: {
             bottom: 'full',
             left: 'collapsed',
             right: 'full',
             top: 'full',
           },
+          viewportShowExpand: true,
+          viewportShowSelectionMode: false,
+          viewportShowAnimation: false,
         },
       },
       components: {
         remoteState: 'none'
       },
       config: [
-        [PluginConfig.Viewport.ShowAnimation, false],
-        [PluginConfig.Viewport.ShowSelectionMode, false],
       ]
     }
     this.plugin = createPlugin(element, spec);
@@ -66,7 +72,7 @@ export class MolstarDemoViewer {
     const {type, coloring, uniformColor} = reprParams;
     let props = {
       type: type,
-      color: coloring,
+      // color: coloring,
       size: 'uniform',
       sizeParams: {value: 2.0}
     }
@@ -74,32 +80,45 @@ export class MolstarDemoViewer {
       props.colorParams = {value: Color.fromRgb(uniformColor.r, uniformColor.g, uniformColor.b)}
     }
     if (type === 'cartoon') {
-      props.typeParams = {visuals: ['nucleotide-block']}
+      props.typeParams = {visuals: ['polymer-trace', 'polymer-gap', 'nucleotide-block']}
     }
+    console.log(props);
     const repr = createStructureRepresentationParams(this.plugin, structure.data, props);
     this.currentStructure = await this.plugin.build().to(structure).apply(StateTransforms.Representation.StructureRepresentation3D, repr).commit();
   }
 
   async updateMoleculeRepresentation (reprParams) {
+    // eslint-disable-next-line no-unused-vars
     const {type, coloring, uniformColor} = reprParams;
     let props = {
       type: type,
-      color: coloring,
+      // color: coloring,
       size: 'uniform',
       sizeParams: {value: 2.0}
     }
-    if (coloring === 'uniform') {
-      props.colorParams = {value: Color.fromRgb(uniformColor.r, uniformColor.g, uniformColor.b)}
-    }
+    // if (coloring === 'uniform') {
+    //   props.colorParams = {value: Color.fromRgb(uniformColor.r, uniformColor.g, uniformColor.b)}
+    // }
+    console.log(type);
     if (type === 'cartoon') {
-      props.typeParams = {visuals: ['nucleotide-block']}
+      props.typeParams = {visuals: ['polymer-trace', 'polymer-gap', 'nucleotide-block']}
+    }
+    if (type === 'no_nucleotide') {
+      props.typeParams = {visuals: ['polymer-trace', 'polymer-gap']}
+      props.type = 'cartoon';
+      console.log('here');
     }
     if (type === 'putty') {
       props.typeParams = {visuals: ['polymer-tube']}
     }
+    console.log('there');
     const newRepresenation = createStructureRepresentationParams(this.plugin, void 0, props);
     console.log(`Trying to update structure 3D Representation to ${type}`)
     await this.plugin.build().to(this.currentStructure).update(newRepresenation).commit();
+  }
+
+  async toggleControls (isVisible) {
+    await PluginCommands.Layout.Update(this.plugin, { state: { showControls: isVisible } });
   }
 
   dispose () {
